@@ -14,13 +14,13 @@ const Search = () => {
       <View style={styles.searchContainer}>
         <TouchableOpacity>
           <Ionicons
-            name='camera-outline'
+            name='search'
             size={SIZES.xLarge} style={styles.searchIcon} />
         </TouchableOpacity>
         <View style={styles.searchWrapper}>
           <TextInput
             style={styles.searchInput}
-            value=""
+            defaultValue=""
             onPressIn={() => {}}
             placeholder='Bạn đang tìm kiếm gì'
           />
@@ -28,7 +28,7 @@ const Search = () => {
         <View>
           <TouchableOpacity style={styles.searchBtn}>
             <Feather
-              name='search' size={24}
+              name='filter' size={24}
               color={COLORS.offwhite}
             />
           </TouchableOpacity>
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginHorizontal: SIZES.small,
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.light,
     borderRadius: SIZES.medium,
     marginVertical: SIZES.medium,
     height: 50,
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   searchWrapper: {
     flex: 1,
-    backgroundColor: COLORS.secondary,
+    backgroundColor: COLORS.light,
     marginRight: SIZES.small,
     borderRadius: SIZES.small,
   },

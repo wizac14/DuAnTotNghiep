@@ -35,7 +35,7 @@ const Welcome = () => {
                 </View>
                 <View>
                     <TouchableOpacity style={styles.searchBtn}>
-                        <Ionicons name='camera-outline' size={SIZES.xLarge} color={COLORS.offwhite} />
+                        <Ionicons name='filter' size={SIZES.xLarge} color={COLORS.offwhite} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginHorizontal: SIZES.small,
-        backgroundColor: COLORS.secondary,
+        backgroundColor: COLORS.light,
         borderRadius: SIZES.medium,
         marginVertical: SIZES.medium,
         height: 50,
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
     searchWrapper: {
         flex: 1,
-        backgroundColor: COLORS.secondary,
+        backgroundColor: COLORS.light,
         marginRight: SIZES.small,
         borderRadius: SIZES.small,
     },

@@ -5,6 +5,9 @@ import { COLORS } from "../constants/index";
 import { Ionicons, Fontisto } from '@expo/vector-icons';
 import { SIZES } from '../constants/index';
 import Welcome from '../components/home/Welcome';
+import ImagesSlider from '../components/home/ImagesSlider';
+import Heading from '../components/home/Heading';
+import ProductsRow from '../components/products/ProductsRow';
 
 const Home = () => {
   return (
@@ -28,7 +31,11 @@ const Home = () => {
 
       <ScrollView>
         <Welcome/>
+        <ImagesSlider/>
+        <Heading/>
+        <ProductsRow/>
       </ScrollView>
+
     </SafeAreaView>
   )
 }
