@@ -1,10 +1,13 @@
 import { StyleSheet,SafeAreaView, Text, View , Dimensions, Image, FlatList,TouchableOpacity} from 'react-native'
 import React, { useState } from 'react'
+import { useNavigation } from "@react-navigation/native";
+
 
 
 const {width, height} = Dimensions.get('window');
 
 const Guide = ({}) => {
+  const navigation = useNavigation();
 
   const [currentSlideIndex,setCurrentSlideIndex] = useState(0)
   const ref = React.useRef(null)
@@ -21,45 +24,7 @@ const Guide = ({}) => {
         </View>
     )
 };
-// const Footer = ()=>{
-//   return(
-//     <View
-//       style={{
-//         height: height * 0.25,
-//         justifyContent: 'space-between',
-//         paddingHorizontal:20
-//       }}>
-//       <View 
-//         style={{
-//           flexDirection:'row',
-//           justifyContent:'center',
-//           marginTop:20
-//         }}>
-//         {slides.map((_,index)=>( 
-//           <View key={index} 
-//             style={[styles.indicator, 
-//               currentSlideIndex == index && {
-//                 backgroundColor:'black',width:25,
-//               },
-//             ]}
-//           />
-//         ))}
-       
-//       </View>
-//       <View style={{marginBottom:20}}>
-//         <View style={{flexDirection:'row'}}>
-//           <TouchableOpacity style={[styles.btn, {backgroundColor:'transparent', borderWidth:1, borderColor:'black'}]}>
-//             <Text style={{fontWeight:'bold'}}>SKIP</Text>
-//           </TouchableOpacity>
-//           <View style={{width: 15}}/>
-//           <TouchableOpacity style={styles.btn} onPress={goToNextSlide}>
-//             <Text style={styles.text}>NEXT</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </View>
-//     </View>
-//   )
-// };
+
 const Footer = () => {
   return (
     <View
@@ -95,6 +60,7 @@ const Footer = () => {
         {currentSlideIndex == slides.length - 1 ? (
           <View style={{height: 50}}>
             <TouchableOpacity
+              onPressIn={() => navigation.navigate("Bottom Navigation")}
               style={styles.btn}>
               <Text style={{fontWeight: 'bold', fontSize: 15, color:'white'}}>
                 GET STARTED

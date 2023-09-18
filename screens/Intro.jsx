@@ -1,12 +1,13 @@
 import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native'
 import React, { useEffect } from 'react'
-
+import { useNavigation } from "@react-navigation/native";
 
 const Intro = () => {
+  const navigation = useNavigation();
     
  useEffect(()=>{
     const timer = setTimeout(()=>{
-        // nnavigation.navigate("Guide");
+        navigation.navigate("Guide");
     },3000)
  },[])
   return (
