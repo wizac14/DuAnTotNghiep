@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BottomTabNavigation from './navigation/BottomTabNavigation';
 import Cart from './screens/Cart';
+import ItemThongBao from './components/item/ItemThongBao';
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,7 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+  
   );
 }
 

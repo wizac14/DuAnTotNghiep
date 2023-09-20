@@ -6,6 +6,7 @@ import Search from '../screens/Search';
 import Profile from '../screens/Profile';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from "../constants/index";
+import ItemThongBao from '../components/item/ItemThongBao';
 
 const Tab = createBottomTabNavigator();
 
@@ -51,7 +52,7 @@ const BottomTabNavigation = () => {
 
       <Tab.Screen
         name="Profile"
-        component={Profile} options={{
+        component={ItemThongBao} options={{
           tabBarIcon: ({ focused }) => {
             return <Ionicons name={focused ? "person" : "person-outline"}
               size={24}
