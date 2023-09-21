@@ -9,6 +9,8 @@ import BottomTabNavigation from './navigation/BottomTabNavigation';
 import Cart from './screens/Cart';
 import Intro from './screens/Intro';
 import Guide from './screens/Begin/Guide';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,13 +39,12 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Intro'>
+      <Stack.Navigator initialRouteName='Login'>
         <Stack.Screen
           name='Bottom Navigation'
           component={BottomTabNavigation}
           options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name='Cart'
           component={Cart}
@@ -57,6 +58,16 @@ export default function App() {
         <Stack.Screen
           name='Guide'
           component={Guide}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Login'
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Register'
+          component={RegisterScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
