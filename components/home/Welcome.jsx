@@ -15,7 +15,7 @@ const Welcome = () => {
                     {" "}
                     Find The Best
                 </Text>
-                <Text style={styles.welcomeText(COLORS.primary, 0)}>
+                <Text style={styles.welcomeText(COLORS.red, 0)}>
                     {" "}
                     Shoes For Your Style
                 </Text>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     },
     searchIcon: {
         marginHorizontal: 10,
-        color: COLORS.gray,
+        color: COLORS.red,
         // marginTop: SIZES.small,
 
     },
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     searchBtn: {
         width: 50,
         height: "100%",
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.red,
         borderRadius: SIZES.medium,
         justifyContent: "center",
         alignItems: 'center',

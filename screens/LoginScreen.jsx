@@ -4,11 +4,30 @@ import { SIZES, COLORS } from '../constants'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 const LoginScreen = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigation = useNavigation();
+    const handleLogin = () => {
+        const user = {
+            email: email,
+            password: password,
+        }
+
+        axios.post("http://192.168.1.7:3000/login", user).then((response) => {
+            console.log(response);
+            const token = response.data.token;
+            AsyncStorage.setItem("authToken", token);
+            navigation.replace("Bottom Navigation");
+        }).catch((error)=> {
+            Alert.alert("Login Error!", "Invalid email!");
+            console.log(error);
+        })
+    };
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white", alignItems: "center" }}>
             <View>
@@ -70,7 +89,7 @@ const LoginScreen = () => {
                 <View style={{ marginTop: 30 }} />
 
                 <Pressable
-                onPress={() => navigation.navigate("Bottom Navigation")}
+                onPress={handleLogin}
                     style={{
                         width: 200,
                         backgroundColor: COLORS.red,
@@ -94,8 +113,8 @@ const LoginScreen = () => {
                 </Pressable>
             </KeyboardAvoidingView>
         </SafeAreaView>
-    )
-}
+    );
+};
 
 export default LoginScreen
 

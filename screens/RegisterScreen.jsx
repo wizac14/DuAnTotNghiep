@@ -21,7 +21,7 @@ const RegisterScreen = () => {
         };
 
         //send a post request to the backend API
-        axios.post("http://192.168.1.7:8000/register", user).then(response => {
+        axios.post("http://192.168.1.7:3000/register", user).then(response => {
             console.log(response);
             Alert.alert("Registration Done!", "We sent to your email a verification, please check it!");
             setName("");
