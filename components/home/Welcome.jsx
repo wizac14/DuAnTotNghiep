@@ -15,7 +15,7 @@ const Welcome = () => {
                     {" "}
                     Find The Best
                 </Text>
-                <Text style={styles.welcomeText(COLORS.red, 0)}>
+                <Text style={styles.welcomeText(COLORS.red ,0)}>
                     {" "}
                     Shoes For Your Style
                 </Text>

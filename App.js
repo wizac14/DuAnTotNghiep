@@ -11,6 +11,8 @@ import Intro from './screens/Intro';
 import Guide from './screens/Begin/Guide';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ForgotPassword from './screens/ForgotPassword';
+import ResetPassword from './screens/ResetPassword';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,7 +42,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen
+        {/* <Stack.Screen
           name='Bottom Navigation'
           component={BottomTabNavigation}
           options={{ headerShown: false }}
@@ -70,9 +72,21 @@ export default function App() {
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
+
+        <Stack.Screen
+          name='Forgot Password'
+          component={ForgotPassword}
+          options={{ headerShown: false }}
+        /> */}
+
+        <Stack.Screen
+          name='Reset'
+          component={ResetPassword}
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
-  
+
   );
 }
 
