@@ -14,7 +14,7 @@ import { Button } from 'react-native';
 
 
 
-const LoginScreen = (props) => {
+const LoginScreen = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");

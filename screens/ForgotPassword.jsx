@@ -33,7 +33,7 @@ const ForgotPassword = () => {
                     }} name="chatbubble-ellipses" size={24} color="black" />
                     <View style={{ flexDirection: 'column', width: 100, margin: 10, left: 10 }}>
                         <Text style={{ color: 'grey' }} >via SMS</Text>
-                        <Text style={{ top: 10 }} >+84 385 2152</Text>
+                        <Text style={{ top: 10 }} >+84 *** **52</Text>
                     </View>
 
 
