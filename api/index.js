@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 const jwt = require ("jsonwebtoken");
 
 //connect database
-//mongodb://127.0.0.1:27017/
 mongoose.connect('mongodb+srv://tungh3210:tung@cluster0.cmonbw2.mongodb.net/GraduationProject', {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -23,8 +22,8 @@ mongoose.connect('mongodb+srv://tungh3210:tung@cluster0.cmonbw2.mongodb.net/Grad
   .then(() => console.log('>>>>>>>>>> DB Connected!!!!!!'))
   .catch(err => console.log('>>>>>>>>> DB Error: ', err));
   
-app.listen(port, "192.168.1.7" ,() => {
-    console.log("Server is running on port")
+app.listen(port,() => {
+    console.log("Server is running on port 3000")
 })
 
 const User = require ("./models/user");
@@ -38,7 +37,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         service: "gmail",
         auth: {
             user: "thefivemensshoesshop@gmail.com",
-            pass: "livc anxs nkgx esar"
+            pass: "ihor pimr pbgb niir"
         }
     })
 
@@ -47,7 +46,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         from: "thefivemensshoes.com",
         to: email,
         subject: "Email Verification",
-        text: `Plsase click the following link to verify your account : http://192.168.1.7:3000/verify/${verificationToken}`
+        text: `Plsase click the following link to verify your account : http://localhost:3000/verify/${verificationToken}`
     };
     
     //send the email
@@ -60,7 +59,6 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 
 //endpoint to register in the app
-// http://192.168.1.7:8000/register
 app.post("/register",async(req,res) => {
     try {
         const {name, email, password} = req.body;

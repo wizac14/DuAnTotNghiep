@@ -41,8 +41,8 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
-        {/* <Stack.Screen
+      <Stack.Navigator initialRouteName='Intro'>
+        <Stack.Screen
           name='Bottom Navigation'
           component={BottomTabNavigation}
           options={{ headerShown: false }}
@@ -77,7 +77,7 @@ export default function App() {
           name='Forgot Password'
           component={ForgotPassword}
           options={{ headerShown: false }}
-        /> */}
+        />
 
         <Stack.Screen
           name='Reset'
