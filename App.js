@@ -18,7 +18,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import ForgotPassword from "./screens/ForgotPassword";
 import ResetPassword from "./screens/ResetPassword";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import ProductDetail from "./screens/ProductDetail";
+import ProductDetail from "./components/products/ProductDetail";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 

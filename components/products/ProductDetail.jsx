@@ -7,7 +7,7 @@ import {
 import { useTheme } from "@react-navigation/native";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import { StatusBar } from "expo-status-bar";
-import { COLORS } from "../constants";
+import { COLORS } from "../../constants";
 import BottomSheet from "@gorhom/bottom-sheet";
 
 const SIZES = ["38", "39", "40", "41", "42", "43", "44"];
