@@ -149,7 +149,7 @@ const LoginScreen = () => {
         <View style={{ marginTop: 30 }} />
 
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={() => navigation.navigate("Bottom Navigation")}
           style={{
             width: 300,
             backgroundColor: "#D80032",
