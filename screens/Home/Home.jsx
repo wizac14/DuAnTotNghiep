@@ -18,6 +18,9 @@ import Card from "../../components/home/Card";
 import { BlurView } from "expo-blur";
 import MasonryList from "reanimated-masonry-list";
 import CustomBackdrop from "../../components/home/CustomBackdrop";
+import ImageSlider from "../../components/home/ImagesSlider";
+import { Pressable } from "react-native";
+import FilterView from "../../components/home/FilterView";
 
 const Home = () => {
   const CATEGORIES = [
@@ -101,7 +104,7 @@ const Home = () => {
               }}
               numberOfLines={1}
             >
-              Hi 👋
+              Xin chào 👋
             </Text>
             <Text
               style={{ color: colors.text, opacity: 0.75 }}
@@ -172,6 +175,7 @@ const Home = () => {
             <MaterialIcons name="tune" size={24} color={colors.background} />
           </TouchableOpacity>
         </View>
+        <ImageSlider />
 
         {/* Grid Collection View */}
         <View style={{ paddingHorizontal: 24 }}>
@@ -283,13 +287,22 @@ const Home = () => {
                   borderRadius: 24,
                 }}
               >
-                <Image
-                  source={{
-                    uri: item.imageUrl,
+                <Pressable
+                  style={{ flex: 1 }}
+                  onPress={() => {
+                    navigation.navigate("ProductDetail", {
+                      id: "123",
+                    });
                   }}
-                  resizeMode="contain"
-                  style={StyleSheet.absoluteFill}
-                />
+                >
+                  <Image
+                    source={{
+                      uri: item.imageUrl,
+                    }}
+                    resizeMode="contain"
+                    style={{ flex: 1 }}
+                  />
+                </Pressable>
                 <View
                   style={[
                     StyleSheet.absoluteFill,
@@ -398,7 +411,7 @@ const Home = () => {
           backgroundColor: colors.primary,
         }}
       >
-        {/* <FilterView /> */}
+        <FilterView/>
       </BottomSheetModal>
     </ScrollView>
   );
@@ -417,7 +430,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   location: {
-    fontFamily: "semibold",
     fontSize: SIZES.medium,
     color: COLORS.gray,
   },
@@ -433,7 +445,6 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   cartNumber: {
-    fontFamily: "regular",
     fontWeight: "600",
     fontSize: 10,
     color: COLORS.lightWhite,

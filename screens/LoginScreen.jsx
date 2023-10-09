@@ -70,7 +70,7 @@ const LoginScreen = () => {
 
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontFamily: "bold", fontSize: SIZES.xLarge }}>
+          <Text style={{  fontSize: SIZES.xLarge }}>
             Login to Your Account
           </Text>
         </View>
@@ -94,7 +94,7 @@ const LoginScreen = () => {
           <TextInput
             value={email}
             onChangeText={(text) => setEmail(text)}
-            style={{ width: 250, fontFamily: "regular" }}
+            style={{ width: 250, }}
             placeholder="Email"
           />
         </View>
@@ -119,7 +119,7 @@ const LoginScreen = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={isSecureEntry}
-            style={{ width: 250, fontFamily: "regular" }}
+            style={{ width: 250, }}
             placeholder="Password"
           />
           <Ionicons
@@ -149,7 +149,7 @@ const LoginScreen = () => {
         <View style={{ marginTop: 30 }} />
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("Bottom Navigation")}
+          onPress={() => navigation.navigate("Tab Navigator")}
           style={{
             width: 300,
             backgroundColor: "#D80032",
@@ -164,7 +164,7 @@ const LoginScreen = () => {
               textAlign: "center",
               color: COLORS.white,
               fontSize: SIZES.Large,
-              fontFamily: "semibold",
+              fontWeight: "bold",
             }}
           >
             Sign in

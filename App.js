@@ -9,8 +9,7 @@ import {
   NavigationContainer,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import BottomTabNavigation from "./navigation/BottomTabNavigation";
-import Cart from "./screens/Cart";
+import Cart from "./screens/Home/Cart";
 import Intro from "./screens/Intro";
 import Guide from "./screens/Begin/Guide";
 import LoginScreen from "./screens/LoginScreen";
@@ -21,6 +20,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import ProductDetail from "./components/products/ProductDetail";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import TabsNavigator from "./navigation/TabsNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -55,13 +55,13 @@ export default function App() {
       <GestureHandlerRootView style={styles.container}>
         <NavigationContainer theme={theme}>
           <BottomSheetModalProvider>
-            <Stack.Navigator initialRouteName="Bottom Navigation">
+            <Stack.Navigator initialRouteName="Intro">
               <Stack.Screen
-                name="Bottom Navigation"
-                component={BottomTabNavigation}
+                name="Tab Navigator"
+                component={TabsNavigator}
                 options={{ headerShown: false }}
               />
-              {/* <Stack.Screen
+              <Stack.Screen
                 name="Cart"
                 component={Cart}
                 options={{ headerShown: false }}
@@ -97,7 +97,7 @@ export default function App() {
                 name="Reset"
                 component={ResetPassword}
                 options={{ headerShown: false }}
-              /> */}
+              />
 
               <Stack.Screen
                 name="ProductDetail"

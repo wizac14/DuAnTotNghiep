@@ -21,7 +21,7 @@ const ProductDetail = ({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [count, setCount] = useState(1);
-  const [size, setSize] = useState(SIZES[0]);
+  const [size, setSize] = useState(SIZES[1]);
   const [imageHeight, setImageHeight] = useState();
   const [isImageFlex, setIsImageFlex] = useState();
   return (

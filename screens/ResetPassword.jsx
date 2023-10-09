@@ -94,7 +94,6 @@ const ResetPassword = () => {
           textAlign: 'center',
           color: COLORS.white,
           fontSize: SIZES.Large,
-          fontFamily: "semibold"
         }}>Submit</Text>
       </TouchableOpacity>
     </View>

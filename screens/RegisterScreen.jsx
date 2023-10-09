@@ -66,7 +66,7 @@ const RegisterScreen = () => {
 
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontFamily: "bold", fontSize: SIZES.xLarge }}>
+          <Text style={{ fontSize: SIZES.xLarge }}>
             Create your Account
           </Text>
         </View>
@@ -90,7 +90,7 @@ const RegisterScreen = () => {
           <TextInput
             value={name}
             onChangeText={(text) => setName(text)}
-            style={{ width: 250, fontFamily: "regular" }}
+            style={{ width: 250,  }}
             placeholder="Enter your name"
           />
         </View>
@@ -114,7 +114,7 @@ const RegisterScreen = () => {
           <TextInput
             value={email}
             onChangeText={(text) => setEmail(text)}
-            style={{ width: 250, fontFamily: "regular" }}
+            style={{ width: 250, }}
             placeholder="Enter your email"
           />
         </View>
@@ -139,7 +139,7 @@ const RegisterScreen = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={isSecureEntry}
-            style={{ width: 250, fontFamily: "regular" }}
+            style={{ width: 250, }}
             placeholder="Enter your password"
           />
           <Ionicons
@@ -169,7 +169,7 @@ const RegisterScreen = () => {
               textAlign: "center",
               color: COLORS.white,
               fontSize: SIZES.Large,
-              fontFamily: "semibold",
+              // fontFamily: "bold",
             }}
           >
             Sign up
