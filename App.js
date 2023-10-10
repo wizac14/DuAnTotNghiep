@@ -11,6 +11,8 @@ import Intro from './screens/Intro';
 import Guide from './screens/Begin/Guide';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
+import ItemCart from './components/item/ItemCart';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -38,41 +40,41 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
-        <Stack.Screen
-          name='Bottom Navigation'
-          component={BottomTabNavigation}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Cart'
-          component={Cart}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Intro'
-          component={Intro}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Guide'
-          component={Guide}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Login'
-          component={LoginScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='Register'
-          component={RegisterScreen}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  
+    // <NavigationContainer>
+    //   <Stack.Navigator initialRouteName='Login'>
+    //     <Stack.Screen
+    //       name='Bottom Navigation'
+    //       component={BottomTabNavigation}
+    //       options={{ headerShown: false }}
+    //     />
+    //     <Stack.Screen
+    //       name='Cart'
+    //       component={Cart}
+    //       options={{ headerShown: false }}
+    //     />
+    //     <Stack.Screen
+    //       name='Intro'
+    //       component={Intro}
+    //       options={{ headerShown: false }}
+    //     />
+    //     <Stack.Screen
+    //       name='Guide'
+    //       component={Guide}
+    //       options={{ headerShown: false }}
+    //     />
+    //     <Stack.Screen
+    //       name='Login'
+    //       component={LoginScreen}
+    //       options={{ headerShown: false }}
+    //     />
+    //     <Stack.Screen
+    //       name='Register'
+    //       component={RegisterScreen}
+    //       options={{ headerShown: false }}
+    //     />
+    //   </Stack.Navigator>
+    // </NavigationContainer>
+    <Cart/>
   );
 }
 
