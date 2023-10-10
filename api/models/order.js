@@ -43,7 +43,7 @@ const orderSchema = new mongoose.Schema({
             city: {
                 type: String,
             },
-            countruy: {
+            country: {
                 type: String,
             },
             postalCode: {

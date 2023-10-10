@@ -12,7 +12,10 @@ import Guide from './screens/Begin/Guide';
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import ForgotPassword from './screens/ForgotPassword';
-import ResetPassword from './screens/ResetPassword';
+import NewPassword from './screens/NewPassword';
+import EmailScreen from './screens/EmailScreen';
+import PhoneScreen from './screens/PhoneScreen';
+import Home from './screens/Home';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +50,8 @@ export default function App() {
           component={BottomTabNavigation}
           options={{ headerShown: false }}
         />
+
+        
         <Stack.Screen
           name='Cart'
           component={Cart}
@@ -80,11 +85,29 @@ export default function App() {
         /> */}
 
         <Stack.Screen
-          name='Reset'
-          component={ResetPassword}
+          name='Email Screen'
+          component={EmailScreen}
+          options={{ headerShown: false }} />
+
+        {/* <Stack.Screen
+          name='New Password'
+          component={NewPassword}
           options={{ headerShown: false }}
         />
+
+
+
+        <Stack.Screen
+          name='Home'
+          component={Home}
+          options={{ headerShown: false }} /> */}
+        {/* <Stack.Screen
+        name = 'Phone Screen'
+        component = {PhoneScreen}
+        options={{headerShown : false}} /> */}
       </Stack.Navigator>
+
+
     </NavigationContainer>
 
   );
