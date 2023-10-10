@@ -76,11 +76,11 @@ const TabItem = ({
         >
           <Icons
             name={
-              routeName === "Home"
+              routeName === "Trang chủ"
                 ? "home"
-                : routeName === "Cart"
+                : routeName === "Giỏ hàng"
                 ? "shopping-cart"
-                : routeName === "Payment"
+                : routeName === "Lịch sử"
                 ? "account-balance-wallet"
                 : "person"
             }

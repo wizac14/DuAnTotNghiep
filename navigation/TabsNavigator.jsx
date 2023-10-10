@@ -9,7 +9,7 @@ import CustomBottomTabs from "../navigation/CustomBottomTabs";
 import Home from "../screens/Home/Home";
 import Cart from "../screens/Home/Cart";
 import Profile from "../screens/Home/Profile";
-
+import ItemListHítory from "../components/item/ItemListHistory";
 
 const TabsStack = createBottomTabNavigator();
 
@@ -22,7 +22,7 @@ const TabsNavigator = () => {
       tabBar={(props) => <CustomBottomTabs {...props} />}
     >
       <TabsStack.Screen
-        name="Home"
+        name="Trang chủ"
         component={Home}
         options={{
           headerShown: false,
@@ -32,27 +32,30 @@ const TabsNavigator = () => {
         }}
       />
       <TabsStack.Screen
-        name="Cart"
+        name="Giỏ hàng"
         component={Cart}
         options={{
+          headerShown: false,
           tabBarIcon(props) {
             return <Icons name="shopping-cart" {...props} />;
           },
         }}
       />
       <TabsStack.Screen
-        name="Payment"
-        component={Example}
+        name="Lịch sử"
+        component={ItemListHítory}
         options={{
+          headerShown: false,
           tabBarIcon(props) {
             return <Icons name="account-balance-wallet" {...props} />;
           },
         }}
       />
       <TabsStack.Screen
-        name="Profile"
+        name="Bạn"
         component={Profile}
         options={{
+          headerShown: false,
           tabBarIcon(props) {
             return <Icons name="person" {...props} />;
           },

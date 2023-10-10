@@ -1,7 +1,16 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import React, { ReactNode, useState } from "react";
 import { useTheme } from "@react-navigation/native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import PriceRangeSelector from "./PriceRangeSelector";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -12,51 +21,57 @@ const COLORS = [
   {
     color: "#D93F3E",
     label: "Red",
-    itemCount: 4,
   },
   {
     color: "#FFFFFF",
     label: "White",
-    itemCount: 2,
   },
   {
     color: "#58AB51",
     label: "Green",
-    itemCount: 6,
   },
   {
     color: "#FB8C1D",
     label: "Orange",
-    itemCount: 10,
   },
   {
     color: "#D3B38D",
     label: "Tan",
-    itemCount: 10,
   },
   {
     color: "#FDE737",
     label: "Yellow",
-    itemCount: 10,
   },
 ];
 
+const BRANDS = [
+  "Nike",
+  "Adidas",
+  "Converse",
+  "New Balance",
+  "Vans",
+  "FILA",
+  "Other",
+];
+
 const FilterView = () => {
+  const { colors } = useTheme();
+  const [brandIndex, setBrandIndex] = useState(0);
+  const [colorIndex, setColorIndex] = useState(0);
   const [startPrice, setStartPrice] = useState(50);
   const [endPrice, setEndPrice] = useState(250);
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   return (
-    <View style={{ flex: 1 }}>
-      <BottomSheetScrollView style={{ flex: 1 }}>
-        <View style={{ paddingVertical: 24, gap: 24 }}>
+    <ScrollView style={{ flex: 1 }}>
+        <SafeAreaView style={{ paddingVertical: 4, gap: 24 }}>
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
               paddingHorizontal: 24,
             }}
-          >
+            >
             <Text
               style={{
                 flex: 1,
@@ -91,23 +106,55 @@ const FilterView = () => {
           />
 
           {/* Sports Category Filter */}
-          <View style={{ paddingHorizontal: 24 }}>
+          <View
+            style={{ flexDirection: "column", paddingHorizontal: 24, gap: 12 }}
+          >
             <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 12 }}>
               Thương hiệu
             </Text>
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-              {new Array(7).fill("").map((_, i) => {
-                return (
-                  <Chip
-                    key={i}
-                    itemCount={i}
-                    label="Item"
-                    isSelected={i === 0}
-                  />
-                );
-              })}
-            </View>
           </View>
+          <FlatList
+            numColumns={3}
+            data={BRANDS}
+            vertical
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              gap: 12,
+            }}
+            renderItem={({ item, index }) => {
+              const isSelected = brandIndex === index;
+              return (
+                <TouchableOpacity
+                  onPress={() => setBrandIndex(index)}
+                  style={{
+                    backgroundColor: isSelected ? colors.primary : colors.card,
+                    paddingHorizontal: 20,
+                    paddingVertical: 12,
+                    borderRadius: 100,
+                    borderWidth: isSelected ? 0 : 0,
+                    borderColor: colors.border,
+                    width: 110,
+                    justifyContent: "space-between",
+                    margin: 5,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: isSelected ? colors.background : colors.text,
+                      fontWeight: "600",
+                      fontSize: 14,
+                      opacity: isSelected ? 1 : 0.6,
+                      textAlign: "center",
+                    }}
+                  >
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+
           {/* Color Filter */}
           <View style={{ paddingHorizontal: 24 }}>
             <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 12 }}>
@@ -118,7 +165,6 @@ const FilterView = () => {
                 return (
                   <Chip
                     key={i}
-                    itemCount={item.itemCount}
                     label={item.label}
                     left={
                       <View
@@ -136,61 +182,61 @@ const FilterView = () => {
               })}
             </View>
           </View>
-        </View>
-      </BottomSheetScrollView>
-      {/* Button */}
+        </SafeAreaView>
 
-      <View
-        style={{
-          padding: 24,
-          paddingBottom: 24 + insets.bottom,
-        }}
-      >
-        <TouchableOpacity
+        {/* Button */}
+
+        <View
           style={{
-            backgroundColor: theme.colors.primary,
-            height: 64,
-            borderRadius: 64,
-            alignItems: "center",
-            justifyContent: "center",
-            position: "relative",
+            padding: 24,
+            paddingBottom: 24 + insets.bottom,
           }}
         >
-          <Text
+          <TouchableOpacity
             style={{
-              fontSize: 16,
-              fontWeight: "600",
-              color: theme.colors.background,
-            }}
-          >
-            Áp dụng bộ lọc
-          </Text>
-
-          <View
-            style={{
-              backgroundColor: theme.colors.card,
-              width: 40,
-              aspectRatio: 1,
-              borderRadius: 40,
+              backgroundColor: theme.colors.primary,
+              height: 64,
+              borderRadius: 64,
               alignItems: "center",
               justifyContent: "center",
-              position: "absolute",
-              top: 12,
-              right: 12,
-              bottom: 12,
+              position: "relative",
             }}
           >
-            <Icons name="arrow-forward" size={24} color={theme.colors.text} />
-          </View>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "600",
+                color: theme.colors.background,
+              }}
+            >
+              Áp dụng bộ lọc
+            </Text>
+
+            <View
+              style={{
+                backgroundColor: theme.colors.card,
+                width: 40,
+                aspectRatio: 1,
+                borderRadius: 40,
+                alignItems: "center",
+                justifyContent: "center",
+                position: "absolute",
+                top: 12,
+                right: 12,
+                bottom: 12,
+              }}
+            >
+              <Icons name="arrow-forward" size={24} color={theme.colors.text} />
+            </View>
+          </TouchableOpacity>
+        </View>
+    </ScrollView>
   );
 };
 
 export default FilterView;
 
-const Chip = ({ isSelected, label, itemCount, left }) => {
+const Chip = ({ isSelected, label, left }) => {
   const theme = useTheme();
 
   return (
@@ -207,14 +253,16 @@ const Chip = ({ isSelected, label, itemCount, left }) => {
       }}
     >
       {left && <View style={{ marginRight: 8 }}>{left}</View>}
-      <Text
-        style={{
-          fontSize: 14,
-          color: isSelected ? theme.colors.background : theme.colors.text,
-        }}
-      >
-        {label} [{itemCount}]
-      </Text>
+      <TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 14,
+            color: isSelected ? theme.colors.background : theme.colors.text,
+          }}
+        >
+          {label}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

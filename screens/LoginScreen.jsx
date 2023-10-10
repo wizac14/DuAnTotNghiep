@@ -12,14 +12,11 @@ import {
 import React, { useState } from "react";
 import { SIZES, COLORS } from "../constants";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import CheckBox from "react-native-check-box";
-import { Button } from "react-native";
 import { axiosClient } from "../api/axiosClient";
 
 const LoginScreen = () => {
@@ -34,29 +31,18 @@ const LoginScreen = () => {
       password: password,
     };
 
-    // axiosClient
-    //   .post("/login", user)
-    //   .then((response) => {
-    //     console.log(response);
-    //     const token = response.data.token;
-    //     AsyncStorage.setItem("authToken", token);
-    //     navigation.replace("Bottom Navigation");
-    //   })
-    //   .catch((error) => {
-    //     Alert.alert("Login Error!", "Invalid email!");
-    //     console.log(error);
-    //   });
-    axiosClient.post("/login", user)
-    .then((response) => {
-      console.log(response);
-      const token = response.data.token;
-      AsyncStorage.setItem("authToken", token);
-      navigation.replace("Bottom Navigation");
-    })
-    .catch((error) => {
-      Alert.alert("Login Error!", "Invalid email!");
-      console.log(error);
-    });
+    axiosClient
+      .post("/login", user)
+      .then((response) => {
+        console.log(response);
+        const token = response.data.token;
+        AsyncStorage.setItem("authToken", token);
+        navigation.replace("Tab Navigator");
+      })
+      .catch((error) => {
+        Alert.alert("Login Error!");
+        console.log(error);
+      });
   };
 
   return (
@@ -70,9 +56,7 @@ const LoginScreen = () => {
 
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text style={{  fontSize: SIZES.xLarge }}>
-            Login to Your Account
-          </Text>
+          <Text style={{ fontSize: SIZES.xLarge }}>Login to Your Account</Text>
         </View>
 
         <View
@@ -94,7 +78,7 @@ const LoginScreen = () => {
           <TextInput
             value={email}
             onChangeText={(text) => setEmail(text)}
-            style={{ width: 250, }}
+            style={{ width: 250 }}
             placeholder="Email"
           />
         </View>
@@ -119,7 +103,7 @@ const LoginScreen = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={isSecureEntry}
-            style={{ width: 250, }}
+            style={{ width: 250 }}
             placeholder="Password"
           />
           <Ionicons

@@ -23,13 +23,14 @@ import { Pressable } from "react-native";
 import FilterView from "../../components/home/FilterView";
 
 const Home = () => {
-  const CATEGORIES = [
+  const BRANDS = [
     "Nike",
-    "Addidas",
+    "Adidas",
     "Converse",
     "New Balance",
     "Vans",
     "FILA",
+    "Other",
   ];
 
   const AVATAR_URL =
@@ -68,7 +69,7 @@ const Home = () => {
     },
   ];
   const { colors } = useTheme();
-  const [categoryIndex, setCategoryIndex] = useState(0);
+  const [brandIndex, setBrandIndex] = useState(0);
   const bottomSheetModalRef = useRef(null);
 
   const openFilterModal = useCallback(() => {
@@ -230,9 +231,9 @@ const Home = () => {
           </View>
         </View>
 
-        {/* Categories Section */}
+        {/* Brands Section */}
         <FlatList
-          data={CATEGORIES}
+          data={BRANDS}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
@@ -240,10 +241,10 @@ const Home = () => {
             gap: 12,
           }}
           renderItem={({ item, index }) => {
-            const isSelected = categoryIndex === index;
+            const isSelected = brandIndex === index;
             return (
               <TouchableOpacity
-                onPress={() => setCategoryIndex(index)}
+                onPress={() => setBrandIndex(index)}
                 style={{
                   backgroundColor: isSelected ? colors.primary : colors.card,
                   paddingHorizontal: 20,
@@ -323,7 +324,7 @@ const Home = () => {
                           height: 1,
                           width: 0,
                         },
-                        textShadowRadius: 10,
+                        textShadowRadius: 15,
                       }}
                     >
                       {item.title}
@@ -351,17 +352,17 @@ const Home = () => {
                       flexDirection: "row",
                       backgroundColor: "rgba(0,0,0,0.5)",
                       alignItems: "center",
-                      padding: 6,
                       borderRadius: 100,
                       overflow: "hidden",
                     }}
                     intensity={20}
                   >
                     <Text
+                    
                       style={{
                         flex: 1,
-                        fontSize: 16,
-                        fontWeight: "600",
+                        fontSize: 20,
+                        fontWeight: "bold",
                         color: "#fff",
                         marginLeft: 8,
                         textShadowColor: "rgba(0,0,0,0.2)",
@@ -369,7 +370,8 @@ const Home = () => {
                           height: 1,
                           width: 0,
                         },
-                        textShadowRadius: 10,
+                        textShadowRadius: 15,
+                        marginTop: 15
                       }}
                       numberOfLines={1}
                     >
@@ -378,7 +380,7 @@ const Home = () => {
                     <TouchableOpacity
                       style={{
                         paddingHorizontal: 12,
-                        paddingVertical: 8,
+                        paddingVertical:8,
                         borderRadius: 100,
                         backgroundColor: "#fff",
                       }}
@@ -411,7 +413,7 @@ const Home = () => {
           backgroundColor: colors.primary,
         }}
       >
-        <FilterView/>
+        <FilterView />
       </BottomSheetModal>
     </ScrollView>
   );

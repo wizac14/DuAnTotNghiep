@@ -2,12 +2,16 @@ const express = require ("express");
 const mongoose = require ("mongoose");
 const crypto = require ("crypto");
 const nodemailer = require ("nodemailer");
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 const port = 3000;
 const cors = require ("cors");
 const bodyParser = require("body-parser");
 app.use(cors());
+app.use(cookieParser());
+
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -46,7 +50,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         from: "thefivemensshoes.com",
         to: email,
         subject: "Email Verification",
-        text: `Plsase click the following link to verify your account : http://localhost:3000/verify/${verificationToken}`
+        text: `Please click the following link to verify your account : http://localhost:3000/verify/${verificationToken}`
     };
     
     //send the email
@@ -133,7 +137,7 @@ app.post("/register",async(req,res) => {
             }
 
             //generate a token
-            const token = jwt.sign({userId:user._id}, secretKey);
+            const token = jwt.sign({ userId: user._id }, secretKey);
 
             res.status(200).json({message: "Login Successfully!", token});
         } catch (error) {

@@ -57,7 +57,7 @@ export default function App() {
       <GestureHandlerRootView style={styles.container}>
         <NavigationContainer theme={theme}>
           <BottomSheetModalProvider>
-            <Stack.Navigator initialRouteName="Intro">
+            <Stack.Navigator initialRouteName="Tab Navigator">
               <Stack.Screen
                 name="Tab Navigator"
                 component={TabsNavigator}
