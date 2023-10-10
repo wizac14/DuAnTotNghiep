@@ -60,7 +60,7 @@ const Footer = () => {
         {currentSlideIndex == slides.length - 1 ? (
           <View style={{height: 50}}>
             <TouchableOpacity
-              onPressIn={() => navigation.navigate("Bottom Navigation")}
+              onPressIn={() => navigation.navigate("Login")}
               style={styles.btn}>
               <Text style={{fontWeight: 'bold', fontSize: 15, color:'white'}}>
                 GET STARTED

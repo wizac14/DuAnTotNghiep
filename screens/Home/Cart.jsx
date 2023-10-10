@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { SIZES } from '../constants/index';
+import { SIZES } from '../../constants/index';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from "../constants/index";
-import ItemCart from '../components/item/ItemCart';
+import { COLORS } from "../../constants/index";
+import ItemCart from '../../components/item/ItemCart';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 
 
