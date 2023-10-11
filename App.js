@@ -22,7 +22,9 @@ import ProductDetail from "./components/products/ProductDetail";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import TabsNavigator from "./navigation/TabsNavigator";
-
+import PhoneScreen from "./screens/PhoneScreen";
+import EmailScreen from "./screens/EmailScreen";
+import NewPassword from "./screens/NewPassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,7 +59,7 @@ export default function App() {
       <GestureHandlerRootView style={styles.container}>
         <NavigationContainer theme={theme}>
           <BottomSheetModalProvider>
-            <Stack.Navigator initialRouteName="Tab Navigator">
+            <Stack.Navigator initialRouteName="Intro">
               <Stack.Screen
                 name="Tab Navigator"
                 component={TabsNavigator}
@@ -106,12 +108,29 @@ export default function App() {
                 component={ProductDetail}
                 options={{ headerShown: false }}
               />
+
+              <Stack.Screen
+                name="Phone Screen"
+                component={PhoneScreen}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="Email Screen"
+                component={EmailScreen}
+                options={{ headerShown: false }}
+              />
+
+              <Stack.Screen
+                name="New Password"
+                component={NewPassword}
+                options={{ headerShown: false }}
+              />
             </Stack.Navigator>
           </BottomSheetModalProvider>
         </NavigationContainer>
       </GestureHandlerRootView>
     </SafeAreaProvider>
-
   );
 }
 
