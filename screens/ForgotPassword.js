@@ -9,8 +9,8 @@ const ForgotPassword = () => {
     const [isClicked, setIsClicked] = useState(false);
     const buttonStyle = (button) => {
         if (button === isClicked) {
-            isClicked === 'button1' ? navigation.navigate('Reset') : null
-            isClicked === 'button2' ? navigation.navigate('Reset') : null
+            isClicked === 'button1' ? navigation.navigate('Email Screen') : null
+            isClicked === 'button2' ? navigation.navigate('Phone Screen') : null
             return styles.isClicked;
 
         } else {
@@ -22,18 +22,17 @@ const ForgotPassword = () => {
     return (
         <KeyboardAvoidingView style={styles.container}>
             <Image style={{ width: 350, height: 400 }} source={require('../assets/images/think.jpg')} />
-            <Text style={{ fontSize: 20, }}>Select which contact details should we use to reset your password </Text>
+            <Text style={{ fontSize: 20, flexWrap : 'wrap', margin : 5 }}>Select which contact details should we use to reset your password </Text>
             <TouchableOpacity onPress={() => setIsClicked('button1')} style={
                 buttonStyle('button1')
             }>
-                <TouchableOpacity style={styles.insideBtn}>
+                <TouchableOpacity onPress={() => navigation.navigate('Email Screen')} style={styles.insideBtn}>
                     <Ionicons style={{
                         margin: 10,
                         padding: 12,
                     }} name="chatbubble-ellipses" size={24} color="black" />
-                    <View style={{ flexDirection: 'column', width: 100, margin: 10, left: 10 }}>
-                        <Text style={{ color: 'grey' }} >via SMS</Text>
-                        <Text style={{ top: 10 }} >+84 *** **52</Text>
+                    <View style={{ flexDirection: 'column', width: 200, margin: 10, left: 10 }}>
+                        <Text style={{  fontSize : 17, top : 10}} >Send to Email</Text>
                     </View>
 
 
@@ -43,14 +42,13 @@ const ForgotPassword = () => {
             <TouchableOpacity onPress={() => setIsClicked('button2')} style={
                 buttonStyle('button2')
             }>
-                <TouchableOpacity style={styles.insideBtn}>
+                <TouchableOpacity onPress={() => navigation.navigate('Phone Screen')}  style={styles.insideBtn}>
                     <Ionicons style={{
                         margin: 10,
                         padding: 12,
                     }} name="mail" size={24} color="black" />
-                    <View style={{ flexDirection: 'column', width: 300, margin: 10, left: 10 }}>
-                        <Text style={{ color: 'grey' }} >via Email</Text>
-                        <Text style={{ top: 10 }} >andre*****hand@gmail.com</Text>
+                    <View style={{ flexDirection: 'column', width: 200, margin: 10, left: 10 }}>
+                        <Text style={{  fontSize : 17, top : 10}} >Send to Phone Number</Text>
                     </View>
                 </TouchableOpacity>
             </TouchableOpacity>
