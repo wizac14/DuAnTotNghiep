@@ -10,7 +10,7 @@ const Heading = () => {
       <View style={styles.header}>
         <Text style={styles.headerTitlte}>Khám phá ngay</Text>
         <TouchableOpacity>
-            <Ionicons name='ios-grid' size={24} color={COLORS.primary}/>
+            <Ionicons name='ios-grid' size={24} color={COLORS.red}/>
         </TouchableOpacity>
       </View>
     </View>
@@ -31,5 +31,6 @@ const styles = StyleSheet.create({
     headerTitlte: {
         fontFamily: "semibold",
         fontSize: SIZES.xLarge,
+        color: COLORS.red
     }
 })
