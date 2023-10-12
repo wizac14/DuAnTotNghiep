@@ -9,9 +9,10 @@ import CustomBottomTabs from "../navigation/CustomBottomTabs";
 import Home from "../screens/Home/Home";
 import Cart from "../screens/Home/Cart";
 import Profile from "../screens/Home/Profile";
-import ItemListHítory from "../components/item/ItemListHistory";
+import ItemListHistory from "../components/item/ItemListHistory";
 
 const TabsStack = createBottomTabNavigator();
+
 
 const TabsNavigator = () => {
   return (
@@ -43,7 +44,7 @@ const TabsNavigator = () => {
       />
       <TabsStack.Screen
         name="Lịch sử"
-        component={ItemListHítory}
+        component={ItemListHistory}
         options={{
           headerShown: false,
           tabBarIcon(props) {

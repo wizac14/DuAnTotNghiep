@@ -25,6 +25,8 @@ import TabsNavigator from "./navigation/TabsNavigator";
 import PhoneScreen from "./screens/PhoneScreen";
 import EmailScreen from "./screens/EmailScreen";
 import NewPassword from "./screens/NewPassword";
+import AppNavigator from "./navigation/AppNavigator";
+import { AppContextProvider } from "./components/ultil/AppContext";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,9 +59,10 @@ export default function App() {
   return (
     <SafeAreaProvider style={{ flex: 1 }}>
       <GestureHandlerRootView style={styles.container}>
+        <AppContextProvider>
         <NavigationContainer theme={theme}>
           <BottomSheetModalProvider>
-            <Stack.Navigator initialRouteName="Intro">
+            {/* <Stack.Navigator initialRouteName="Intro">
               <Stack.Screen
                 name="Tab Navigator"
                 component={TabsNavigator}
@@ -126,9 +129,12 @@ export default function App() {
                 component={NewPassword}
                 options={{ headerShown: false }}
               />
-            </Stack.Navigator>
+            </Stack.Navigator> */}
+            <AppNavigator></AppNavigator>
+         
           </BottomSheetModalProvider>
         </NavigationContainer>
+        </AppContextProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

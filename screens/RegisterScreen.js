@@ -9,14 +9,18 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import { SIZES, COLORS } from "../constants";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import { axiosClient } from "../api/axiosClient";
+import { Axios } from "axios";
+import AxiosIntance from "../components/ultil/AxiosIntance";
+
+
+
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -24,37 +28,33 @@ const RegisterScreen = () => {
   const [name, setName] = useState("");
   const navigation = useNavigation();
   const [isSecureEntry, setIsSecureEntry] = useState(true);
+  
+const RegisterUser=async()=>{
+  console.log(email,password);
+  try {
+    const response= await AxiosIntance().post("/user/register",{email: email, password:password,name:name});
+    console.log(response);
+    if(response.result==true)
+    {
+      ToastAndroid.show("Đăng ký thành công",ToastAndroid.SHORT);
+        
+          navigation.navigate("Login");
+    }
+    else
+    {
+      ToastAndroid.show("Đăng ký không thành công",ToastAndroid.SHORT);
+    }
 
-  const handleRegister = () => {
-    const user = {
-      name: name,
-      email: email,
-      password: password,
-    };
+    
+  } catch (error) {
+    console.log("Error RegisterUser",error);
+    
+  }
+}
+  
+   
 
-    //send a post request to the backend API
-
-    axiosClient
-      .post("/register", user)
-      .then((response) => {
-        console.log(response);
-        Alert.alert(
-          "Registration Done!",
-          "We sent to your email a verification, please check it!"
-        );
-        setName("");
-        setEmail("");
-        setPassword("");
-        navigation.replace("Login");
-      })
-      .catch((error) => {
-        Alert.alert(
-          "Registration Error",
-          "an error occured during registration!"
-        );
-        console.log("registration jhkjhkj error!", error);
-      });
-  };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -91,7 +91,7 @@ const RegisterScreen = () => {
           <TextInput
             value={name}
             onChangeText={(text) => setName(text)}
-            style={{ width: 250,  }}
+            style={{ width: 250, }}
             placeholder="Enter your name"
           />
         </View>
@@ -114,7 +114,7 @@ const RegisterScreen = () => {
           />
           <TextInput
             value={email}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(text) =>   setEmail(text)}
             style={{ width: 250, }}
             placeholder="Enter your email"
           />
@@ -155,7 +155,7 @@ const RegisterScreen = () => {
         <View style={{ marginTop: 30 }} />
 
         <TouchableOpacity
-          onPress={handleRegister}
+          onPress={RegisterUser}
           style={{
             width: 300,
             backgroundColor: "#D80032",

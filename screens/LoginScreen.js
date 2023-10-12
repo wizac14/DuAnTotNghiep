@@ -18,6 +18,10 @@ import { Alert } from "react-native";
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import CheckBox from "react-native-check-box";
 import { axiosClient } from "../api/axiosClient";
+import AxiosIntance from "../components/ultil/AxiosIntance";
+import { ToastAndroid } from "react-native";
+import { AppContext } from "../components/ultil/AppContext";
+import { useContext } from "react";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -25,26 +29,29 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [isChecked, setIsChecked] = useState(false);
   const [isSecureEntry, setIsSecureEntry] = useState(true);
-  const handleLogin = () => {
-    const user = {
-      email: email,
-      password: password,
-    };
+  const {setisLogin,setinforuser} = useContext(AppContext);
 
-    axiosClient
-      .post("/login", user)
-      .then((response) => {
-        console.log(response);
-        const token = response.data.token;
-        AsyncStorage.setItem("authToken", token);
-        navigation.replace("Tab Navigator");
-      })
-      .catch((error) => {
-        Alert.alert("Login Error!");
-        console.log(error);
-      });
-  };
+  const LoginUser= async()=>{
+      try {
+        const response= await AxiosIntance().post("/user/login",{email:email,password:password});
+        if(response.error==false)
+        {
+          console.log("user:",response.data.user);
+          console.log("token:",response.data.token);
+          
+          await AsyncStorage.setItem("token",response.data.token);
+          ToastAndroid.show("Đăng nhập thành công ",ToastAndroid.SHORT);
+          setisLogin(true);
+          setinforuser(response.data.user);
+        }
+      } catch (error) {
+        ToastAndroid.show("Đăng nhập thất bại",ToastAndroid.SHORT);
+        
+      }
+  }
 
+
+   
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -133,7 +140,7 @@ const LoginScreen = () => {
         <View style={{ marginTop: 30 }} />
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("Tab Navigator")}
+          onPress={LoginUser}
           style={{
             width: 300,
             backgroundColor: "#D80032",
