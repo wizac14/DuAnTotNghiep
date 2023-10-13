@@ -202,6 +202,7 @@ const Home = () => {
             <Card
               onPress={() => {
                 navigation.navigate("ProductDetail", {
+                  // screen: "ProductDetail",
                   id: "123",
                 });
               }}
@@ -347,18 +348,17 @@ const Home = () => {
                     </View>
                   </View>
                   <View style={{ flex: 1 }} />
-                  <BlurView
+                  <View
                     style={{
                       flexDirection: "row",
-                      backgroundColor: "rgba(0,0,0,0.5)",
+                      // backgroundColor: "rgba(0,0,0,0.5)",
                       alignItems: "center",
                       borderRadius: 100,
                       overflow: "hidden",
                     }}
-                    intensity={20}
+                    // intensity={20}
                   >
                     <Text
-                    
                       style={{
                         flex: 1,
                         fontSize: 20,
@@ -371,7 +371,7 @@ const Home = () => {
                           width: 0,
                         },
                         textShadowRadius: 15,
-                        marginTop: 15
+                        marginTop: 15,
                       }}
                       numberOfLines={1}
                     >
@@ -380,7 +380,7 @@ const Home = () => {
                     <TouchableOpacity
                       style={{
                         paddingHorizontal: 12,
-                        paddingVertical:8,
+                        paddingVertical: 8,
                         borderRadius: 100,
                         backgroundColor: "#fff",
                       }}
@@ -391,7 +391,7 @@ const Home = () => {
                         color="#000"
                       />
                     </TouchableOpacity>
-                  </BlurView>
+                  </View>
                 </View>
               </View>
             </View>

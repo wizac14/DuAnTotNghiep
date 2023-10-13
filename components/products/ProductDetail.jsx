@@ -190,17 +190,6 @@ const ProductDetail = ({
 
           <View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <Text
-                style={{
-                  flex: 1,
-                  fontSize: 16,
-                  fontWeight: "600",
-                  color: colors.text,
-                  textTransform: "uppercase",
-                }}
-              >
-                Model is 6'1'', Size M
-              </Text> */}
               <Text style={{ color: colors.text, opacity: 0.5 }}>
                 Bảng size
               </Text>

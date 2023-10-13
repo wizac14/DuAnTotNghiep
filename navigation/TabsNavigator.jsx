@@ -68,6 +68,3 @@ const TabsNavigator = () => {
 
 export default TabsNavigator;
 
-const Example = () => {
-  return <View />;
-};

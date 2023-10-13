@@ -62,75 +62,8 @@ export default function App() {
         <AppContextProvider>
         <NavigationContainer theme={theme}>
           <BottomSheetModalProvider>
-            {/* <Stack.Navigator initialRouteName="Intro">
-              <Stack.Screen
-                name="Tab Navigator"
-                component={TabsNavigator}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Cart"
-                component={Cart}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Intro"
-                component={Intro}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Guide"
-                component={Guide}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Login"
-                component={LoginScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Register"
-                component={RegisterScreen}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="Forgot Password"
-                component={ForgotPassword}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="Reset"
-                component={ResetPassword}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="ProductDetail"
-                component={ProductDetail}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="Phone Screen"
-                component={PhoneScreen}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="Email Screen"
-                component={EmailScreen}
-                options={{ headerShown: false }}
-              />
-
-              <Stack.Screen
-                name="New Password"
-                component={NewPassword}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator> */}
-            <AppNavigator></AppNavigator>
+        
+            <AppNavigator/>
          
           </BottomSheetModalProvider>
         </NavigationContainer>
