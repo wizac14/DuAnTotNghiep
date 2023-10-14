@@ -19,42 +19,33 @@ import { useNavigation } from "@react-navigation/native";
 import { Axios } from "axios";
 import AxiosIntance from "../components/ultil/AxiosIntance";
 
-
-
-
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const navigation = useNavigation();
   const [isSecureEntry, setIsSecureEntry] = useState(true);
-  
-const RegisterUser=async()=>{
-  console.log(email,password);
-  try {
-    const response= await AxiosIntance().post("/user/register",{email: email, password:password,name:name});
-    console.log(response);
-    if(response.result==true)
-    {
-      ToastAndroid.show("Đăng ký thành công",ToastAndroid.SHORT);
-        
-          navigation.navigate("Login");
-    }
-    else
-    {
-      ToastAndroid.show("Đăng ký không thành công",ToastAndroid.SHORT);
-    }
 
-    
-  } catch (error) {
-    console.log("Error RegisterUser",error);
-    
-  }
-}
-  
-   
+  const RegisterUser = async () => {
+    console.log(email, password);
+    try {
+      const response = await AxiosIntance().post("/user/register", {
+        email: email,
+        password: password,
+        name: name,
+      });
+      console.log(response);
+      if (response.result == true) {
+        ToastAndroid.show("Đăng ký thành công", ToastAndroid.SHORT);
 
-  
+        navigation.navigate("Login");
+      } else {
+        ToastAndroid.show("Đăng ký không thành công", ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      console.log("Error RegisterUser", error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -67,9 +58,7 @@ const RegisterUser=async()=>{
 
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontSize: SIZES.xLarge }}>
-            Create your Account
-          </Text>
+          <Text style={{ fontSize: SIZES.xLarge }}>Create your Account</Text>
         </View>
 
         <View
@@ -91,7 +80,7 @@ const RegisterUser=async()=>{
           <TextInput
             value={name}
             onChangeText={(text) => setName(text)}
-            style={{ width: 250, }}
+            style={{ width: 250 }}
             placeholder="Enter your name"
           />
         </View>
@@ -114,8 +103,8 @@ const RegisterUser=async()=>{
           />
           <TextInput
             value={email}
-            onChangeText={(text) =>   setEmail(text)}
-            style={{ width: 250, }}
+            onChangeText={(text) => setEmail(text)}
+            style={{ width: 250 }}
             placeholder="Enter your email"
           />
         </View>
@@ -140,7 +129,7 @@ const RegisterUser=async()=>{
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={isSecureEntry}
-            style={{ width: 250, }}
+            style={{ width: 250 }}
             placeholder="Enter your password"
           />
           <Ionicons

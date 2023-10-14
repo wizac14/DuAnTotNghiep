@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 import Icons from "@expo/vector-icons/MaterialIcons";
-import CustomBottomTabs from "../navigation/CustomBottomTabs";
+import CustomBottomTabs from "./CustomBottomTabs";
 import Home from "../screens/Home/Home";
 import Cart from "../screens/Home/Cart";
 import Profile from "../screens/Home/Profile";
@@ -19,27 +19,15 @@ import PhoneScreen from "../screens/PhoneScreen";
 import EmailScreen from "../screens/EmailScreen";
 import NewPassword from "../screens/NewPassword";
 import ItemListHistory from "../components/item/ItemListHistory";
-import {
-  BottomTabScreenProps,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useContext } from "react";
 import { AppContext } from "../components/ultil/AppContext";
+import BottomTabNavigation from "./BottomTabNavigation";
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
-const Users = () => {
+const NotAuthNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Intro">
-      <Stack.Screen
-        name="Tab Navigator"
-        component={TabsNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Cart"
-        component={Cart}
-        options={{ headerShown: false }}
-      />
       <Stack.Screen
         name="Intro"
         component={Intro}
@@ -90,71 +78,40 @@ const Users = () => {
         component={NewPassword}
         options={{ headerShown: false }}
       />
+    </Stack.Navigator>
+  );
+};
 
+const AuthNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name="Home"
+        component={TabsNavigator}
+      ></Stack.Screen>
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetail}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="Cart"
+        component={Cart}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
-
-const Mains = () => {
-  <TabsStack.Navigator
-    screenOptions={{
-      tabBarShowLabel: false,
-    }}
-    tabBar={(props) => <Cust {...props} />}
-  >
-    <TabsStack.Screen
-      name="Trang chủ"
-      component={Home}
-      options={{
-        headerShown: false,
-        tabBarIcon(props) {
-          return <Icons name="home" {...props} />;
-        },
-      }}
-    />
-    <TabsStack.Screen
-      name="Giỏ hàng"
-      component={Cart}
-      options={{
-        headerShown: false,
-        tabBarIcon(props) {
-          return <Icons name="shopping-cart" {...props} />;
-        },
-      }}
-    />
-    <TabsStack.Screen
-      name="Lịch sử"
-      component={ItemListHistory}
-      options={{
-        headerShown: false,
-        tabBarIcon(props) {
-          return <Icons name="account-balance-wallet" {...props} />;
-        },
-      }}
-    />
-    <TabsStack.Screen
-      name="Bạn"
-      component={Profile}
-      options={{
-        headerShown: false,
-        tabBarIcon(props) {
-          return <Icons name="person" {...props} />;
-        },
-      }}
-    />
-  </TabsStack.Navigator>;
-};
 const AppNavigator = () => {
   const { isLogin } = useContext(AppContext);
+
   return (
     <>
       {
-        isLogin == false ? <Users /> : <TabsNavigator />
+        isLogin == false ? <NotAuthNavigator /> : <AuthNavigator />
         // <Mains></Mains>
       }
     </>

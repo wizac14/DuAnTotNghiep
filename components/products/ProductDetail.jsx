@@ -105,8 +105,6 @@ const ProductDetail = ({
           backgroundColor: colors.primary,
         }}
         onChange={() => {
-          console.log(imageHeight);
-          console.log(isImageFlex);
           setImageHeight(imageHeight === "100%" ? "50%" : "100%");
           setIsImageFlex(isImageFlex === 1 ? undefined : 1);
         }}

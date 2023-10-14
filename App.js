@@ -60,13 +60,11 @@ export default function App() {
     <SafeAreaProvider style={{ flex: 1 }}>
       <GestureHandlerRootView style={styles.container}>
         <AppContextProvider>
-        <NavigationContainer theme={theme}>
-          <BottomSheetModalProvider>
-        
-            <AppNavigator/>
-         
-          </BottomSheetModalProvider>
-        </NavigationContainer>
+          <NavigationContainer theme={theme}>
+            <BottomSheetModalProvider>
+              <AppNavigator />
+            </BottomSheetModalProvider>
+          </NavigationContainer>
         </AppContextProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>

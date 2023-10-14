@@ -22,7 +22,9 @@ const screenOptions = {
     height: 40,
   },
 };
-
+/**
+ * @deprecated
+ */
 const BottomTabNavigation = () => {
   return (
     <Tab.Navigator screenOptions={screenOptions}>

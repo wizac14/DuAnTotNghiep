@@ -14,6 +14,7 @@ import {
 import Icons from "@expo/vector-icons/MaterialIcons";
 import PriceRangeSelector from "./PriceRangeSelector";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import TextTicker from "react-native-text-ticker";
 
 const MAX_PRICE = 500;
 
@@ -63,7 +64,8 @@ const FilterView = () => {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <>
+      <ScrollView style={{ flex: 1 }}>
         <SafeAreaView style={{ paddingVertical: 4, gap: 24 }}>
           <View
             style={{
@@ -71,7 +73,7 @@ const FilterView = () => {
               alignItems: "center",
               paddingHorizontal: 24,
             }}
-            >
+          >
             <Text
               style={{
                 flex: 1,
@@ -113,19 +115,19 @@ const FilterView = () => {
               Thương hiệu
             </Text>
           </View>
-          <FlatList
-            numColumns={3}
-            data={BRANDS}
-            vertical
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              gap: 12,
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              flexWrap: "wrap",
+              paddingHorizontal: 24,
             }}
-            renderItem={({ item, index }) => {
+          >
+            {BRANDS?.map((item, index) => {
               const isSelected = brandIndex === index;
               return (
                 <TouchableOpacity
+                  key={index}
                   onPress={() => setBrandIndex(index)}
                   style={{
                     backgroundColor: isSelected ? colors.primary : colors.card,
@@ -134,26 +136,70 @@ const FilterView = () => {
                     borderRadius: 100,
                     borderWidth: isSelected ? 0 : 0,
                     borderColor: colors.border,
-                    width: 110,
+                    width: "33%",
+                    marginBottom: 5,
                     justifyContent: "space-between",
-                    margin: 5,
+                    alignItems: "center",
                   }}
                 >
                   <Text
                     style={{
                       color: isSelected ? colors.background : colors.text,
-                      fontWeight: "600",
+                      // fontWeight: "600",
                       fontSize: 14,
                       opacity: isSelected ? 1 : 0.6,
                       textAlign: "center",
                     }}
+                    numberOfLines={1}
                   >
                     {item}
                   </Text>
                 </TouchableOpacity>
               );
-            }}
-          />
+            })}
+          </View>
+
+          {/* <FlatList
+          numColumns={3}
+          data={BRANDS}
+          vertical
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 16,
+            gap: 12,
+          }}
+          renderItem={({ item, index }) => {
+            const isSelected = brandIndex === index;
+            return (
+              <TouchableOpacity
+                onPress={() => setBrandIndex(index)}
+                style={{
+                  backgroundColor: isSelected ? colors.primary : colors.card,
+                  paddingHorizontal: 20,
+                  paddingVertical: 12,
+                  borderRadius: 100,
+                  borderWidth: isSelected ? 0 : 0,
+                  borderColor: colors.border,
+                  width: 110,
+                  justifyContent: "space-between",
+                  margin: 5,
+                }}
+              >
+                <Text
+                  style={{
+                    color: isSelected ? colors.background : colors.text,
+                    fontWeight: "600",
+                    fontSize: 14,
+                    opacity: isSelected ? 1 : 0.6,
+                    textAlign: "center",
+                  }}
+                >
+                  {item}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+        /> */}
 
           {/* Color Filter */}
           <View style={{ paddingHorizontal: 24 }}>
@@ -185,11 +231,11 @@ const FilterView = () => {
         </SafeAreaView>
 
         {/* Button */}
-
+      </ScrollView>
+      <SafeAreaView>
         <View
           style={{
             padding: 24,
-            paddingBottom: 24 + insets.bottom,
           }}
         >
           <TouchableOpacity
@@ -230,7 +276,8 @@ const FilterView = () => {
             </View>
           </TouchableOpacity>
         </View>
-    </ScrollView>
+      </SafeAreaView>
+    </>
   );
 };
 
