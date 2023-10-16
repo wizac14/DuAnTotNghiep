@@ -105,8 +105,6 @@ const ProductDetail = ({
           backgroundColor: colors.primary,
         }}
         onChange={() => {
-          console.log(imageHeight);
-          console.log(isImageFlex);
           setImageHeight(imageHeight === "100%" ? "50%" : "100%");
           setIsImageFlex(isImageFlex === 1 ? undefined : 1);
         }}
@@ -190,17 +188,6 @@ const ProductDetail = ({
 
           <View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <Text
-                style={{
-                  flex: 1,
-                  fontSize: 16,
-                  fontWeight: "600",
-                  color: colors.text,
-                  textTransform: "uppercase",
-                }}
-              >
-                Model is 6'1'', Size M
-              </Text> */}
               <Text style={{ color: colors.text, opacity: 0.5 }}>
                 Bảng size
               </Text>

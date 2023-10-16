@@ -29,29 +29,28 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const [isChecked, setIsChecked] = useState(false);
   const [isSecureEntry, setIsSecureEntry] = useState(true);
-  const {setisLogin,setinforuser} = useContext(AppContext);
+  const { setisLogin, setinforuser } = useContext(AppContext);
 
-  const LoginUser= async()=>{
-      try {
-        const response= await AxiosIntance().post("/user/login",{email:email,password:password});
-        if(response.error==false)
-        {
-          console.log("user:",response.data.user);
-          console.log("token:",response.data.token);
-          
-          await AsyncStorage.setItem("token",response.data.token);
-          ToastAndroid.show("Đăng nhập thành công ",ToastAndroid.SHORT);
-          setisLogin(true);
-          setinforuser(response.data.user);
-        }
-      } catch (error) {
-        ToastAndroid.show("Đăng nhập thất bại",ToastAndroid.SHORT);
-        
+  const LoginUser = async () => {
+    try {
+      const response = await AxiosIntance().post("/user/login", {
+        email: email,
+        password: password,
+      });
+      if (response.error == false) {
+        console.log("user:", response.data.user);
+        console.log("token:", response.data.token);
+
+        await AsyncStorage.setItem("token", response.data.token);
+        ToastAndroid.show("Đăng nhập thành công ", ToastAndroid.SHORT);
+        setisLogin(true);
+        setinforuser(response.data.user);
       }
-  }
+    } catch (error) {
+      ToastAndroid.show("Đăng nhập thất bại", ToastAndroid.SHORT);
+    }
+  };
 
-
-   
   return (
     <SafeAreaView style={styles.container}>
       <View>
