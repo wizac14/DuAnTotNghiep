@@ -8,6 +8,7 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import { firebaseConfig } from '../config';
 import firebase from 'firebase/compat/app'
 import { TextInput } from 'react-native-paper';
+import OTPInputView from '@twotalltotems/react-native-otp-input';
 
 const PhoneScreen = () => {
     const navigation = useNavigation();
@@ -105,12 +106,7 @@ const PhoneScreen = () => {
 
 
             <View style={styles.otpView}>
-                <TextInput onChangeText={setCode} maxLength={1} keyboardType='numeric' style={[styles.inputView, { borderColor: code.length >= 1 ? 'blue' : "black" }]} />
-                <TextInput onChangeText={setCode} maxLength={1} keyboardType='numeric' style={[styles.inputView, { borderColor: code.length >= 1 ? 'blue' : "black" }]} />
-                <TextInput onChangeText={setCode} maxLength={1} keyboardType='numeric' style={[styles.inputView, { borderColor: code.length >= 1 ? 'blue' : "black" }]} />
-                <TextInput onChangeText={setCode} maxLength={1} keyboardType='numeric' style={[styles.inputView, { borderColor: code.length >= 1 ? 'blue' : "black" }]} />
-                <TextInput onChangeText={setCode} maxLength={1} keyboardType='numeric' style={[styles.inputView, { borderColor: code.length >= 1 ? 'blue' : "black" }]} />
-                <TextInput onChangeText={setCode} maxLength={1} keyboardType='numeric' style={[styles.inputView, { borderColor: code.length >= 1 ? 'blue' : "black" }]} />
+                <OTPInputView style={{ width: '80%', height: 50 }} codeInputFieldStyle={{ color: "black", fontWeight: "bold" }} keyboardType='number-pad' pinCount={6} code={code} onCodeChanged={code => { setCode(code) }} />
             </View>
 
             {/* lhjo */}

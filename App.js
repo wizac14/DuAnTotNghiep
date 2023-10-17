@@ -84,27 +84,29 @@ export default function App() {
           options={{ headerShown: false }}
         /> */}
 
-        <Stack.Screen
+        {/* <Stack.Screen
           name='Email Screen'
           component={EmailScreen}
           options={{ headerShown: false }} />
 
-        {/* <Stack.Screen
+        <Stack.Screen
           name='New Password'
           component={NewPassword}
           options={{ headerShown: false }}
-        />
-
+        /> */}
 
 
         <Stack.Screen
+          name='Phone Screen'
+          component={PhoneScreen}
+          options={{ headerShown: false }} />
+
+        {/* <Stack.Screen
           name='Home'
           component={Home}
           options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen
-        name = 'Phone Screen'
-        component = {PhoneScreen}
-        options={{headerShown : false}} /> */}
+
+
       </Stack.Navigator>
 
 
