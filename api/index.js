@@ -2,12 +2,16 @@ const express = require ("express");
 const mongoose = require ("mongoose");
 const crypto = require ("crypto");
 const nodemailer = require ("nodemailer");
+const cookieParser = require('cookie-parser');
+
 
 const app = express();
 const port = 3000;
 const cors = require ("cors");
 const bodyParser = require("body-parser");
 app.use(cors());
+app.use(cookieParser());
+
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -15,7 +19,6 @@ app.use(bodyParser.json());
 const jwt = require ("jsonwebtoken");
 
 //connect database
-//mongodb://127.0.0.1:27017/
 mongoose.connect('mongodb+srv://tungh3210:tung@cluster0.cmonbw2.mongodb.net/GraduationProject', {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -23,8 +26,8 @@ mongoose.connect('mongodb+srv://tungh3210:tung@cluster0.cmonbw2.mongodb.net/Grad
   .then(() => console.log('>>>>>>>>>> DB Connected!!!!!!'))
   .catch(err => console.log('>>>>>>>>> DB Error: ', err));
   
-app.listen(port, "192.168.1.7" ,() => {
-    console.log("Server is running on port")
+app.listen(port,() => {
+    console.log("Server is running on port 3000")
 })
 
 const User = require ("./models/user");
@@ -38,7 +41,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         service: "gmail",
         auth: {
             user: "thefivemensshoesshop@gmail.com",
-            pass: "livc anxs nkgx esar"
+            pass: "ihor pimr pbgb niir"
         }
     })
 
@@ -47,7 +50,7 @@ const sendVerificationEmail = async (email, verificationToken) => {
         from: "thefivemensshoes.com",
         to: email,
         subject: "Email Verification",
-        text: `Please click the following link to verify your account : http://192.168.1.7:3000/verify/${verificationToken}`
+        text: `Please click the following link to verify your account : http://localhost:3000/verify/${verificationToken}`
     };
     
     //send the email
@@ -60,7 +63,6 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
 
 //endpoint to register in the app
-// http://192.168.1.7:8000/register
 app.post("/register",async(req,res) => {
     try {
         const {name, email, password} = req.body;
@@ -135,7 +137,7 @@ app.post("/register",async(req,res) => {
             }
 
             //generate a token
-            const token = jwt.sign({userId:user._id}, secretKey);
+            const token = jwt.sign({ userId: user._id }, secretKey);
 
             res.status(200).json({message: "Login Successfully!", token});
         } catch (error) {
