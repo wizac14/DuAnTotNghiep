@@ -38,7 +38,7 @@ const NewPassword = () => {
 
       <KeyboardAvoidingView>
         <View style={{ alignItems: "center" }}>
-          <Text style={{ fontFamily: "bold", fontSize: SIZES.xLarge }}>
+          <Text style={{ fontWeight: "bold", fontSize: SIZES.xLarge }}>
             Create Your New Password
           </Text>
         </View>
@@ -63,7 +63,7 @@ const NewPassword = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             secureTextEntry={isSecureEntry1}
-            style={{ width: 250, fontFamily: "regular" }}
+            style={{ width: 250,  }}
             placeholder="Password"
           />
           <Ionicons
@@ -95,7 +95,7 @@ const NewPassword = () => {
             value={repassword}
             onChangeText={(text) => setRePassword(text)}
             secureTextEntry={isSecureEntry2}
-            style={{ width: 250, fontFamily: "regular" }}
+            style={{ width: 250,  }}
             placeholder="Re-Password"
           />
           <Ionicons
@@ -124,7 +124,6 @@ const NewPassword = () => {
               textAlign: "center",
               color: COLORS.white,
               fontSize: SIZES.Large,
-              fontFamily: "semibold",
             }}
           >
             Continue

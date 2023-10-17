@@ -102,7 +102,7 @@ const PhoneScreen = () => {
         keyboardType="phone-pad"
         onChangeText={setPhoneNumber}
         autoComplete="tel"
-        style={{ width: 350, fontFamily: "regular", marginTop: 10 }}
+        style={{ width: 350, marginTop: 10 }}
       />
 
       <TouchableOpacity
@@ -122,7 +122,6 @@ const PhoneScreen = () => {
             textAlign: "center",
             color: COLORS.white,
             fontSize: SIZES.Large,
-            fontFamily: "semibold",
           }}
         >
           Generate OTP
@@ -194,7 +193,6 @@ const PhoneScreen = () => {
             textAlign: "center",
             color: COLORS.white,
             fontSize: SIZES.Large,
-            fontFamily: "semibold",
           }}
         >
           Submit

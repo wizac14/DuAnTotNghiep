@@ -14,7 +14,7 @@ import AxiosIntance from "../../components/ultil/AxiosIntance";
 const SIZES = ["38", "39", "40", "41", "42", "43", "44"];
 
 const ProductDetail = (props) => {
-  const { navigation } = props
+  const { navigation } = props;
   const { route } = props;
   const { params } = route;
 
@@ -29,40 +29,37 @@ const ProductDetail = (props) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  
+
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
-      const response = await AxiosIntance().get("/product/get-by-id?id=" + params.id);
+      const response = await AxiosIntance().get(
+        "/product/get-by-id?id=" + params.id
+      );
       console.log(response);
       if (response.result === true) {
         //lấy dữ liệu thành công
 
         setimageUrl(response.product.image);
         setTitle(response.product.title);
-        setDescription( response.product.description);
+        setDescription(response.product.description);
         setPrice(response.product.price);
-        
-        
       } else {
-        ToastAndroid.show("Lấy dữ liệu thất bại", ToastAndroid.SHORT)
+        ToastAndroid.show("Lấy dữ liệu thất bại", ToastAndroid.SHORT);
       }
     };
 
     getDetails();
 
-    return () => {
-
-    }
-  }, [])
-
+    return () => {};
+  }, []);
 
   return (
     <View style={{ flex: 1 }}>
       <Image
         resizeMode="contain"
         source={{
-          uri: imageUrl
+          uri: imageUrl,
         }}
         style={{ flex: isImageFlex, height: imageHeight, position: "relative" }}
       />
@@ -276,7 +273,7 @@ const ProductDetail = (props) => {
               style={{ color: colors.text, opacity: 0.75 }}
               numberOfLines={8}
             >
-            {description}
+              {description}
             </Text>
           </View>
 
@@ -291,7 +288,7 @@ const ProductDetail = (props) => {
               <Text
                 style={{ color: colors.text, fontSize: 18, fontWeight: "600" }}
               >
-                {(price).toLocaleString()} $
+                {price.toLocaleString()} $
               </Text>
             </View>
 

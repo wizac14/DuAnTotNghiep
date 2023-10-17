@@ -50,7 +50,7 @@ const EmailScreen = () => {
         activeOutlineColor="#000000"
         keyboardType="phone-pad"
         autoComplete="email"
-        style={{ width: 350, fontFamily: "regular", marginTop: 10 }}
+        style={{ width: 350, marginTop: 10 }}
       />
 
       <TouchableOpacity
@@ -69,7 +69,7 @@ const EmailScreen = () => {
             textAlign: "center",
             color: COLORS.white,
             fontSize: SIZES.Large,
-            fontFamily: "semibold",
+            
           }}
         >
           Generate OTP
@@ -133,7 +133,7 @@ const EmailScreen = () => {
             textAlign: "center",
             color: COLORS.white,
             fontSize: SIZES.Large,
-            fontFamily: "semibold",
+            
           }}
         >
           Submit
