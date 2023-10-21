@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -9,27 +9,57 @@ import Icons from "@expo/vector-icons/MaterialIcons";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../../constants";
 import BottomSheet from "@gorhom/bottom-sheet";
+import AxiosIntance from "../../components/ultil/AxiosIntance";
 
 const SIZES = ["38", "39", "40", "41", "42", "43", "44"];
 
-const ProductDetail = ({
-  navigation,
-  route: {
-    params: { id },
-  },
-}) => {
+const ProductDetail = (props) => {
+  const { navigation } = props;
+  const { route } = props;
+  const { params } = route;
+
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [count, setCount] = useState(1);
   const [size, setSize] = useState(SIZES[1]);
   const [imageHeight, setImageHeight] = useState();
   const [isImageFlex, setIsImageFlex] = useState();
+
+  const [imageUrl, setimageUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+
+  //Hiển thị chi tiết sản phẩm theo ID
+  useEffect(() => {
+    const getDetails = async () => {
+      const response = await AxiosIntance().get(
+        "/product/get-by-id?id=" + params.id
+      );
+      console.log(response);
+      if (response.result === true) {
+        //lấy dữ liệu thành công
+
+        setimageUrl(response.product.image);
+        setTitle(response.product.title);
+        setDescription(response.product.description);
+        setPrice(response.product.price);
+      } else {
+        ToastAndroid.show("Lấy dữ liệu thất bại", ToastAndroid.SHORT);
+      }
+    };
+
+    getDetails();
+
+    return () => {};
+  }, []);
+
   return (
     <View style={{ flex: 1 }}>
       <Image
         resizeMode="contain"
         source={{
-          uri: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/4225f4a7-dc73-4926-a99f-a677f56346fe/cortez-se-shoes-Pfr5Qh.png",
+          uri: imageUrl,
         }}
         style={{ flex: isImageFlex, height: imageHeight, position: "relative" }}
       />
@@ -105,15 +135,13 @@ const ProductDetail = ({
           backgroundColor: colors.primary,
         }}
         onChange={() => {
-          console.log(imageHeight);
-          console.log(isImageFlex);
           setImageHeight(imageHeight === "100%" ? "50%" : "100%");
           setIsImageFlex(isImageFlex === 1 ? undefined : 1);
         }}
       >
         <View style={{ padding: 16, gap: 16, flex: 1 }}>
           <Text style={{ fontSize: 20, fontWeight: "600", color: colors.text }}>
-            NIKE Cortez SE
+            {title}
           </Text>
 
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
@@ -190,17 +218,6 @@ const ProductDetail = ({
 
           <View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              {/* <Text
-                style={{
-                  flex: 1,
-                  fontSize: 16,
-                  fontWeight: "600",
-                  color: colors.text,
-                  textTransform: "uppercase",
-                }}
-              >
-                Model is 6'1'', Size M
-              </Text> */}
               <Text style={{ color: colors.text, opacity: 0.5 }}>
                 Bảng size
               </Text>
@@ -256,11 +273,7 @@ const ProductDetail = ({
               style={{ color: colors.text, opacity: 0.75 }}
               numberOfLines={8}
             >
-              Từ những đường chạy truyền thống đến hiện tượng thời trang, sức
-              hấp dẫn cổ điển, đế giữa mềm xốp và các chi tiết bập bênh mang đến
-              sự khác biệt từ thập kỷ này sang thập kỷ khác. Phiên bản da lộn
-              này có đường khâu tương phản và chữ lồng Hangul Nike - một lời ca
-              ngợi người sáng tạo ra bảng chữ cái tiếng Hàn.
+              {description}
             </Text>
           </View>
 
@@ -275,7 +288,7 @@ const ProductDetail = ({
               <Text
                 style={{ color: colors.text, fontSize: 18, fontWeight: "600" }}
               >
-                {(2990000).toLocaleString()} đ
+                {price.toLocaleString()} $
               </Text>
             </View>
 

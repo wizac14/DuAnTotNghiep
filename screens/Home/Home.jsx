@@ -7,7 +7,7 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../constants/index";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,6 +21,7 @@ import CustomBackdrop from "../../components/home/CustomBackdrop";
 import ImageSlider from "../../components/home/ImagesSlider";
 import { Pressable } from "react-native";
 import FilterView from "../../components/home/FilterView";
+import AxiosIntance from "../../components/ultil/AxiosIntance";
 
 const Home = () => {
   const BRANDS = [
@@ -71,6 +72,23 @@ const Home = () => {
   const { colors } = useTheme();
   const [brandIndex, setBrandIndex] = useState(0);
   const bottomSheetModalRef = useRef(null);
+  const [dataNe, setdataNe] = useState([]);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      const response = await AxiosIntance().get("/product/get-all");
+      console.log(response.products);
+      if (response.result) {
+        setdataNe(response.products)
+      } else {
+        ToastAndroid.show("Lấy data thất bại")
+      }
+    }
+    getProducts();
+    return () => {
+
+    }
+  }, [])
 
   const openFilterModal = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -202,6 +220,7 @@ const Home = () => {
             <Card
               onPress={() => {
                 navigation.navigate("ProductDetail", {
+                  // screen: "ProductDetail",
                   id: "123",
                 });
               }}
@@ -274,7 +293,7 @@ const Home = () => {
 
         {/* Mesonary */}
         <MasonryList
-          data={MESONARY_LIST_DATA}
+          data={dataNe}
           numColumns={2}
           contentContainerStyle={{ paddingHorizontal: 12 }}
           showsVerticalScrollIndicator={false}
@@ -292,13 +311,13 @@ const Home = () => {
                   style={{ flex: 1 }}
                   onPress={() => {
                     navigation.navigate("ProductDetail", {
-                      id: "123",
+                      id: item._id
                     });
                   }}
                 >
                   <Image
                     source={{
-                      uri: item.imageUrl,
+                      uri: item.image
                     }}
                     resizeMode="contain"
                     style={{ flex: 1 }}
@@ -347,18 +366,17 @@ const Home = () => {
                     </View>
                   </View>
                   <View style={{ flex: 1 }} />
-                  <BlurView
+                  <View
                     style={{
                       flexDirection: "row",
-                      backgroundColor: "rgba(0,0,0,0.5)",
+                      // backgroundColor: "rgba(0,0,0,0.5)",
                       alignItems: "center",
                       borderRadius: 100,
                       overflow: "hidden",
                     }}
-                    intensity={20}
+                    // intensity={20}
                   >
                     <Text
-                    
                       style={{
                         flex: 1,
                         fontSize: 20,
@@ -371,7 +389,7 @@ const Home = () => {
                           width: 0,
                         },
                         textShadowRadius: 15,
-                        marginTop: 15
+                        marginTop: 15,
                       }}
                       numberOfLines={1}
                     >
@@ -380,7 +398,7 @@ const Home = () => {
                     <TouchableOpacity
                       style={{
                         paddingHorizontal: 12,
-                        paddingVertical:8,
+                        paddingVertical: 8,
                         borderRadius: 100,
                         backgroundColor: "#fff",
                       }}
@@ -391,12 +409,13 @@ const Home = () => {
                         color="#000"
                       />
                     </TouchableOpacity>
-                  </BlurView>
+                  </View>
                 </View>
               </View>
             </View>
           )}
           onEndReachedThreshold={0.1}
+          keyExtractor={item => item._id}
         />
       </SafeAreaView>
 

@@ -1,12 +1,17 @@
-import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { SIZES } from '../constants/index';
-import { Ionicons, Fontisto } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { SIZES } from "../constants/index";
+import { Ionicons, Fontisto } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../constants/index";
-
 
 const Search = () => {
   return (
@@ -14,31 +19,30 @@ const Search = () => {
       <View style={styles.searchContainer}>
         <TouchableOpacity>
           <Ionicons
-            name='search'
-            size={SIZES.xLarge} style={styles.searchIcon} />
+            name="search"
+            size={SIZES.xLarge}
+            style={styles.searchIcon}
+          />
         </TouchableOpacity>
         <View style={styles.searchWrapper}>
           <TextInput
             style={styles.searchInput}
             defaultValue=""
             onPressIn={() => {}}
-            placeholder='Bạn đang tìm kiếm gì'
+            placeholder="Bạn đang tìm kiếm gì"
           />
         </View>
         <View>
           <TouchableOpacity style={styles.searchBtn}>
-            <Feather
-              name='filter' size={24}
-              color={COLORS.offwhite}
-            />
+            <Feather name="filter" size={24} color={COLORS.offwhite} />
           </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Search
+export default Search;
 
 const styles = StyleSheet.create({
   searchContainer: {
@@ -50,13 +54,11 @@ const styles = StyleSheet.create({
     borderRadius: SIZES.medium,
     marginVertical: SIZES.medium,
     height: 50,
-
   },
   searchIcon: {
     marginHorizontal: 10,
     color: COLORS.red,
     // marginTop: SIZES.small,
-
   },
   searchWrapper: {
     flex: 1,
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.red,
     borderRadius: SIZES.medium,
     justifyContent: "center",
-    alignItems: 'center',
-
-  }
-})
+    alignItems: "center",
+  },
+});

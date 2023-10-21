@@ -13,7 +13,6 @@ import ItemListHistory from "../components/item/ItemListHistory";
 
 const TabsStack = createBottomTabNavigator();
 
-
 const TabsNavigator = () => {
   return (
     <TabsStack.Navigator
@@ -67,7 +66,3 @@ const TabsNavigator = () => {
 };
 
 export default TabsNavigator;
-
-const Example = () => {
-  return <View />;
-};
