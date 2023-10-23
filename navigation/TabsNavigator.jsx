@@ -10,10 +10,15 @@ import Home from "../screens/Home/Home";
 import Cart from "../screens/Home/Cart";
 import Profile from "../screens/Home/Profile";
 import ItemListHistory from "../components/item/ItemListHistory";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import FilterScreen from "../screens/Home/FilterScreen";
 
 const TabsStack = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
 
 const TabsNavigator = () => {
+
   return (
     <TabsStack.Navigator
       screenOptions={{
