@@ -22,6 +22,7 @@ import ImageSlider from "../../components/home/ImagesSlider";
 import { Pressable } from "react-native";
 import FilterView from "../../components/home/FilterView";
 import AxiosIntance from "../../components/ultil/AxiosIntance";
+import { TextInput } from "react-native-gesture-handler";
 
 const Home = () => {
   const BRANDS = [
@@ -69,11 +70,21 @@ const Home = () => {
       price: 120,
     },
   ];
+  const navigation = useNavigation();
   const { colors } = useTheme();
   const [brandIndex, setBrandIndex] = useState(0);
   const bottomSheetModalRef = useRef(null);
   const [dataNe, setdataNe] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
+  const handleSearch = async () => {
+    const response = await AxiosIntance().get(`/product/search?search=${searchText}`);
+    if (response.result) {
+      setdataNe(response.products)
+    } else {
+      ToastAndroid.show("Tìm kiếm thất bại")
+    }
+  };
   useEffect(() => {
     const getProducts = async () => {
       const response = await AxiosIntance().get("/product/get-all");
@@ -93,7 +104,7 @@ const Home = () => {
   const openFilterModal = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
-  const navigation = useNavigation();
+
   return (
     <ScrollView>
       <SafeAreaView style={{ paddingVertical: 24, gap: 24 }}>
@@ -149,36 +160,28 @@ const Home = () => {
 
         {/* Search Bar Section */}
         <View style={{ flexDirection: "row", paddingHorizontal: 24, gap: 12 }}>
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              height: 52,
-              borderRadius: 52,
-              borderWidth: 1,
-              borderColor: colors.border,
-              alignItems: "center",
-              paddingHorizontal: 24,
-              flexDirection: "row",
-              gap: 12,
-            }}
-          >
-            <MaterialIcons
-              name="search"
-              size={24}
-              color={colors.text}
-              style={{ opacity: 0.5 }}
-            />
-            <Text
+          <View style={{
+            flexDirection: "row", flex: 1, borderRadius: 100,
+            borderWidth: 1, borderColor: colors.border, paddingHorizontal: 12,
+          }}>
+            <TouchableOpacity >
+              <View>
+                <MaterialIcons name="search" size={24} style={{ top: 15 }} />
+              </View>
+            </TouchableOpacity>
+            <TextInput
+              onPressIn={() => navigation.navigate("Search")}
               style={{
                 flex: 1,
-                fontSize: 16,
-                color: colors.text,
-                opacity: 0.5,
+                paddingHorizontal: 12,
+                height: 52,
               }}
+              placeholder="Tìm kiếm sản phẩm"
             >
-              Tìm kiếm
-            </Text>
-          </TouchableOpacity>
+            </TextInput>
+          </View>
+
+
 
           <TouchableOpacity
             onPress={openFilterModal}
@@ -374,7 +377,7 @@ const Home = () => {
                       borderRadius: 100,
                       overflow: "hidden",
                     }}
-                    // intensity={20}
+                  // intensity={20}
                   >
                     <Text
                       style={{

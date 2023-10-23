@@ -23,6 +23,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useContext } from "react";
 import { AppContext } from "../components/ultil/AppContext";
 import BottomTabNavigation from "./BottomTabNavigation";
+import Search from "../screens/Home/Search";
+import SearchTitle from "../screens/Home/SearchTitle";
+
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -78,6 +81,8 @@ const NotAuthNavigator = () => {
         component={NewPassword}
         options={{ headerShown: false }}
       />
+
+
     </Stack.Navigator>
   );
 };
@@ -100,6 +105,20 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="Cart"
         component={Cart}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="Search"
+        component={Search}
+        options={{ headerShown: false }}
+      />
+
+
+
+      <Stack.Screen
+        name="SearchTitle"
+        component={SearchTitle}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
