@@ -12,6 +12,7 @@ import Profile from "../screens/Home/Profile";
 import ItemListHistory from "../components/item/ItemListHistory";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FilterScreen from "../screens/Home/FilterScreen";
+import History from "../screens/History"
 
 const TabsStack = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -48,7 +49,7 @@ const TabsNavigator = () => {
       />
       <TabsStack.Screen
         name="Lịch sử"
-        component={ItemListHistory}
+        component={History}
         options={{
           headerShown: false,
           tabBarIcon(props) {
@@ -71,3 +72,4 @@ const TabsNavigator = () => {
 };
 
 export default TabsNavigator;
+ 
