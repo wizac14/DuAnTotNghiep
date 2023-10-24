@@ -25,9 +25,22 @@ import { AppContext } from "../components/ultil/AppContext";
 import BottomTabNavigation from "./BottomTabNavigation";
 import Search from "../screens/Home/Search";
 import SearchTitle from "../screens/Home/SearchTitle";
+import FilterView from "../components/home/FilterView";
+import FilterScreen from "../screens/Home/FilterScreen";
 
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
+
+const Filter=()=>{
+  return(
+    <Stack.Navigator>
+      
+     
+  </Stack.Navigator>
+  
+
+  )
+}
 const NotAuthNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Intro">
@@ -81,8 +94,6 @@ const NotAuthNavigator = () => {
         component={NewPassword}
         options={{ headerShown: false }}
       />
-
-
     </Stack.Navigator>
   );
 };
@@ -108,6 +119,7 @@ const AuthNavigator = () => {
         options={{ headerShown: false }}
       />
 
+
       <Stack.Screen
         name="Search"
         component={Search}
@@ -121,6 +133,10 @@ const AuthNavigator = () => {
         component={SearchTitle}
         options={{ headerShown: false }}
       />
+
+      <Stack.Screen  options={{ headerShown: false }} name="FilterView" component={FilterView}></Stack.Screen>
+      <Stack.Screen   options={{ headerShown: false }} name="FilterScreen" component={FilterScreen}></Stack.Screen>
+
     </Stack.Navigator>
   );
 };
@@ -132,6 +148,7 @@ const AppNavigator = () => {
       {
         isLogin == false ? <NotAuthNavigator /> : <AuthNavigator />
         // <Mains></Mains>
+        // <AuthNavigator/>
       }
     </>
   );

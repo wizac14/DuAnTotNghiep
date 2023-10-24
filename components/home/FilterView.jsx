@@ -1,20 +1,13 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  FlatList,
-} from "react-native";
-import React, { ReactNode, useState } from "react";
-import { useTheme } from "@react-navigation/native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import {View,Text,TouchableOpacity,ScrollView,FlatList,} from "react-native";
+import React, { ReactNode, useEffect, useState } from "react";
+import { useNavigation, useTheme } from "@react-navigation/native";
+import {SafeAreaView,useSafeAreaInsets,} from "react-native-safe-area-context";
 import Icons from "@expo/vector-icons/MaterialIcons";
 import PriceRangeSelector from "./PriceRangeSelector";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import TextTicker from "react-native-text-ticker";
+import ItemFilterBrand from "../item/ItemFilterBrand";
+import AxiosIntance from "../ultil/AxiosIntance";
 
 const MAX_PRICE = 500;
 
@@ -56,13 +49,39 @@ const BRANDS = [
 ];
 
 const FilterView = () => {
+
   const { colors } = useTheme();
   const [brandIndex, setBrandIndex] = useState(0);
   const [colorIndex, setColorIndex] = useState(0);
   const [startPrice, setStartPrice] = useState(50);
   const [endPrice, setEndPrice] = useState(250);
+  const [data, setData] = useState([]);
+  const navigation = useNavigation();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const ClickIdFilter=()=>{
+    navigation.navigate("FilterScreen", { id: brandIndex });
+    console.log("idBrand da chon",brandIndex);
+  }
+ 
+
+  useEffect(() => {
+    const getBrand=async()=>{
+      const response=await AxiosIntance().get("/brand/get-all");
+      console.log("aaa",response.brands);
+      console.log(brandIndex);
+      if(response.result==true)
+      {
+        setData(response.brands);
+
+      }else
+      {
+        ToastAndroid.show("Lấy dữ liệu thất bại",ToastAndroid.SHORT)
+      }
+    }
+    getBrand();
+  }, [])
+  
   return (
     <>
       <ScrollView style={{ flex: 1 }}>
@@ -123,12 +142,13 @@ const FilterView = () => {
               paddingHorizontal: 24,
             }}
           >
-            {BRANDS?.map((item, index) => {
-              const isSelected = brandIndex === index;
+            {data?.map((item) => {
+            
+              const isSelected = brandIndex === item._id;
               return (
                 <TouchableOpacity
-                  key={index}
-                  onPress={() => setBrandIndex(index)}
+                  key={item._id}
+                  onPress={()=>(setBrandIndex(item._id)) }
                   style={{
                     backgroundColor: isSelected ? colors.primary : colors.card,
                     paddingHorizontal: 20,
@@ -152,11 +172,14 @@ const FilterView = () => {
                     }}
                     numberOfLines={1}
                   >
-                    {item}
+                    {item.name}
                   </Text>
                 </TouchableOpacity>
               );
             })}
+            {/* {
+              data.map((item) => <ItemFilterBrand key={item._id} dulieu={item} />)
+            } */}
           </View>
 
           {/* <FlatList
@@ -235,10 +258,11 @@ const FilterView = () => {
       <SafeAreaView>
         <View
           style={{
-            padding: 24,
+            padding: 5,
           }}
         >
           <TouchableOpacity
+          onPress={ClickIdFilter}
             style={{
               backgroundColor: theme.colors.primary,
               height: 64,
