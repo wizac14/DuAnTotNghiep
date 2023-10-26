@@ -23,7 +23,7 @@ import { Pressable } from 'react-native';
 import FilterView from '../../components/home/FilterView';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { UIActivityIndicator } from 'react-native-indicators';
-
+import noImageAvailable from '../../assets/images/no_image_available.jpg';
 const Home = () => {
   const BRANDS = ['Nike', 'Adidas', 'Converse', 'New Balance', 'Vans', 'FILA', 'Other'];
 
@@ -390,15 +390,16 @@ const Home = () => {
                       });
                     }}
                   >
-                    <Image
-                      source={{
-                        uri: item.image,
-                      }}
-                      resizeMode="contain"
-                      style={{
-                        flex: 1,
-                      }}
-                    />
+                    {item?.url ? (
+                      <Image
+                        source={{
+                          uri: item?.url[0],
+                        }}
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <Image resizeMode="contain" source={noImageAvailable} />
+                    )}
                   </Pressable>
                   <View
                     style={[
