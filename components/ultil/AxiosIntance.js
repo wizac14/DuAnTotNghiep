@@ -2,9 +2,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const AxiosIntance = (contentType = "application/json") => {
   const axiosInstance = axios.create({
-    // baseURL: 'https://fpoly-hcm.herokuapp.com/api/'
-    baseURL: "http://192.168.1.94:3000/api",
-
+    baseURL: "http://192.168.1.8:3000/api",
   });
   axiosInstance.interceptors.request.use(
     async (config) => {
