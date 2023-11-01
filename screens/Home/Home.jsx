@@ -378,22 +378,22 @@ const Home = () => {
                     position: 'relative',
                     overflow: 'hidden',
                     borderRadius: 24,
+                    elevation: 2,
                   }}
                 >
                   <Pressable
-                    style={{
-                      flex: 1,
-                    }}
+                    style={{ width: '100%', height: '100%' }}
                     onPress={() => {
                       navigation.navigate('ProductDetail', {
                         id: item._id,
                       });
                     }}
                   >
-                    {item?.url ? (
+                    {item?.variances[0]?.images[0]?.url ? (
                       <Image
+                        style={{ flex: 1 }}
                         source={{
-                          uri: item?.url[0],
+                          uri: item?.variances[0].images[0].url,
                         }}
                         resizeMode="contain"
                       />
@@ -419,10 +419,10 @@ const Home = () => {
                       <Text
                         style={{
                           flex: 1,
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: '600',
-                          color: '#fff',
-                          textShadowColor: 'rgba(0,0,0,0.2)',
+                          color: COLORS.gray,
+                          textShadowColor: 'rgba(0,0,0,0.1)',
                           textShadowOffset: {
                             height: 1,
                             width: 0,
@@ -432,9 +432,9 @@ const Home = () => {
                       >
                         {item.title}
                       </Text>
-                      <View
+                      <TouchableOpacity
                         style={{
-                          backgroundColor: colors.card,
+                          // backgroundColor: colors.card,
                           borderRadius: 100,
                           height: 32,
                           aspectRatio: 1,
@@ -443,7 +443,7 @@ const Home = () => {
                         }}
                       >
                         <MaterialIcons name="favorite-border" size={20} color={colors.text} />
-                      </View>
+                      </TouchableOpacity>
                     </View>
                     <View
                       style={{
@@ -453,38 +453,39 @@ const Home = () => {
                     <View
                       style={{
                         flexDirection: 'row',
-                        // backgroundColor: "rgba(0,0,0,0.5)",
-                        alignItems: 'center',
-                        borderRadius: 100,
+                        backgroundColor: 'rgba(0,0,0,0)',
+                        alignItems: 'flex-end',
                         overflow: 'hidden',
+                        justifyContent: 'space-between',
                       }}
-                      // intensity={20}
+                      intensity={20}
                     >
                       <Text
                         style={{
-                          flex: 1,
-                          fontSize: 20,
-                          fontWeight: 'bold',
-                          color: '#fff',
+                          fontSize: 15,
+                          color: COLORS.black,
                           marginLeft: 8,
-                          textShadowColor: 'rgba(0,0,0,0.2)',
+                          textShadowColor: 'rgba(0,0,0,0)',
                           textShadowOffset: {
-                            height: 1,
+                            height: 0,
                             width: 0,
                           },
                           textShadowRadius: 15,
-                          marginTop: 15,
+                          marginTop: 25,
+                          backgroundColor: COLORS.lightWhite,
+                          borderRadius: 5,
                         }}
                         numberOfLines={1}
                       >
-                        ${item.price}
+                        {item.price.toLocaleString()} đ
                       </Text>
                       <TouchableOpacity
                         style={{
                           paddingHorizontal: 12,
                           paddingVertical: 8,
                           borderRadius: 100,
-                          backgroundColor: '#fff',
+                          backgroundColor: 'rgba(0,0,0,0.1)',
+                          alignContent: 'flex-end',
                         }}
                       >
                         <MaterialIcons name="add-shopping-cart" size={18} color="#000" />
