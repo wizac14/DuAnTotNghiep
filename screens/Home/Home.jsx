@@ -462,7 +462,7 @@ const Home = () => {
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: COLORS.black,
                           marginLeft: 8,
                           textShadowColor: 'rgba(0,0,0,0)',

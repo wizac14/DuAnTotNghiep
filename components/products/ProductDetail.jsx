@@ -8,11 +8,9 @@ import { COLORS } from '../../constants';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { SliderBox } from 'react-native-image-slider-box';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
-
-const SIZES = ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'];
+import { width } from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
 
 const ProductDetail = (props) => {
-  const size = '';
   const { navigation } = props;
   const { route } = props;
   const { params } = route;
@@ -20,22 +18,51 @@ const ProductDetail = (props) => {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [count, setCount] = useState(1);
-  // const [size, setSize] = useState(SIZES[1]);
   const [imageHeight, setImageHeight] = useState();
   const [isImageFlex, setIsImageFlex] = useState();
 
-  const [imageUrl, setimageUrl] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [sliderImages, setSliderImages] = useState([]);
+  const [colorVariances, setColorVariances] = useState([]);
 
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [sizeVariances, setSizeVariances] = useState([]);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [selectedColor, setSelectedColor] = useState('');
+  const [sizesForSelectedColor, setSizesForSelectedColor] = useState([]);
+  const [showSizes, setShowSizes] = useState(false);
+  const [product, setProduct] = useState('');
 
-  const handleSizeSelect = (size) => {
-    console.log('Kích cỡ đã chọn:', size);
-    setSelectedSize(size);
+  const handleSizeSelect = (varianceDetail) => {
+    console.log('Kích cỡ đã chọn:', varianceDetail);
+    setSelectedSize(varianceDetail);
   };
+
+  const handleColorSelect = (color) => {
+    console.log('Màu sắc đã chọn:', color);
+
+    // Lấy danh sách size tương ứng với màu đã chọn từ product.variances.varianceDetail
+    const sizesForSelectedColor = getSizesForColor(product?.variances, color);
+
+    setSelectedSize(null); // Đặt kích thước đã chọn về null trước khi chọn màu mới
+    setSelectedColor(color); // Lưu màu được chọn
+    setSizesForSelectedColor(sizesForSelectedColor);
+    setShowSizes(true); // Hiển thị danh sách kích thước
+  };
+
+  function getSizesForColor(variances, color) {
+    let sizesForColor = [];
+
+    variances?.forEach((variance) => {
+      if (variance?.color === color) {
+        sizesForColor = variance?.varianceDetail;
+      }
+    });
+    console.log(sizesForColor);
+
+    return sizesForColor;
+  }
 
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
@@ -44,20 +71,30 @@ const ProductDetail = (props) => {
         const response = await AxiosIntance().get('/product/get-by-id?id=' + params.id);
 
         if (response.result === true) {
-          const product = response.product;
+          const productData = response.product;
+          setProduct(productData); // Gán dữ liệu sản phẩm cho biến state product
           const imageUrls = [];
+          const varianceShoes = [];
 
-          product.variances.forEach((variance) => {
-            variance.images.forEach((image) => {
-              imageUrls.push(image.url);
+          productData?.variances?.forEach((variance) => {
+            varianceShoes.push(variance);
+
+            // variance?.varianceDetail?.forEach((sizes) => {
+            //   varianceSizes.push(sizes?.size);
+            // });
+
+            variance?.images?.forEach((image) => {
+              imageUrls.push(image?.url);
             });
           });
-          //lấy dữ liệu thành công
 
+          //lấy dữ liệu thành công
           setTitle(response.product.title);
           setDescription(response.product.description);
           setPrice(response.product.price);
           setSliderImages(imageUrls);
+          setColorVariances(varianceShoes);
+          console.log(varianceShoes);
         } else {
           ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
         }
@@ -89,13 +126,6 @@ const ProductDetail = (props) => {
         inactiveDotColor={COLORS.gray2}
         ImageComponentStyle={{ borderRadius: 15, width: '95%', marginTop: 30 }}
       />
-      {/* <Image
-        resizeMode="contain"
-        source={{
-          uri: imageUrl,
-        }}
-        style={{ flex: isImageFlex, height: imageHeight, position: 'relative' }}
-      /> */}
 
       <SafeAreaView edges={['top']} style={{ position: 'absolute', top: 0, left: 0, right: 0 }}>
         <StatusBar style="light" />
@@ -153,7 +183,7 @@ const ProductDetail = (props) => {
 
       <BottomSheet
         detached
-        snapPoints={[64, 500]}
+        snapPoints={[64, 470]}
         index={0}
         style={{ marginHorizontal: 20 }}
         bottomInset={insets.bottom + 20}
@@ -172,25 +202,14 @@ const ProductDetail = (props) => {
         <View style={{ padding: 16, gap: 16, flex: 1 }}>
           <Text style={{ fontSize: 20, fontWeight: '600', color: colors.text }}>{title}</Text>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-            <View style={{ flex: 1 }}>
-              <View style={{ flexDirection: 'row', gap: 2 }}>
-                {new Array(5).fill('').map((_, i) => (
-                  <Icons key={i} name={i < 5 ? 'star' : 'star-border'} color="#facc15" size={20} />
-                ))}
-              </View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: colors.text,
-                  opacity: 0.5,
-                  marginTop: 4,
-                }}
-              >
-                5.0 (25K đánh giá)
-              </Text>
-            </View>
-
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 8,
+              justifyContent: 'space-between',
+            }}
+          >
             <View
               style={{
                 flexDirection: 'row',
@@ -237,56 +256,84 @@ const ProductDetail = (props) => {
                 <Icons name="add" size={20} color={colors.text} />
               </TouchableOpacity>
             </View>
+            <View>
+              <View
+                style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <Text style={{ color: colors.text, opacity: 0.5 }}>Bảng màu</Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  gap: 6,
+                  marginTop: 6,
+                }}
+              >
+                {product?.variances?.map((variance, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    onPress={() => handleColorSelect(variance?.color)}
+                    style={{
+                      width: selectedColor === variance?.color ? 32 : 28,
+                      height: selectedColor === variance?.color ? 32 : 28,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: variance?.color,
+                      borderWidth: selectedColor === variance?.color ? 3 : 1,
+
+                      borderRadius: 44,
+                    }}
+                  ></TouchableOpacity>
+                ))}
+              </View>
+            </View>
           </View>
 
-          <View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ color: colors.text, opacity: 0.5 }}>Bảng size</Text>
-            </View>
+          {showSizes && (
+            <View>
+              {/* Hiển thị danh sách kích thước */}
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={{ color: colors.text, opacity: 0.5 }}>Bảng size</Text>
+              </View>
 
-            <View
-              style={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                gap: 6,
-                marginTop: 6,
-              }}
-            >
-              {SIZES.map((size, i) => (
-                <TouchableOpacity
-                  key={i}
-                  onPress={() => handleSizeSelect(size)}
-                  style={{
-                    width: 44,
-                    height: 44,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: selectedSize === size ? COLORS.black : COLORS.lightWhite,
-                    borderRadius: 44,
-                  }}
-                >
-                  <Text
+              <View
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  gap: 6,
+                  marginTop: 6,
+                }}
+              >
+                {sizesForSelectedColor?.map((varianceDetail, i) => (
+                  <TouchableOpacity
+                    key={i}
+                    onPress={() => handleSizeSelect(varianceDetail)}
                     style={{
-                      color: selectedSize === size ? colors.card : colors.text,
-                      fontWeight: '600',
-                      fontSize: 16,
+                      width: 44,
+                      height: 44,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor:
+                        selectedSize === varianceDetail ? COLORS.black : COLORS.lightWhite,
+                      borderRadius: 44,
                     }}
                   >
-                    {size}
-                  </Text>
-                </TouchableOpacity>
-              ))}
+                    <Text
+                      style={{
+                        color: selectedSize === varianceDetail ? colors.card : colors.text,
+                        fontWeight: '600',
+                        fontSize: 16,
+                      }}
+                    >
+                      {varianceDetail?.size}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </View>
-            <Text
-              style={{
-                color: selectedSize === size ? COLORS.black : colors.text,
-                fontWeight: '600',
-                fontSize: 16,
-              }}
-            >
-              {/* Kích cỡ đã chọn: {selectedSize} */}
-            </Text>
-          </View>
+          )}
 
           <View>
             <Text
@@ -309,7 +356,7 @@ const ProductDetail = (props) => {
             <View style={{ flex: 1 }}>
               <Text style={{ color: colors.text, opacity: 0.75, marginBottom: 4 }}>Tổng</Text>
               <Text style={{ color: colors.text, fontSize: 18, fontWeight: '600' }}>
-                {price.toLocaleString()} $
+                {price.toLocaleString()} đ
               </Text>
             </View>
 
