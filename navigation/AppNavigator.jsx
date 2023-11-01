@@ -111,8 +111,9 @@ const AppNavigator = () => {
   return (
     <>
       {
-        isLogin == false ? <NotAuthNavigator /> : <AuthNavigator />
+        // isLogin == false ? <NotAuthNavigator /> : <AuthNavigator />
         // <Mains></Mains>
+        <AuthNavigator></AuthNavigator>
       }
     </>
   );

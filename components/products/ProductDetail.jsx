@@ -29,14 +29,27 @@ const ProductDetail = (props) => {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [sliderImages, setSliderImages] = useState([]);
-
+  const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
-
+  const [data, setdata] = useState([]);
+  const [selectedQuantity, setSelectedQuantity] = useState(null);
   const handleSizeSelect = (size) => {
     console.log('Kích cỡ đã chọn:', size);
     setSelectedSize(size);
+    const selectedVariance = data.variances.find((variance) => variance.color === selectedColor);
+    const selectedDetail = selectedVariance.varianceDetail.find((detail) => detail.size === size);
+    setSelectedQuantity(selectedDetail.quantity);
   };
+  // const handleQuantitySelect = (quantity) => {
+  //   console.log('số lượng đã chọn:', quantity);
+  //   setSelectedQuantity(quantity);
+  // };
 
+
+  const handleColorSelect = (color) => {
+    console.log('Màu đã chọn:', color);
+    setSelectedColor(color);
+  };
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
@@ -45,8 +58,9 @@ const ProductDetail = (props) => {
 
         if (response.result === true) {
           const product = response.product;
+          setdata(response.product);
           const imageUrls = [];
-
+          console.log("aaaaaas", product);
           product.variances.forEach((variance) => {
             variance.images.forEach((image) => {
               imageUrls.push(image.url);
@@ -69,7 +83,7 @@ const ProductDetail = (props) => {
 
     getDetails();
 
-    return () => {};
+    return () => { };
   }, []);
 
   return (
@@ -239,20 +253,19 @@ const ProductDetail = (props) => {
             </View>
           </View>
 
-          <View>
+          <View style={{ flexDirection: 'column' }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ color: colors.text, opacity: 0.5 }}>Bảng size</Text>
+              <Text style={{ color: colors.text, opacity: 0.5 }}>Bảng Màu</Text>
             </View>
-
+            <View>
             <View
               style={{
                 flexDirection: 'row',
                 flexWrap: 'wrap',
                 gap: 6,
-                marginTop: 6,
-              }}
-            >
-              {SIZES.map((size, i) => (
+                marginTop: 10,
+              }}>
+              {/* {SIZES.map((size, i) => (
                 <TouchableOpacity
                   key={i}
                   onPress={() => handleSizeSelect(size)}
@@ -275,7 +288,61 @@ const ProductDetail = (props) => {
                     {size}
                   </Text>
                 </TouchableOpacity>
+              ))} */}
+              {data.variances?.map((variance, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => handleColorSelect(variance.color)}
+                  style={{
+                    backgroundColor: variance.color,
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    margin: 5,
+                  }}
+                />
               ))}
+             
+             
+
+
+            </View>
+            <View style={{marginTop:10}}>
+               {/* Hiển thị danh sách size */}
+              {selectedColor && (
+                <View>
+                  {data.variances.map((variance, index) => {
+                    if (variance.color === selectedColor) {
+                      return (
+                        <View style={{ flexDirection: "row" }} key={index}>
+                          <Text>Size:</Text>
+                          {variance.varianceDetail.map((detail, index) => (
+                            <TouchableOpacity
+                              key={index}
+                              onPress={() => handleSizeSelect(detail.size)}
+                              style={{
+                                backgroundColor: selectedSize === detail.size ? 'red' : 'white',
+                               padding:5,
+                                margin: 10,
+                              }}
+                            >
+                              <Text>{detail.size}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      );
+                    }
+                  })}
+                </View>
+              )}
+
+              {/* Hiển thị số lượng tương ứng */}
+              {selectedSize && (
+                <View style={{  }}>
+                  <Text style={{color:"black"}}>Số lượng:  {selectedQuantity}</Text>
+                </View>
+              )}
+              </View>
             </View>
             <Text
               style={{
