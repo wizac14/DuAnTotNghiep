@@ -31,12 +31,19 @@ const ProductDetail = (props) => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [sizesForSelectedColor, setSizesForSelectedColor] = useState([]);
+  const [quantityVariences, setQuantityVariences] = useState([]);
+  const [remainingQuantity, setRemainingQuantity] = useState(null);
   const [showSizes, setShowSizes] = useState(false);
   const [product, setProduct] = useState('');
 
   const handleSizeSelect = (varianceDetail) => {
     console.log('Kích cỡ đã chọn:', varianceDetail);
     setSelectedSize(varianceDetail);
+    // Tìm kích thước tương ứng và lấy số lượng sản phẩm còn lại
+    const index = sizeVariances.indexOf(varianceDetail?.size);
+    if (index !== -1) {
+      setRemainingQuantity(quantityVariences[index]);
+    }
   };
 
   const handleColorSelect = (color) => {
@@ -75,16 +82,21 @@ const ProductDetail = (props) => {
           setProduct(productData); // Gán dữ liệu sản phẩm cho biến state product
           const imageUrls = [];
           const varianceShoes = [];
+          const sizeOfShoes = [];
+          const quantityOfShoes = [];
 
           productData?.variances?.forEach((variance) => {
             varianceShoes.push(variance);
 
-            // variance?.varianceDetail?.forEach((sizes) => {
-            //   varianceSizes.push(sizes?.size);
-            // });
-
             variance?.images?.forEach((image) => {
               imageUrls.push(image?.url);
+            });
+
+            variance?.varianceDetail.forEach((sizes) => {
+              sizeOfShoes.push(sizes.size);
+            });
+            variance?.varianceDetail.forEach((quantity) => {
+              quantityOfShoes.push(quantity.quantity);
             });
           });
 
@@ -94,6 +106,8 @@ const ProductDetail = (props) => {
           setPrice(response.product.price);
           setSliderImages(imageUrls);
           setColorVariances(varianceShoes);
+          setSizeVariances(sizeOfShoes);
+          setQuantityVariences(quantityOfShoes);
           console.log(varianceShoes);
         } else {
           ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
@@ -200,8 +214,10 @@ const ProductDetail = (props) => {
         }}
       >
         <View style={{ padding: 16, gap: 16, flex: 1 }}>
-          <Text style={{ fontSize: 20, fontWeight: '600', color: colors.text }}>{title}</Text>
-
+          <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+            <Text style={{ fontSize: 20, fontWeight: '600', color: colors.text }}>{title}</Text>
+            {selectedSize && <Text>Số lượng: {remainingQuantity}</Text>}
+          </View>
           <View
             style={{
               flexDirection: 'row',
@@ -256,11 +272,12 @@ const ProductDetail = (props) => {
                 <Icons name="add" size={20} color={colors.text} />
               </TouchableOpacity>
             </View>
+
             <View>
               <View
                 style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
               >
-                <Text style={{ color: colors.text, opacity: 0.5 }}>Bảng màu</Text>
+                <Text style={{ color: colors.text, opacity: 0.5 }}>Màu sắc</Text>
               </View>
 
               <View
@@ -295,7 +312,7 @@ const ProductDetail = (props) => {
             <View>
               {/* Hiển thị danh sách kích thước */}
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ color: colors.text, opacity: 0.5 }}>Bảng size</Text>
+                <Text style={{ color: colors.text, opacity: 0.5 }}>Kích thước</Text>
               </View>
 
               <View
