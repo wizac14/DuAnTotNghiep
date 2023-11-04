@@ -1,22 +1,48 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
+import noImageAvailable from '../../assets/images/no_image_available.jpg';
+import { useEffect } from "react";
 
 const ItemCart = (props) => {
   const { dulieu } = props;
+
   return (
     <View style={styles.container}>
       <View style={styles.viewImage}>
-        <Image style={styles.image} source={{ uri: dulieu.image }} />
+        {/* <Image style={styles.image} source={{ uri: dulieu.idProduct.image }} /> */}
+        {dulieu.idProduct?.variances[0]?.images[0]?.url ? (
+                      <Image
+                        style={styles.image}
+                        source={{
+                          uri: dulieu.idProduct?.variances[0].images[0].url,
+                        }}
+                        resizeMode="contain"
+                      />
+                    ) : (
+                      <Image resizeMode="contain" source={noImageAvailable} />
+                    )}
       </View>
       <View style={styles.view1}>
-        <Text style={styles.textName}>{dulieu.title}</Text>
+        <Text style={styles.textName}>{dulieu.idProduct?.title}</Text>
         <View style={styles.view2}>
           <View style={{ marginTop: 10 }}>
-            <Image style={styles.color} source={{ uri: dulieu.color }} />
+            {/* <Image style={styles.color} source={{ uri: dulieu?.color }} /> */}
+            <TouchableOpacity
+              
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: dulieu?.color,
+                      width:28,
+                      height:28,
+                      borderRadius: 44,
+                      borderWidth: 2
+                    }}
+                  ></TouchableOpacity>
           </View>
           <View style={{ marginTop: 10, marginLeft: 10 }}>
-            <Text>{dulieu.nameColor}</Text>
+            <Text>{dulieu?.color}</Text>
           </View>
           <View style={{ marginTop: 10, marginLeft: 10 }}>
             <Text>{dulieu.size}</Text>
@@ -24,7 +50,7 @@ const ItemCart = (props) => {
         </View>
         <View style={styles.view2}>
           <View>
-            <Text style={styles.textPrice}>{dulieu.price}</Text>
+            <Text style={styles.textPrice}>{dulieu.idProduct.price}</Text>
           </View>
           <View style={styles.viewValue}>
             <View>
@@ -111,7 +137,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   textName: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: "bold",
     marginTop: 20,
   },
