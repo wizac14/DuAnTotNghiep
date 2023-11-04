@@ -215,7 +215,7 @@ const Home = () => {
               Tìm kiếm
             </Text>
           </TouchableOpacity>
-
+          {/* filter       */}
           <TouchableOpacity
             onPress={openFilterModal}
             style={{
