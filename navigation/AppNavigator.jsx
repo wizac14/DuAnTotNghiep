@@ -102,6 +102,7 @@ const AuthNavigator = () => {
         component={Cart}
         options={{ headerShown: false }}
       />
+    
     </Stack.Navigator>
   );
 };

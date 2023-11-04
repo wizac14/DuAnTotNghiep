@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet ,ToastAndroid} from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
@@ -9,6 +9,8 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import { SliderBox } from 'react-native-image-slider-box';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { width } from 'deprecated-react-native-prop-types/DeprecatedImagePropType';
+import { useContext } from 'react';
+import { AppContext } from '../ultil/AppContext';
 
 const ProductDetail = (props) => {
   const { navigation } = props;
@@ -20,13 +22,12 @@ const ProductDetail = (props) => {
   const [count, setCount] = useState(1);
   const [imageHeight, setImageHeight] = useState();
   const [isImageFlex, setIsImageFlex] = useState();
-
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [sliderImages, setSliderImages] = useState([]);
   const [colorVariances, setColorVariances] = useState([]);
-
+  const {inforuser}=useContext(AppContext);
   const [sizeVariances, setSizeVariances] = useState([]);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
@@ -36,13 +37,17 @@ const ProductDetail = (props) => {
   const [showSizes, setShowSizes] = useState(false);
   const [product, setProduct] = useState('');
 
+  
   const handleSizeSelect = (varianceDetail) => {
     console.log('Kích cỡ đã chọn:', varianceDetail);
+    // console.log("saiiiii",selectedSize.size);
     setSelectedSize(varianceDetail);
+  
     // Tìm kích thước tương ứng và lấy số lượng sản phẩm còn lại
     const index = sizeVariances.indexOf(varianceDetail?.size);
     if (index !== -1) {
       setRemainingQuantity(quantityVariences[index]);
+     
     }
   };
 
@@ -66,11 +71,22 @@ const ProductDetail = (props) => {
         sizesForColor = variance?.varianceDetail;
       }
     });
-    console.log(sizesForColor);
+    console.log("aaa",sizesForColor);
+    console.log("aaaaaa",count);
 
     return sizesForColor;
   }
-
+  // http://localhost:3000/api/cart/new-to-cart
+  const addNewCart =async()=>{
+    const response = await AxiosIntance().post("/cart/new-to-cart", { idUser:inforuser._id, idProduct:product._id,color: selectedColor,size:parseInt(selectedSize.size),quantity: parseInt(count)});
+    if (response.result) {
+      ToastAndroid.show("Thêm vào giỏ hành thành công", ToastAndroid.SHORT);
+      navigation.navigate("Cart");
+    }
+    else {
+      ToastAndroid.show("Thêm thất bại! Hãy kiểm tra lại?", ToastAndroid.SHORT);
+    }
+  }
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
@@ -101,7 +117,7 @@ const ProductDetail = (props) => {
           });
 
           //lấy dữ liệu thành công
-          setTitle(response.product.title);
+          setTitle(response.product?.title);
           setDescription(response.product.description);
           setPrice(response.product.price);
           setSliderImages(imageUrls);
@@ -216,7 +232,7 @@ const ProductDetail = (props) => {
         <View style={{ padding: 16, gap: 16, flex: 1 }}>
           <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
             <Text style={{ fontSize: 20, fontWeight: '600', color: colors.text }}>{title}</Text>
-            {selectedSize && <Text>Số lượng: {remainingQuantity}</Text>}
+            {/* {selectedSize && <Text>Số lượng: {remainingQuantity}</Text>} */}
           </View>
           <View
             style={{
@@ -259,7 +275,7 @@ const ProductDetail = (props) => {
                 {count}
               </Text>
               <TouchableOpacity
-                onPress={() => setCount((count) => Math.min(10, count + 1))}
+                onPress={() => setCount((count) => Math.min(remainingQuantity, count + 1))}
                 style={{
                   backgroundColor: colors.card,
                   width: 34,
@@ -377,7 +393,8 @@ const ProductDetail = (props) => {
               </Text>
             </View>
 
-            <TouchableOpacity
+            <TouchableOpacity 
+            onPress={addNewCart}
               style={{
                 backgroundColor: colors.primary,
                 height: 64,

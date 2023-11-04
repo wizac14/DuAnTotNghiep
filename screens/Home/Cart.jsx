@@ -13,10 +13,51 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/index";
 import ItemCart from "../../components/item/ItemCart";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { useEffect } from "react";
+import AxiosIntance from "../../components/ultil/AxiosIntance";
+import { ToastAndroid } from "react-native";
+import { useContext } from "react";
+import { AppContext } from "../../components/ultil/AppContext";
 
 const Cart = (props) => {
   const { navigation } = props;
+  const [data, setdata] = useState([]);
+  const {inforuser}=useContext(AppContext);
+  const [showTotalPrice, setShowTotalPrice] = useState(false);
+  const [totalPrice, setTotalPrice] = useState(0);
+  useEffect(() => {
+    const getDetailByIdUser = async () => {
+      try {
+        const response = await AxiosIntance().get('/cart/get-by-idUser?idUser=' + inforuser._id );
+        if (response.result === true) {
+            setdata(response.cart);
+            console.log("aaaa",data);
+        } else {
+          ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        ToastAndroid.show('Lỗi kết nối', ToastAndroid.SHORT);
+      }
+    };
+    const calculateTotalPrice = () => {
+      let total = 0;
+      data.forEach((item) => {
+        const price = parseFloat(item.price?.slice(1));
+        const quantity = parseInt(item.quantity);
+        total += price * quantity;
+      });
+      setTotalPrice(total);
+    };
+    calculateTotalPrice();
+    getDetailByIdUser();
 
+
+    return () => {};
+  }, [data]);
+  const handleToggleTotalPrice = () => {
+    setShowTotalPrice(!showTotalPrice);
+  };
   return (
     <View style={styles.container}>
       <View style={styles.viewContent}>
@@ -37,7 +78,7 @@ const Cart = (props) => {
       </View>
       <View style={{ height: 480 }}>
         <FlatList
-          data={dataNe}
+          data={data}
           renderItem={({ item }) => (
             <ItemCart dulieu={item} navigation={navigation} />
           )}
@@ -53,17 +94,18 @@ const Cart = (props) => {
             fillColor="black"
             unfillColor="#FFFFFF"
             innerIconStyle={{ borderWidth: 2 }}
+           onPress={handleToggleTotalPrice}
           />
         </View>
         <View style={styles.viewAll}>
           <Text style={{ fontSize: 15, marginRight: 30 }}>Tất cả</Text>
         </View>
         <View style={{ marginLeft: 50 }}>
-          <Text style={{ fontSize: 15 }}>Tổng thanh toán</Text>
+          <Text style={{ fontSize: 15 }}>Tổng thanh toán </Text>
         </View>
         <View style={{ marginLeft: 10 }}>
           <Text style={{ fontSize: 15, color: "red", fontWeight: "bold" }}>
-            $10.000
+          ${showTotalPrice ? totalPrice : "0"}
           </Text>
         </View>
       </View>
