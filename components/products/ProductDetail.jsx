@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet ,ToastAndroid} from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ToastAndroid } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
@@ -27,7 +27,7 @@ const ProductDetail = (props) => {
   const [price, setPrice] = useState('');
   const [sliderImages, setSliderImages] = useState([]);
   const [colorVariances, setColorVariances] = useState([]);
-  const {inforuser}=useContext(AppContext);
+  const { inforuser } = useContext(AppContext);
   const [sizeVariances, setSizeVariances] = useState([]);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
@@ -37,17 +37,15 @@ const ProductDetail = (props) => {
   const [showSizes, setShowSizes] = useState(false);
   const [product, setProduct] = useState('');
 
-  
   const handleSizeSelect = (varianceDetail) => {
     console.log('Kích cỡ đã chọn:', varianceDetail);
     // console.log("saiiiii",selectedSize.size);
     setSelectedSize(varianceDetail);
-  
+
     // Tìm kích thước tương ứng và lấy số lượng sản phẩm còn lại
     const index = sizeVariances.indexOf(varianceDetail?.size);
     if (index !== -1) {
       setRemainingQuantity(quantityVariences[index]);
-     
     }
   };
 
@@ -71,22 +69,27 @@ const ProductDetail = (props) => {
         sizesForColor = variance?.varianceDetail;
       }
     });
-    console.log("aaa",sizesForColor);
-    console.log("aaaaaa",count);
+    console.log('aaa', sizesForColor);
+    console.log('aaaaaa', count);
 
     return sizesForColor;
   }
   // http://localhost:3000/api/cart/new-to-cart
-  const addNewCart =async()=>{
-    const response = await AxiosIntance().post("/cart/new-to-cart", { idUser:inforuser._id, idProduct:product._id,color: selectedColor,size:parseInt(selectedSize.size),quantity: parseInt(count)});
+  const addNewCart = async () => {
+    const response = await AxiosIntance().post('/cart/new-to-cart', {
+      idUser: inforuser._id,
+      idProduct: product._id,
+      color: selectedColor,
+      size: parseInt(selectedSize.size),
+      quantity: parseInt(count),
+    });
     if (response.result) {
-      ToastAndroid.show("Thêm vào giỏ hành thành công", ToastAndroid.SHORT);
-      navigation.navigate("Cart");
+      ToastAndroid.show('Thêm vào giỏ hành thành công', ToastAndroid.SHORT);
+      // navigation.navigate('Cart');
+    } else {
+      ToastAndroid.show('Thêm thất bại! Hãy kiểm tra lại?', ToastAndroid.SHORT);
     }
-    else {
-      ToastAndroid.show("Thêm thất bại! Hãy kiểm tra lại?", ToastAndroid.SHORT);
-    }
-  }
+  };
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
@@ -195,7 +198,7 @@ const ProductDetail = (props) => {
           >
             <Icons name="favorite-border" size={24} color={COLORS.black} />
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               width: 52,
               aspectRatio: 1,
@@ -207,7 +210,7 @@ const ProductDetail = (props) => {
             }}
           >
             <Icons name="add-shopping-cart" size={24} color={COLORS.black} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </SafeAreaView>
 
@@ -393,8 +396,8 @@ const ProductDetail = (props) => {
               </Text>
             </View>
 
-            <TouchableOpacity 
-            onPress={addNewCart}
+            <TouchableOpacity
+              onPress={addNewCart}
               style={{
                 backgroundColor: colors.primary,
                 height: 64,

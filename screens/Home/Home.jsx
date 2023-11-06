@@ -179,7 +179,7 @@ const Home = () => {
               borderColor: colors.border,
             }}
           >
-            <MaterialIcons name="notifications" size={24} color={colors.text} />
+            <MaterialIcons name="favorite-border" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
         {/* Search Bar Section */}
@@ -395,7 +395,7 @@ const Home = () => {
                         source={{
                           uri: item?.variances[0].images[0].url,
                         }}
-                        resizeMode="contain"
+                        // resizeMode="contain"
                       />
                     ) : (
                       <Image resizeMode="contain" source={noImageAvailable} />
@@ -420,8 +420,8 @@ const Home = () => {
                         style={{
                           flex: 1,
                           fontSize: 14,
-                          fontWeight: '600',
-                          color: COLORS.gray,
+                          fontWeight: '900',
+                          color: COLORS.black,
                           textShadowColor: 'rgba(0,0,0,0.1)',
                           textShadowOffset: {
                             height: 1,
@@ -479,7 +479,7 @@ const Home = () => {
                       >
                         {item.price.toLocaleString()} đ
                       </Text>
-                      <TouchableOpacity
+                      {/* <TouchableOpacity
                         style={{
                           paddingHorizontal: 12,
                           paddingVertical: 8,
@@ -489,7 +489,7 @@ const Home = () => {
                         }}
                       >
                         <MaterialIcons name="add-shopping-cart" size={18} color="#000" />
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </View>
                   </View>
                 </View>
