@@ -15,7 +15,6 @@ const ItemCart = (props) => {
         `/product/get-quantity?product_id=${dulieu?.idProduct?._id}&size=${dulieu?.size}&color=${dulieu?.color}`
       );
       const apiQuantity = response?.result;
-      console.log(apiQuantity);
       return apiQuantity?.quantity;
     } catch (error) {
       console.error('Lỗi', error);
@@ -23,20 +22,27 @@ const ItemCart = (props) => {
   };
 
   const handleIncrease = async () => {
-    // setCount((prevCount) => prevCount + 1);
-    let newQuantity = await fetchProductQuantity(); //5
-    setCount((pre) => {
-      if (pre < newQuantity) {
-        return pre + 1;
-      } else {
-        return pre;
-      }
-    });
+    let quantityInStock = await fetchProductQuantity();
+    if (count < quantityInStock) {
+      let updatedQuantity = count + 1;
+      handleUpdateQuantity(updatedQuantity);
+      setCount(updatedQuantity);
+    }
+  };
+
+  const handleUpdateQuantity = (updatedQuantity) => {
+    let data = {
+      id: dulieu?._id,
+      quantity: updatedQuantity,
+    };
+    AxiosIntance().post(`/cart/update-quantity`, data);
   };
 
   const handleDecrease = () => {
     if (count > 1) {
-      setCount((prevCount) => prevCount - 1);
+      let updatedQuantity = count - 1;
+      handleUpdateQuantity(updatedQuantity);
+      setCount(updatedQuantity);
     }
   };
 
@@ -89,7 +95,7 @@ const ItemCart = (props) => {
             <View style={styles.viewValue}>
               <View>
                 <TouchableOpacity onPress={handleDecrease}>
-                  <Ionicons name="remove-outline" size={20} />
+                  <Ionicons name="remove-outline" size={30} />
                 </TouchableOpacity>
               </View>
               <View>
@@ -97,7 +103,7 @@ const ItemCart = (props) => {
               </View>
               <View>
                 <TouchableOpacity onPress={handleIncrease}>
-                  <Ionicons name="add-outline" size={20} />
+                  <Ionicons name="add-outline" size={30} />
                 </TouchableOpacity>
               </View>
             </View>
