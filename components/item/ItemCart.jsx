@@ -1,21 +1,53 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import noImageAvailable from '../../assets/images/no_image_available.jpg';
+import AxiosIntance from '../../components/ultil/AxiosIntance';
+import { COLORS } from '../../constants';
 
 const ItemCart = (props) => {
   const { dulieu, removeItemFromCart } = props;
-  const [count, setCount] = useState(1);
+  const [count, setCount] = useState(dulieu?.quantity || 1);
+
+  const fetchProductQuantity = async () => {
+    try {
+      const response = await AxiosIntance().get(
+        `/product/get-quantity?product_id=${dulieu?.idProduct?._id}&size=${dulieu?.size}&color=${dulieu?.color}`
+      );
+      const apiQuantity = response?.result;
+      console.log(apiQuantity);
+      return apiQuantity?.quantity;
+    } catch (error) {
+      console.error('Lỗi', error);
+    }
+  };
+
+  const handleIncrease = async () => {
+    // setCount((prevCount) => prevCount + 1);
+    let newQuantity = await fetchProductQuantity(); //5
+    setCount((pre) => {
+      if (pre < newQuantity) {
+        return pre + 1;
+      } else {
+        return pre;
+      }
+    });
+  };
+
+  const handleDecrease = () => {
+    if (count > 1) {
+      setCount((prevCount) => prevCount - 1);
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.viewImage}>
-        {/* <Image style={styles.image} source={{ uri: dulieu.idProduct.image }} /> */}
-        {dulieu.idProduct?.variances[0]?.images[0]?.url ? (
+        {dulieu?.idProduct?.variances[0]?.images[0]?.url ? (
           <Image
             style={styles.image}
             source={{
-              uri: dulieu.idProduct?.variances[0].images[0].url,
+              uri: dulieu?.idProduct?.variances[0].images[0].url,
             }}
             resizeMode="contain"
           />
@@ -31,7 +63,6 @@ const ItemCart = (props) => {
 
           <View style={{ flexDirection: 'row', height: '33%', gap: 10, alignItems: 'center' }}>
             <View>
-              {/* <Image style={styles.color} source={{ uri: dulieu?.color }} /> */}
               <TouchableOpacity
                 style={{
                   alignItems: 'center',
@@ -53,26 +84,20 @@ const ItemCart = (props) => {
           </View>
           <View style={styles.view2}>
             <View>
-              <Text style={styles.textPrice}>{dulieu.idProduct.price.toLocaleString()}đ</Text>
+              <Text style={styles.textPrice}>đ{dulieu?.idProduct?.price.toLocaleString()}</Text>
             </View>
             <View style={styles.viewValue}>
               <View>
-                <TouchableOpacity onPress={() => setCount((count) => Math.max(1, count - 1))}>
-                  <Ionicons
-                    name="remove-outline"
-                    size={15}
-                    style={{ marginLeft: 10, marginTop: 5 }}
-                  />
+                <TouchableOpacity onPress={handleDecrease}>
+                  <Ionicons name="remove-outline" size={20} />
                 </TouchableOpacity>
               </View>
               <View>
-                <Text style={styles.textQuantity}>{dulieu.quantity}</Text>
+                <Text style={styles.textQuantity}>{count}</Text>
               </View>
               <View>
-                <TouchableOpacity
-                  onPress={() => setCount((count) => Math.min(remainingQuantity, count + 1))}
-                >
-                  <Ionicons name="add-outline" size={15} style={{ marginLeft: 10, marginTop: 5 }} />
+                <TouchableOpacity onPress={handleIncrease}>
+                  <Ionicons name="add-outline" size={20} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -98,7 +123,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
     marginBottom: 10,
-    backgroundColor: '#EEEEEE',
+    backgroundColor: COLORS.offwhite,
     borderRadius: 20,
   },
   viewColor: {

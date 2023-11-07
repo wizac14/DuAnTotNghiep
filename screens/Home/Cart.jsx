@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, Pressable } from 'react-native';
 import React, { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SIZES } from '../../constants/index';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,12 +34,14 @@ const Cart = (props) => {
     }
     return () => {
       setdata([]);
-      setTotalPrice(null);
+      setTotalPrice(0);
       setIsLoading(true);
     };
   }, [isFocused]);
+
   const handleToggleTotalPrice = () => {
     setShowTotalPrice(!showTotalPrice);
+    calculateTotalPrice();
   };
 
   const getDetailByIdUser = async () => {
@@ -46,7 +49,7 @@ const Cart = (props) => {
       const response = await AxiosIntance().get('/cart/get-by-idUser?idUser=' + inforuser._id);
       if (response?.result === true) {
         setdata(response?.cart);
-        console.log(response?.cart[0]);
+        // console.log(response?.cart[0]);
       } else {
         ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
       }
@@ -57,12 +60,15 @@ const Cart = (props) => {
       setIsLoading(false);
     }
   };
+
   const calculateTotalPrice = () => {
     let total = 0;
-    data.forEach((item) => {
-      const price = parseFloat(item?.price?.slice(1));
-      const quantity = parseInt(item?.quantity);
-      total += price * quantity;
+    data?.forEach((item) => {
+      const price = item?.idProduct.price; //lấy giá tiền của sản phẩm qua idProduct ms đúng
+      const quantity = item?.quantity;
+      const productTotal = price * quantity;
+      total += productTotal;
+      // console.log(productTotal);
     });
     setTotalPrice(total);
   };
@@ -72,7 +78,7 @@ const Cart = (props) => {
       const response = await AxiosIntance().delete(`/cart/remove-from-cart/${productId}`);
       console.log(response);
       if (response?.result === true) {
-        // Xóa sản phẩm thành công
+        //xóa sản phẩm thành công
         getDetailByIdUser();
         ToastAndroid.show('Sản phẩm đã được xóa khỏi giỏ hàng', ToastAndroid.SHORT);
       } else {
@@ -84,92 +90,86 @@ const Cart = (props) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.viewContent}>
-        <View style={styles.viewIcBack}>
-          <TouchableOpacity style={styles.iconBack}>
-            <Ionicons name="arrow-back-outline" size={30} />
-          </TouchableOpacity>
-        </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <StatusBar style="dark" />
 
-        <View>
-          <Text style={styles.text}>Giỏ hàng</Text>
-        </View>
-        <View style={styles.viewIcSearch}>
-          <TouchableOpacity style={styles.iconSeacrch}>
-            <Ionicons name="search" size={30} />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {isLoading ? (
-        <View
-          style={{
-            // height: Dimensions.get('window').height * 0.75,
-            height: '75%',
-            // backgroundColor: 'red',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <UIActivityIndicator size={30} color={colors.text} />
-        </View>
-      ) : (
-        <View style={{ height: '75%' }}>
-          <FlatList
-            data={data}
-            renderItem={({ item }) => (
-              <ItemCart
-                dulieu={item}
-                navigation={navigation}
-                removeItemFromCart={removeItemFromCart}
+        <View style={styles.viewContent}>
+          <View style={styles.rightContent}>
+            <Text style={styles.text}>Giỏ hàng</Text>
+            <View style={styles.checkboxRow}>
+              <Text style={styles.checkboxText}>Tất cả</Text>
+              <BouncyCheckbox
+                size={30}
+                fillColor="red"
+                unfillColor="white"
+                innerIconStyle={{ borderWidth: 1, borderColor: 'black' }}
+                onPress={handleToggleTotalPrice}
               />
-            )}
-            keyExtractor={(item) => item._id}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={
-              <View
-                style={{
-                  height: Dimensions.get('window').height * 0.25,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                <Text>Rất tiếc, không có sản phẩm nào.</Text>
-              </View>
-            }
-          />
+            </View>
+          </View>
         </View>
-      )}
-      <View style={{ height: '25%' }}>
-        <View style={styles.viewBuy}>
-          <View>
-            <BouncyCheckbox
-              size={25}
-              fillColor="black"
-              unfillColor="#FFFFFF"
-              innerIconStyle={{ borderWidth: 2 }}
-              onPress={handleToggleTotalPrice}
+        {isLoading ? (
+          <View
+            style={{
+              // height: Dimensions.get('window').height * 0.75,
+              height: '75%',
+              // backgroundColor: 'red',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <UIActivityIndicator size={30} color={colors.text} />
+          </View>
+        ) : (
+          <View style={{ height: '75%' }}>
+            <FlatList
+              data={data}
+              renderItem={({ item }) => (
+                <ItemCart
+                  dulieu={item}
+                  navigation={navigation}
+                  removeItemFromCart={removeItemFromCart}
+                />
+              )}
+              keyExtractor={(item) => item._id}
+              showsVerticalScrollIndicator={false}
+              ListEmptyComponent={
+                <View
+                  style={{
+                    height: Dimensions.get('window').height * 0.25,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text>Rất tiếc, không có sản phẩm nào.</Text>
+                </View>
+              }
             />
           </View>
-          <View style={styles.viewAll}>
-            <Text style={{ fontSize: 15, marginRight: 30 }}>Tất cả</Text>
+        )}
+        <View style={{ height: '25%' }}>
+          <View style={styles.viewBuy}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+              }}
+            >
+              <Text style={{ fontSize: 18, color: COLORS.red }}>
+                Tổng thanh toán: đ{showTotalPrice ? totalPrice.toLocaleString() : '0'}
+              </Text>
+            </View>
           </View>
-          <View style={{ marginLeft: 50 }}>
-            <Text style={{ fontSize: 15 }}>Tổng thanh toán </Text>
+          <View>
+            <Pressable style={styles.buttonBuy}>
+              <Text style={styles.textBuy}>Mua hàng</Text>
+            </Pressable>
           </View>
-          <View style={{ marginLeft: 10 }}>
-            <Text style={{ fontSize: 15, color: 'red', fontWeight: 'bold' }}>
-              đ {showTotalPrice ? totalPrice : '0'}
-            </Text>
-          </View>
-        </View>
-        <View>
-          <Pressable style={styles.buttonBuy}>
-            <Text style={styles.textBuy}>Mua</Text>
-          </Pressable>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -177,7 +177,7 @@ export default Cart;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 60,
+    marginTop: 10,
     marginEnd: 10,
     marginLeft: 10,
     marginBottom: 30,
@@ -186,18 +186,38 @@ const styles = StyleSheet.create({
   viewContent: {
     flexDirection: 'row',
     marginBottom: 10,
+    justifyContent: 'space-between',
+  },
+  textAndCheckbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  checkboxRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rightContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
   },
   text: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 10,
     marginRight: 100,
+  },
+  checkboxText: {
+    fontSize: 18,
+    marginRight: 5,
   },
   viewIcSearch: {
     marginLeft: 90,
   },
   viewBuy: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     paddingTop: 20,
   },
   buttonBuy: {
@@ -206,7 +226,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 10,
   },
   textBuy: {
     color: '#FFFFFF',
@@ -214,46 +234,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-
-const dataNe = [
-  {
-    _id: '1',
-    title: 'Nike Air Jordan 1',
-    price: '$105',
-    color: 'https://vuanem.com/blog/wp-content/uploads/2022/12/pha-mau-tim.jpg',
-    nameColor: 'Purple',
-    size: 'Size = 42',
-    quantity: '1',
-    image: 'https://hncmua.com/images/thumbs/0003220_giay-nike-air-jordan-1-low-se-tim_550.jpeg',
-  },
-  {
-    _id: '2',
-    title: 'Nike Air Jordan 1',
-    price: '$105',
-    color: 'https://vuanem.com/blog/wp-content/uploads/2022/12/pha-mau-tim.jpg',
-    nameColor: 'Purple',
-    size: 'Size = 42',
-    quantity: '1',
-    image: 'https://hncmua.com/images/thumbs/0003220_giay-nike-air-jordan-1-low-se-tim_550.jpeg',
-  },
-  {
-    _id: '3',
-    title: 'Nike Air Jordan 1',
-    price: '$105',
-    color: 'https://vuanem.com/blog/wp-content/uploads/2022/12/pha-mau-tim.jpg',
-    nameColor: 'Purple',
-    size: 'Size = 42',
-    quantity: '1',
-    image: 'https://hncmua.com/images/thumbs/0003220_giay-nike-air-jordan-1-low-se-tim_550.jpeg',
-  },
-  {
-    _id: '4',
-    title: 'Nike Air Jordan 1',
-    price: '$105',
-    color: 'https://vuanem.com/blog/wp-content/uploads/2022/12/pha-mau-tim.jpg',
-    nameColor: 'Purple',
-    size: 'Size = 42',
-    quantity: '1',
-    image: 'https://hncmua.com/images/thumbs/0003220_giay-nike-air-jordan-1-low-se-tim_550.jpeg',
-  },
-];
