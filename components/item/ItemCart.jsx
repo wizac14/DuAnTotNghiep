@@ -1,13 +1,17 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import noImageAvailable from '../../assets/images/no_image_available.jpg';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { COLORS } from '../../constants';
+import { PanGestureHandler, Swipeable } from 'react-native-gesture-handler';
+import DeleteConfirmationModal from '../../screens/DeleteConfirmationModal';
+import { StatusBar } from 'expo-status-bar';
 
 const ItemCart = (props) => {
   const { dulieu, removeItemFromCart } = props;
   const [count, setCount] = useState(dulieu?.quantity || 1);
+  // console.log(count); //so luong san pham trong gio hang
 
   const fetchProductQuantity = async () => {
     try {
@@ -15,6 +19,7 @@ const ItemCart = (props) => {
         `/product/get-quantity?product_id=${dulieu?.idProduct?._id}&size=${dulieu?.size}&color=${dulieu?.color}`
       );
       const apiQuantity = response?.result;
+      // console.log(apiQuantity); //so luong san pham trong database
       return apiQuantity?.quantity;
     } catch (error) {
       console.error('Lỗi', error);
@@ -46,78 +51,105 @@ const ItemCart = (props) => {
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.viewImage}>
-        {dulieu?.idProduct?.variances[0]?.images[0]?.url ? (
-          <Image
-            style={styles.image}
-            source={{
-              uri: dulieu?.idProduct?.variances[0].images[0].url,
-            }}
-            resizeMode="contain"
-          />
-        ) : (
-          <Image resizeMode="contain" source={noImageAvailable} />
-        )}
+  const rightSwipe = () => {
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.removeButton}
+          // onPress={() => removeItemFromCart(dulieu?._id)}
+          onPress={handleDeleteItem}
+        >
+          <Ionicons name="trash-outline" size={44} color={COLORS.red} />
+        </TouchableOpacity>
       </View>
-      <View style={{ width: '55%' }}>
-        <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
-          <View style={{ flexDirection: 'row', height: '25%' }}>
-            <Text style={{ fontSize: 17, fontWeight: 'bold' }}>{dulieu.idProduct?.title}</Text>
-          </View>
+    );
+  };
 
-          <View style={{ flexDirection: 'row', height: '33%', gap: 10, alignItems: 'center' }}>
-            <View>
-              <TouchableOpacity
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  backgroundColor: dulieu?.color,
-                  width: 28,
-                  height: 28,
-                  borderRadius: 44,
-                  borderWidth: 1,
-                }}
-              ></TouchableOpacity>
-            </View>
-            <View>
-              <Text>{dulieu?.color}</Text>
-            </View>
-            <View>
-              <Text>{dulieu.size}</Text>
-            </View>
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+
+  const handleDeleteItem = () => {
+    setDeleteModalVisible(true);
+  };
+
+  const confirmDeleteItem = () => {
+    setDeleteModalVisible(false);
+    removeItemFromCart(dulieu?._id);
+  };
+
+  const cancelDeleteItem = () => {
+    setDeleteModalVisible(false);
+  };
+
+  return (
+    <Swipeable renderRightActions={rightSwipe}>
+      <View style={styles.container}>
+        <View style={styles.imageContainer}>
+          {dulieu?.idProduct?.variances[0]?.images[0]?.url ? (
+            <Image
+              style={styles.image}
+              source={{
+                uri: dulieu?.idProduct?.variances[0].images[0].url,
+              }}
+              resizeMode="contain"
+            />
+          ) : (
+            <Image resizeMode="contain" source={noImageAvailable} style={styles.noImage} />
+          )}
+        </View>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.title}>{dulieu.idProduct?.title}</Text>
+          <View style={styles.colorSizeContainer}>
+            {/* <View style={styles.colorCircle}></View> */}
+            <TouchableOpacity
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: dulieu?.color,
+                width: 24,
+                height: 24,
+                borderRadius: 24,
+                borderWidth: 1,
+              }}
+            ></TouchableOpacity>
+            {/* <Text>{dulieu?.color}</Text> */}
+            <Text>Kích cỡ: {dulieu.size}</Text>
           </View>
-          <View style={styles.view2}>
-            <View>
-              <Text style={styles.textPrice}>đ{dulieu?.idProduct?.price.toLocaleString()}</Text>
-            </View>
-            <View style={styles.viewValue}>
-              <View>
-                <TouchableOpacity onPress={handleDecrease}>
-                  <Ionicons name="remove-outline" size={30} />
-                </TouchableOpacity>
-              </View>
-              <View>
-                <Text style={styles.textQuantity}>{count}</Text>
-              </View>
-              <View>
-                <TouchableOpacity onPress={handleIncrease}>
-                  <Ionicons name="add-outline" size={30} />
-                </TouchableOpacity>
-              </View>
+          <View style={styles.priceQuantityContainer}>
+            <Text style={styles.price}>đ{dulieu?.idProduct?.price.toLocaleString()}</Text>
+            <View style={styles.quantityControls}>
+              <TouchableOpacity onPress={handleDecrease}>
+                <Ionicons name="remove-outline" size={24} color={COLORS.primary} />
+              </TouchableOpacity>
+              <Text style={styles.quantity}>{count}</Text>
+              <TouchableOpacity onPress={handleIncrease}>
+                <Ionicons name="add-outline" size={24} color={COLORS.primary} />
+              </TouchableOpacity>
             </View>
           </View>
         </View>
       </View>
-      <View style={{ width: '20%' }}>
-        <View>
-          <TouchableOpacity style={styles.icon} onPress={() => removeItemFromCart(dulieu?._id)}>
-            <Ionicons name="trash-outline" size={25} />
-          </TouchableOpacity>
+      {/* <Modal animationType="fade" transparent={true} visible={isDeleteModalVisible}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Xóa sản phẩm này khỏi giỏ hàng ?</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.cancelButton} onPress={cancelDeleteItem}>
+                <Text style={styles.buttonText}>Đóng</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.confirmButton} onPress={confirmDeleteItem}>
+                <Text style={styles.buttonText}>Đồng ý</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
-    </View>
+      </Modal> */}
+
+      <DeleteConfirmationModal
+        isVisible={isDeleteModalVisible}
+        onCancel={cancelDeleteItem}
+        onConfirm={confirmDeleteItem}
+      />
+    </Swipeable>
   );
 };
 
@@ -125,65 +157,122 @@ export default ItemCart;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
-    marginTop: 10,
-    marginBottom: 10,
+    margin: 10,
     backgroundColor: COLORS.offwhite,
     borderRadius: 20,
+    padding: 10,
+    flex: 1,
+    elevation: 1,
   },
-  viewColor: {
-    marginTop: 10,
+  imageContainer: {
+    width: '25%',
+    flex: 1,
   },
-  color: {
+  image: {
+    width: 120,
+    height: 100,
+    borderRadius: 10,
+    flex: 1,
+  },
+  noImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: COLORS.lightGray,
+  },
+  detailsContainer: {
+    width: '55%',
+    marginLeft: 10,
+    // flex: 1,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  colorSizeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+    flex: 1,
+    gap: 6,
+  },
+  colorCircle: {
     width: 20,
     height: 20,
     borderRadius: 10,
+    backgroundColor: COLORS.primary,
+    marginRight: 5,
   },
-  viewImage: {
-    marginLeft: 20,
-    marginTop: 20,
-    marginBottom: 20,
-    marginRight: 20,
-    width: '25%',
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 20,
-  },
-  icon: {
-    marginTop: 20,
-    marginRight: 30,
-  },
-  view1: {
-    flexDirection: 'column',
-  },
-  view2: {
+  priceQuantityContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
+    // flex: 1,
+    // justifyContent: 'space-between',
+    gap: 10,
   },
-  viewValue: {
-    flexDirection: 'row',
-    backgroundColor: '#F5F5F5',
-    width: 80,
-    marginLeft: 40,
-    borderRadius: 50,
-    marginTop: 10,
-  },
-  textName: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    marginTop: 20,
-  },
-
-  textPrice: {
-    fontSize: 20,
+  price: {
+    fontSize: 18,
     // fontWeight: 'bold',
-    marginTop: 10,
+    marginRight: 10,
+    backgroundColor: 'white',
   },
-  textQuantity: {
-    marginTop: 3,
-    marginLeft: 10,
+  quantityControls: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 0.5,
+    borderColor: COLORS.primary,
+    borderRadius: 20,
+    // flex: 1,
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+  },
+  quantity: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginHorizontal: 10,
+  },
+  removeButton: {
+    justifyContent: 'center',
+    flex: 1,
+    // backgroundColor: COLORS.red,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: COLORS.light,
+    borderRadius: 10,
+    padding: 20,
+    width: 300,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 6,
+    alignSelf: 'flex-end',
+  },
+  confirmButton: {
+    // backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  cancelButton: {
+    // backgroundColor: COLORS.gray2,
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'red',
     fontWeight: 'bold',
   },
 });

@@ -20,7 +20,7 @@ const Cart = (props) => {
   const { navigation } = props;
   const [data, setdata] = useState([]);
   const { inforuser } = useContext(AppContext);
-  const [showTotalPrice, setShowTotalPrice] = useState(false);
+  // const [showTotalPrice, setShowTotalPrice] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const isFocused = useIsFocused();
@@ -40,7 +40,7 @@ const Cart = (props) => {
   }, [isFocused]);
 
   const handleToggleTotalPrice = () => {
-    setShowTotalPrice(!showTotalPrice);
+    // setShowTotalPrice(!showTotalPrice);
     calculateTotalPrice();
   };
 
@@ -64,7 +64,7 @@ const Cart = (props) => {
   const calculateTotalPrice = () => {
     let total = 0;
     data?.forEach((item) => {
-      const price = item?.idProduct.price; //lấy giá tiền của sản phẩm qua idProduct ms đúng
+      const price = item?.idProduct.price; //lấy giá tiền của sản phẩm qua idProduct
       const quantity = item?.quantity;
       const productTotal = price * quantity;
       total += productTotal;
@@ -97,16 +97,7 @@ const Cart = (props) => {
         <View style={styles.viewContent}>
           <View style={styles.rightContent}>
             <Text style={styles.text}>Giỏ hàng</Text>
-            <View style={styles.checkboxRow}>
-              <Text style={styles.checkboxText}>Tất cả</Text>
-              <BouncyCheckbox
-                size={30}
-                fillColor="red"
-                unfillColor="white"
-                innerIconStyle={{ borderWidth: 1, borderColor: 'black' }}
-                onPress={handleToggleTotalPrice}
-              />
-            </View>
+            <View style={styles.checkboxRow}></View>
           </View>
         </View>
         {isLoading ? (
@@ -130,6 +121,7 @@ const Cart = (props) => {
                   dulieu={item}
                   navigation={navigation}
                   removeItemFromCart={removeItemFromCart}
+                  calculateTotalPrice={calculateTotalPrice}
                 />
               )}
               keyExtractor={(item) => item._id}
@@ -148,23 +140,23 @@ const Cart = (props) => {
             />
           </View>
         )}
-        <View style={{ height: '25%' }}>
-          <View style={styles.viewBuy}>
+        <View style={{ height: '30%' }}>
+          {/* <View style={styles.viewBuy}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
               }}
             >
               <Text style={{ fontSize: 18, color: COLORS.red }}>
-                Tổng thanh toán: đ{showTotalPrice ? totalPrice.toLocaleString() : '0'}
+                Tổng thanh toán: đ{totalPrice.toLocaleString() || '0'}
               </Text>
             </View>
-          </View>
+          </View> */}
           <View>
             <Pressable style={styles.buttonBuy}>
-              <Text style={styles.textBuy}>Mua hàng</Text>
+              <Text style={styles.textBuy}>Tiếp tục thanh toán</Text>
             </Pressable>
           </View>
         </View>

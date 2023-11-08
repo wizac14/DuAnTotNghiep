@@ -92,21 +92,24 @@ const ProductDetail = (props) => {
       idProduct: product._id,
       color: selectedColor,
       size: parseInt(selectedSize.size),
-      quantity: parseInt(count),
+      quantity: parseInt(count), //so luong san pham khi chon
     });
+    // console.log(count);
+
     if (response.result) {
       ToastAndroid.show('Thêm vào giỏ hành thành công', ToastAndroid.SHORT);
       // navigation.navigate('Cart');
     } else {
       ToastAndroid.show('Thêm thất bại! Hãy kiểm tra lại?', ToastAndroid.SHORT);
     }
+    // console.log(count); //so luong san pham user da chon
   };
+
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
       try {
         const response = await AxiosIntance().get('/product/get-by-id?id=' + params.id);
-
         if (response.result === true) {
           const productData = response.product;
           setProduct(productData);
@@ -123,10 +126,10 @@ const ProductDetail = (props) => {
             });
 
             variance?.varianceDetail.forEach((sizes) => {
-              sizeOfShoes.push(sizes.size);
+              sizeOfShoes.push(sizes?.size);
             });
             variance?.varianceDetail.forEach((quantity) => {
-              quantityOfShoes.push(quantity.quantity);
+              quantityOfShoes.push(quantity?.quantity);
             });
           });
 
@@ -138,7 +141,6 @@ const ProductDetail = (props) => {
           setColorVariances(varianceShoes);
           setSizeVariances(sizeOfShoes);
           setQuantityVariences(quantityOfShoes);
-          console.log(varianceShoes);
         } else {
           ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
         }
@@ -189,7 +191,7 @@ const ProductDetail = (props) => {
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 52,
-              borderWidth: 1,
+              borderWidth: 2,
               borderColor: COLORS.black,
             }}
           >
@@ -203,7 +205,7 @@ const ProductDetail = (props) => {
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 52,
-              borderWidth: 1,
+              borderWidth: 2,
               borderColor: COLORS.black,
             }}
           >
@@ -328,15 +330,15 @@ const ProductDetail = (props) => {
           </View>
 
           {showSizes && (
-            <View>
+            <View style={{ flex: 1 }}>
               <View
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
+                  // justifyContent: 'center',
                 }}
               >
-                <Text style={{ color: colors.text, opacity: 0.5 }}>Kích thước</Text>
+                {/* <Text style={{ color: colors.text, opacity: 0.5, fontSize: 10 }}>Kích cỡ</Text> */}
               </View>
 
               <View
@@ -344,7 +346,8 @@ const ProductDetail = (props) => {
                   flexDirection: 'row',
                   flexWrap: 'wrap',
                   gap: 6,
-                  marginTop: 6,
+                  marginTop: 5,
+                  // alignSelf: 'center',
                 }}
               >
                 {sizesForSelectedColor?.map((varianceDetail, i) => (
@@ -352,12 +355,12 @@ const ProductDetail = (props) => {
                     key={i}
                     onPress={() => varianceDetail?.quantity > 0 && handleSizeSelect(varianceDetail)}
                     style={{
-                      width: 44,
-                      height: 44,
+                      width: selectedSize === varianceDetail ? 34 : 34,
+                      height: selectedSize === varianceDetail ? 34 : 34,
                       alignItems: 'center',
                       justifyContent: 'center',
                       backgroundColor:
-                        selectedSize === varianceDetail ? COLORS.white : 'transparent',
+                        selectedSize === varianceDetail ? COLORS.black : 'transparent',
                       borderRadius: 44,
                       opacity: varianceDetail?.quantity > 0 ? 1 : 0.3,
                       borderColor: varianceDetail?.quantity === 0 ? 'transparent' : 'black',
@@ -366,9 +369,9 @@ const ProductDetail = (props) => {
                   >
                     <Text
                       style={{
-                        color: selectedSize === varianceDetail ? COLORS.black : COLORS.black,
-                        fontWeight: '600',
-                        fontSize: selectedSize === varianceDetail ? 30 : 18,
+                        color: selectedSize === varianceDetail ? COLORS.white : COLORS.primary,
+                        fontWeight: selectedSize === varianceDetail ? '600' : '100',
+                        fontSize: selectedSize === varianceDetail ? 24 : 18,
                       }}
                     >
                       {varianceDetail?.size}
@@ -385,6 +388,7 @@ const ProductDetail = (props) => {
                 fontSize: 20,
                 fontWeight: '600',
                 marginBottom: 6,
+                marginTop: 16,
                 color: COLORS.black,
               }}
             >
@@ -398,17 +402,20 @@ const ProductDetail = (props) => {
               {description}
             </Text>
           </View>
-
           <View style={{ flex: 1 }} />
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16 }}>
-            <View style={{ flex: 1 }}>
-              {/* <Text style={{ color: colors.text, opacity: 0.75, marginBottom: 4 }}>Giá</Text> */}
-              <Text
-                style={{ color: colors.text, fontSize: 22, fontWeight: '600', letterSpacing: 1 }}
-              >
-                đ{price.toLocaleString()}
-              </Text>
-            </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 16,
+              justifyContent: 'space-between',
+              // flex: 1,
+            }}
+          >
+            <Text style={{ color: colors.text, fontSize: 22, fontWeight: '600', letterSpacing: 1 }}>
+              đ{price?.toLocaleString()}
+            </Text>
 
             <TouchableOpacity
               onPress={addNewCart}
