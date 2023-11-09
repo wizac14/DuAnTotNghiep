@@ -128,22 +128,6 @@ const ItemCart = (props) => {
           </View>
         </View>
       </View>
-      {/* <Modal animationType="fade" transparent={true} visible={isDeleteModalVisible}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Xóa sản phẩm này khỏi giỏ hàng ?</Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.cancelButton} onPress={cancelDeleteItem}>
-                <Text style={styles.buttonText}>Đóng</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.confirmButton} onPress={confirmDeleteItem}>
-                <Text style={styles.buttonText}>Đồng ý</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal> */}
-
       <DeleteConfirmationModal
         isVisible={isDeleteModalVisible}
         onCancel={cancelDeleteItem}
@@ -160,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     margin: 10,
     backgroundColor: COLORS.offwhite,
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 10,
     flex: 1,
     elevation: 1,
@@ -213,10 +197,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   price: {
-    fontSize: 18,
+    fontSize: 20,
     // fontWeight: 'bold',
     marginRight: 10,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   quantityControls: {
     flexDirection: 'row',

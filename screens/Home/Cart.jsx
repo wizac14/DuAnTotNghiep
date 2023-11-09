@@ -2,17 +2,13 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Pressable } from 'r
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SIZES } from '../../constants/index';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/index';
 import ItemCart from '../../components/item/ItemCart';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useEffect } from 'react';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { ToastAndroid } from 'react-native';
 import { useContext } from 'react';
 import { AppContext } from '../../components/ultil/AppContext';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import { useIsFocused, useTheme, useNavigation } from '@react-navigation/native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
 
@@ -20,7 +16,6 @@ const Cart = (props) => {
   const { navigation } = props;
   const [data, setdata] = useState([]);
   const { inforuser } = useContext(AppContext);
-  // const [showTotalPrice, setShowTotalPrice] = useState(false);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const isFocused = useIsFocused();
@@ -39,17 +34,12 @@ const Cart = (props) => {
     };
   }, [isFocused]);
 
-  const handleToggleTotalPrice = () => {
-    // setShowTotalPrice(!showTotalPrice);
-    calculateTotalPrice();
-  };
-
   const getDetailByIdUser = async () => {
     try {
       const response = await AxiosIntance().get('/cart/get-by-idUser?idUser=' + inforuser._id);
       if (response?.result === true) {
         setdata(response?.cart);
-        // console.log(response?.cart[0]);
+        console.log(response?.cart[0]);
       } else {
         ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
       }
@@ -105,7 +95,6 @@ const Cart = (props) => {
             style={{
               // height: Dimensions.get('window').height * 0.75,
               height: '75%',
-              // backgroundColor: 'red',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -121,7 +110,6 @@ const Cart = (props) => {
                   dulieu={item}
                   navigation={navigation}
                   removeItemFromCart={removeItemFromCart}
-                  calculateTotalPrice={calculateTotalPrice}
                 />
               )}
               keyExtractor={(item) => item._id}
@@ -141,22 +129,14 @@ const Cart = (props) => {
           </View>
         )}
         <View style={{ height: '30%' }}>
-          {/* <View style={styles.viewBuy}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
+          <View>
+            <Pressable
+              style={styles.buttonBuy}
+              onPress={() => {
+                navigation.navigate('CartDetail', { data });
               }}
             >
-              <Text style={{ fontSize: 18, color: COLORS.red }}>
-                Tổng thanh toán: đ{totalPrice.toLocaleString() || '0'}
-              </Text>
-            </View>
-          </View> */}
-          <View>
-            <Pressable style={styles.buttonBuy}>
-              <Text style={styles.textBuy}>Tiếp tục thanh toán</Text>
+              <Text style={styles.textBuy}>Tiếp tục</Text>
             </Pressable>
           </View>
         </View>

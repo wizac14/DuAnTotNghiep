@@ -7,7 +7,10 @@ const DeleteConfirmationModal = ({ isVisible, onCancel, onConfirm }) => {
     <Modal isVisible={isVisible}>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
-          <Text style={styles.modalText}>Xóa khỏi giỏ hàng?</Text>
+          <Text style={styles.modalText1}>XÁC NHẬN</Text>
+          <Text style={styles.modalText2}>
+            Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?
+          </Text>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={onCancel}>
               <Text style={styles.buttonText}>Đóng</Text>
@@ -35,9 +38,15 @@ const styles = StyleSheet.create({
     width: 300,
     alignItems: 'center',
   },
-  modalText: {
+  modalText1: {
+    fontSize: 22,
+    marginBottom: 30,
+    fontWeight: 'bold',
+  },
+  modalText2: {
     fontSize: 18,
-    marginBottom: 20,
+    marginBottom: 40,
+    textAlign: 'center',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -46,12 +55,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   cancelButton: {
-    backgroundColor: 'red',
+    backgroundColor: 'grey',
     padding: 10,
     borderRadius: 5,
   },
   confirmButton: {
-    backgroundColor: 'green',
+    backgroundColor: 'red',
     padding: 10,
     borderRadius: 5,
   },
