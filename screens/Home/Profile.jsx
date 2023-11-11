@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,Button } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,Button, KeyboardAvoidingView } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SIZES } from "../../constants/index";
@@ -46,6 +46,7 @@ const Profile = () => {
     };
   return (
     <SafeAreaView style={styles.container}>
+     
     <View>
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
         <TouchableOpacity onPress={capture}  style={styles.circle}>
@@ -60,6 +61,7 @@ const Profile = () => {
           </TouchableOpacity>
         <Image style={{ marginTop: 70, marginLeft: -10 }} source={require('../../assets/images/editing.png')}></Image>
       </View>
+      <KeyboardAvoidingView>
       <TextInput style={styles.textHint} placeholder="Email" value={inforuser.email} onChangeText={(text)=> setinforuser({...inforuser,email: text})}
         placeholderTextColor="gray"></TextInput>
       <TextInput style={styles.textHint} value={inforuser.name} onChangeText={(text)=> setinforuser({...inforuser,name: text})} placeholder="Martias Duarte"
@@ -78,10 +80,11 @@ const Profile = () => {
        color="black"
         title="Press me"
       />
+        </KeyboardAvoidingView>
       </View>
      
 
-
+    
   </SafeAreaView>
   );
 };

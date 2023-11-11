@@ -82,8 +82,8 @@ const TabItem = ({ routeName, isActive, navigation }) => {
               ? "home"
               : routeName === "Giỏ hàng"
               ? "shopping-cart"
-              : routeName === "Lịch sử"
-              ? "account-balance-wallet"
+              : routeName === "Yêu thích"
+              ? "favorite"
               : "person"
           }
           size={24}

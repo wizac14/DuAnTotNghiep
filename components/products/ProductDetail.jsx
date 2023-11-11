@@ -10,6 +10,7 @@ import { SliderBox } from 'react-native-image-slider-box';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { useContext } from 'react';
 import { AppContext } from '../ultil/AppContext';
+import { Alert } from 'react-native';
 
 const ProductDetail = (props) => {
   const { navigation } = props;
@@ -35,9 +36,11 @@ const ProductDetail = (props) => {
   const [remainingQuantity, setRemainingQuantity] = useState(null);
   const [showSizes, setShowSizes] = useState(false);
   const [product, setProduct] = useState('');
+  const [idProduct1, setidProduct] = useState([]);
   const [isColorSelected, setIsColorSelected] = useState(false);
   const [isSizeSelected, setIsSizeSelected] = useState(false);
   const [hasSelectedColor, setHasSelectedColor] = useState(false);
+  const [isSaved, setIsSaved] = useState(false)
 
   const handleSizeSelect = (selectedSize) => {
     setSelectedSize(selectedSize);
@@ -85,6 +88,23 @@ const ProductDetail = (props) => {
 
     return sizesForColor;
   }
+  const getProducts = async () => {
+    try {
+      const response = await AxiosIntance().get('/favorite/get-by-idProduct?idProduct='+ params.id);
+    if (response.result) {
+      console.log("aaaa",response.favorite);
+      setidProduct(response.favorite);
+   
+    // console.log("aa",response.favorite);
+    } else {
+    ToastAndroid.show('Lấy data thất bại');
+    }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      ToastAndroid.show('Lỗi kết nối', ToastAndroid.SHORT);
+      
+    }
+  };
   // http://localhost:3000/api/cart/new-to-cart
   const addNewCart = async () => {
     const response = await AxiosIntance().post('/cart/new-to-cart', {
@@ -101,6 +121,54 @@ const ProductDetail = (props) => {
       ToastAndroid.show('Thêm thất bại! Hãy kiểm tra lại?', ToastAndroid.SHORT);
     }
   };
+
+  const addToFavorite = async () => {
+    try {
+      // http://localhost:3000/api/favorite/new-to-favorite
+      // console.log("idUser", idUser);
+      const response = await AxiosIntance().post("/favorite/new-to-favorite", { idUser: inforuser._id, idProduct: params.id });
+      if (response.result) {
+        ToastAndroid.show("Lưu món thành công !!! ", ToastAndroid.SHORT, ToastAndroid.CENTER,);
+      } else {
+        console.log("Failed to get all RECIPE");
+      }
+    } catch (error) {
+      console.log("=========>", error);
+    }
+  }
+  const deleteFavorite=async()=>{
+    try {
+
+      // console.log("AAAAAAAAAAAA",recipe._id);
+      const response = await AxiosIntance().delete(`/favorite/delete-by-id?idProduct=${product._id}&idUser=${inforuser._id}`);
+      console.log(response.recipe)
+      if (response.result) {
+          ToastAndroid.show("Xoá thành công!", ToastAndroid.SHORT);
+      } else {
+          console.log("Failed to delete RECIPE");
+      }
+  } catch (error) {
+      console.log("=========>", error);
+  }
+  }
+  const dialogConfirm = () => {
+    return Alert.alert(
+        "Thông báo",
+        "Xóa lưu Yêu thích",
+        [{
+            text: "Đồng ý",
+            onPress: () => {
+                setIsSaved(false)
+                deleteFavorite()
+            }
+        },
+        {
+            text: "Hủy",
+            onPress: () => {
+                setIsSaved(true)
+            },
+        }]);
+};
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
@@ -147,11 +215,19 @@ const ProductDetail = (props) => {
         ToastAndroid.show('Lỗi kết nối', ToastAndroid.SHORT);
       }
     };
-
+   
     getDetails();
+    
+   
+    if (isSaved) {
+      addToFavorite()
+    }
+    
+   
 
     return () => {};
-  }, []);
+  }, [isSaved]);
+  
 
   return (
     <View style={{ flex: 1 }}>
@@ -196,7 +272,7 @@ const ProductDetail = (props) => {
             <Icons name="arrow-back" size={24} color={COLORS.black} />
           </TouchableOpacity>
           <View style={{ flex: 1 }} />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{
               width: 52,
               aspectRatio: 1,
@@ -208,7 +284,34 @@ const ProductDetail = (props) => {
             }}
           >
             <Icons name="favorite-border" size={24} color={COLORS.black} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          {!isSaved
+            ?
+            (
+              <TouchableOpacity style={{
+                width: 52,
+                aspectRatio: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 52,
+                borderWidth: 1,
+                borderColor: COLORS.black}} onPress={() => setIsSaved(true)}>
+                <Icons name="favorite-border" size={24} color={COLORS.black} />
+              </TouchableOpacity>
+            )
+            :
+            (
+              <TouchableOpacity style={{
+                width: 52,
+                aspectRatio: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 52,
+                borderWidth: 1,
+                borderColor: COLORS.black}} onPress={() => {setIsSaved(false),dialogConfirm()}}>
+                <Icons name="favorite" size={24} color={"red"} />
+              </TouchableOpacity>
+            )}
         </View>
       </SafeAreaView>
 
