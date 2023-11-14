@@ -8,7 +8,7 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useEffect, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../constants/index';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -24,6 +24,7 @@ import FilterView from '../../components/home/FilterView';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { UIActivityIndicator } from 'react-native-indicators';
 import noImageAvailable from '../../assets/images/no_image_available.jpg';
+import { AppContext } from '../../components/ultil/AppContext';
 const Home = () => {
   const BRANDS = ['Nike', 'Adidas', 'Converse', 'New Balance', 'Vans', 'FILA', 'Other'];
 
@@ -68,6 +69,7 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [isProductLoading, setIsProductLoading] = useState(true);
+  const {inforuser}=useContext(AppContext);
 
   useEffect(() => {
     const getBrands = async () => {
@@ -135,7 +137,14 @@ const Home = () => {
             gap: 8,
           }}
         >
-          <Image
+        {inforuser.image!=''
+        ?(<Image style={{
+              width: 52,
+              aspectRatio: 1,
+              borderRadius: 52,
+            }}
+            resizeMode="cover" source={{ uri: inforuser?.image }} />):
+          (<Image
             source={{
               uri: AVATAR_URL,
             }}
@@ -145,7 +154,10 @@ const Home = () => {
               borderRadius: 52,
             }}
             resizeMode="cover"
-          />
+          />)
+
+        }
+          
           <View style={{ flex: 1 }}>
             <Text
               style={{
@@ -156,7 +168,7 @@ const Home = () => {
               }}
               numberOfLines={1}
             >
-              Xin chào 👋
+              Xin chào {inforuser?.name} 👋
             </Text>
             <Text
               style={{
@@ -179,7 +191,7 @@ const Home = () => {
               borderColor: colors.border,
             }}
           >
-            <MaterialIcons name="notifications" size={24} color={colors.text} />
+            <MaterialIcons name="favorite-border" size={24} color={colors.text} />
           </TouchableOpacity>
         </View>
         {/* Search Bar Section */}
@@ -395,7 +407,7 @@ const Home = () => {
                         source={{
                           uri: item?.variances[0].images[0].url,
                         }}
-                        resizeMode="contain"
+                        // resizeMode="contain"
                       />
                     ) : (
                       <Image resizeMode="contain" source={noImageAvailable} />
@@ -420,8 +432,8 @@ const Home = () => {
                         style={{
                           flex: 1,
                           fontSize: 14,
-                          fontWeight: '600',
-                          color: COLORS.gray,
+                          fontWeight: '900',
+                          color: COLORS.black,
                           textShadowColor: 'rgba(0,0,0,0.1)',
                           textShadowOffset: {
                             height: 1,
@@ -462,7 +474,7 @@ const Home = () => {
                     >
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: COLORS.black,
                           marginLeft: 8,
                           textShadowColor: 'rgba(0,0,0,0)',
@@ -479,7 +491,7 @@ const Home = () => {
                       >
                         {item.price.toLocaleString()} đ
                       </Text>
-                      <TouchableOpacity
+                      {/* <TouchableOpacity
                         style={{
                           paddingHorizontal: 12,
                           paddingVertical: 8,
@@ -489,7 +501,7 @@ const Home = () => {
                         }}
                       >
                         <MaterialIcons name="add-shopping-cart" size={18} color="#000" />
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     </View>
                   </View>
                 </View>
