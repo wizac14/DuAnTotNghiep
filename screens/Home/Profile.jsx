@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,Button, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,Button, KeyboardAvoidingView , Alert} from 'react-native'
 import React, { useContext, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { SIZES } from "../../constants/index";
@@ -6,7 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../../constants/index";
 import { AppContext } from '../../components/ultil/AppContext';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
-import { launchCameraAsync } from 'expo-image-picker';
+import { launchCameraAsync , launchImageLibraryAsync} from 'expo-image-picker';
 import { ToastAndroid } from 'react-native';
 
 
@@ -14,7 +14,7 @@ const Profile = () => {
   const { inforuser, setinforuser} = useContext(AppContext);
   const updateprofile= async ()=>
     {
-        const response=await AxiosIntance().post("/user/update",{name:inforuser.name,email:inforuser.email,address:inforuser.address,phoneNumber:inforuser.phoneNumber, dob:inforuser.dob,image:inforuser.image,gender:inforuser.gender});
+        const response=await AxiosIntance().put("/user/update/"+ inforuser._id,{name:inforuser.name,email:inforuser.email,address:inforuser.address,phoneNumber:inforuser.phoneNumber, dob:inforuser.dob,image:inforuser.image,gender:inforuser.gender});
         if(response.result)
         {
             ToastAndroid.show("Cập nhật thành công",ToastAndroid.SHORT);
@@ -24,6 +24,27 @@ const Profile = () => {
             ToastAndroid.show("Cập nhật không thành công",ToastAndroid.SHORT);
 
         }
+    }
+    const dialogImageChoose = () => {
+      return Alert.alert(
+        "Thông báo",
+        "Chọn phương thức lấy ảnh",
+        [{
+          text: "Chụp ảnh ",
+          onPress: () => {
+            capture()
+          },
+        },
+        {
+          text: "Tải ảnh lên",
+          onPress: () => {
+            getImageLibrary()
+          },
+        },
+        {
+          text: "Hủy",
+        },
+        ])
     }
     const capture= async ()=>
     {
@@ -37,19 +58,42 @@ const Profile = () => {
 
 
         });
-        // const response= await AxiosIntance("multipart/form-data").post('/media/upload',formdata);
-        // console.log(response.data.path);
-        // setinforuser({...inforuser,avatar: response.data.path});
         const response= await AxiosIntance('multipart/form-data').post('/user/upload-image',formdata);
-        console.log("aaa"+response);
-        setinforuser({...inforuser,image: response.link});
+        console.log(response.link);
+        if (response.result) {
+          setinforuser({...inforuser,image: response.link});
+          ToastAndroid.show("Upload Image Success", ToastAndroid.SHORT);
+        }
+        else {
+          ToastAndroid.show("Upload Image Failed", ToastAndroid.SHORT);
+        }
+      
     };
+    const getImageLibrary = async () => {
+      const result = await launchImageLibraryAsync();
+      console.log(result.assets[0].uri);
+      const formData = new FormData();
+      formData.append('image', {
+        uri: result.assets[0].uri,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+      });
+      const response = await AxiosIntance("multipart/form-data").post('/user/upload-image', formData);
+      console.log(response.link);
+      if (response.result) {
+        setinforuser({...inforuser,image: response.link});
+        ToastAndroid.show("Upload Image Success", ToastAndroid.SHORT);
+      }
+      else {
+        ToastAndroid.show("Upload Image Failed", ToastAndroid.SHORT);
+      }
+    }
   return (
     <SafeAreaView style={styles.container}>
      
     <View>
       <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <TouchableOpacity onPress={capture}  style={styles.circle}>
+        <TouchableOpacity onPress={dialogImageChoose }  style={styles.circle}>
       
       
             {
