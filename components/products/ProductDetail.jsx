@@ -15,6 +15,7 @@ const ProductDetail = (props) => {
   const { navigation } = props;
   const { route } = props;
   const { params } = route;
+  const { cartItemCount, setCartItemCount } = useContext(AppContext);
 
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
@@ -57,20 +58,17 @@ const ProductDetail = (props) => {
     // Đặt biến isColorSelected thành true khi chọn màu mới
     setIsColorSelected(true);
 
-    // Đặt biến isSizeSelected thành false
     setIsSizeSelected(false);
-    // Lấy danh sách size tương ứng với màu đã chọn từ product.variances.varianceDetail
 
     const sizesForSelectedColor = getSizesForColor(product?.variances, color);
 
     setSelectedSize(null); // Đặt kích thước đã chọn về null trước khi chọn màu mới
-    setSelectedColor(color); // Lưu màu được chọn
+    setSelectedColor(color);
     setCount(1);
     setSizesForSelectedColor(sizesForSelectedColor);
     setShowSizes(true); // Hiển thị danh sách kích thước
-    setHasSelectedColor(true); // Đã chọn màu
+    setHasSelectedColor(true);
 
-    // Tắt thông báo "Vui lòng chọn màu" khi đã chọn màu
     setRemainingQuantity(null);
   };
 
@@ -99,6 +97,7 @@ const ProductDetail = (props) => {
     if (response.result) {
       ToastAndroid.show('Thêm vào giỏ hành thành công', ToastAndroid.SHORT);
       // navigation.navigate('Cart');
+      setCartItemCount(cartItemCount + 1);
     } else {
       ToastAndroid.show('Thêm thất bại! Hãy kiểm tra lại?', ToastAndroid.SHORT);
     }
@@ -213,7 +212,6 @@ const ProductDetail = (props) => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-
       <BottomSheet
         // detached
         snapPoints={[64, 470]}

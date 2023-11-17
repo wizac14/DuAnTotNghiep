@@ -6,11 +6,11 @@ import { SliderBox } from 'react-native-image-slider-box';
 const ImagesSlider = () => {
   const slides = [
     'https://wallpaperset.com/w/full/f/d/6/43388.jpg',
-    'https://wallpaperset.com/w/full/3/3/6/186736.jpg',
-    'https://wallpaperset.com/w/full/a/2/9/186945.jpg',
-    'https://wallpaperset.com/w/full/2/b/1/186688.jpg',
     'https://wallpaperset.com/w/full/a/4/b/76571.jpg',
-    'https://wallpaperset.com/w/full/2/5/b/408920.jpg',
+    'https://wallpaperset.com/w/full/8/9/5/474196.jpg',
+    'https://wallpaperset.com/w/full/f/e/0/25026.jpg',
+    'https://wallpaperset.com/w/full/b/8/0/21482.jpg',
+    'https://wallpaperset.com/w/full/5/f/d/65130.jpg',
   ];
   return (
     <View style={styles.imageSlider}>

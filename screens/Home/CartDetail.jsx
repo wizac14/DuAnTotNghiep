@@ -13,6 +13,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { TextInput } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Pressable } from 'react-native';
+import { Button } from 'react-native';
+import { ToastAndroid } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
 const CartDetail = (props) => {
   const { route } = props;
@@ -21,8 +27,12 @@ const CartDetail = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [totalPrice, setTotalPrice] = useState(0);
 
-  const [isVnpayChecked, setVnpayChecked] = useState(false);
+  const [isVnpayChecked, setVnpayChecked] = useState(true);
   const [isCodChecked, setCodChecked] = useState(false);
+  const navigation = useNavigation();
+  const [nameText, setNameText] = useState('');
+  const [addressText, setAddressText] = useState('');
+  const [phoneNbText, setPhoneNbText] = useState('');
 
   useEffect(() => {
     getDetailByIdUser();
@@ -58,136 +68,237 @@ const CartDetail = (props) => {
       setIsLoading(false);
     }
   };
+  const [paymentUrl, setPaymentUrl] = useState('');
 
+  const getVnPayPaymentUrl = async () => {
+    try {
+      const result = await AxiosIntance().get(`order/create_payment_url?amount=${totalPrice}`);
+      return result.url;
+    } catch (error) {
+      ToastAndroid.show('Lỗi kết nối đến VNPAY', ToastAndroid.SHORT);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (isVnpayChecked) {
+      const paymentUrl = await getVnPayPaymentUrl();
+      if (paymentUrl) {
+        navigation.navigate('VnPayWebView', { paymentUrl: paymentUrl });
+      } else {
+        Alert.alert(
+          'Chọn phương thức thanh toán',
+          'Vui lòng chọn phương thức thanh toán trước khi thanh toán.'
+        );
+      }
+    }
+    if (isCodChecked) {
+      navigation.navigate('CodPayment', {
+        address: addressText,
+        phoneNumber: phoneNbText,
+        inforuser: inforuser,
+        cartData: data,
+        totalAmount: totalPrice,
+      });
+    }
+  };
+
+  const handleCodPayment = () => {
+    // Thực hiện xử lý thanh toán COD ở đây
+    // Ví dụ: Gửi thông tin đơn hàng và thanh toán đến server
+    // Sau đó, hiển thị thông báo thanh toán thành công hoặc thất bại
+    Alert.alert(
+      'Thanh toán COD',
+      'Đơn hàng của bạn đã được ghi nhận. Chúng tôi sẽ liên hệ với bạn để xác nhận thanh toán.'
+    );
+  };
   return (
-    <SafeAreaView>
-      <View style={styles.cartDetailContainer}>
-        <View>
-          <Text style={styles.cartDetailTitle}>Chi tiết đơn hàng</Text>
-        </View>
-        <View>
-          <Text style={styles.placeToShip}>Giao đến</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginBottom: 26,
-              //   justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottomWidth: 0.5,
-              borderBottomColor: COLORS.gray2,
-            }}
-          >
-            <Entypo style={{ marginRight: 5 }} name="location-pin" size={28} color="red" />
-            <View style={{ flexDirection: 'column', alignSelf: 'flex-start', flex: 1 }}>
-              <Text style={{ color: 'grey' }}>Địa chỉ của bạn</Text>
-              <TextInput style={{ fontSize: 18 }} value={inforuser.address} placeholder="Address" />
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.cartDetailContainer}>
+          <View style={{ height: '53%' }}>
+            <View>
+              <Text style={styles.cartDetailTitle}>CHI TIẾT ĐƠN HÀNG</Text>
             </View>
-            <SimpleLineIcons
+            <View>
+              <Text style={styles.placeToShip}>Giao đến cho {inforuser.name}</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginBottom: 26,
+                  //   justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: COLORS.gray2,
+                }}
+              >
+                <Entypo style={{ marginRight: 5 }} name="location-pin" size={28} color="green" />
+                <View style={{ flexDirection: 'column', alignSelf: 'flex-start', flex: 1 }}>
+                  <Text style={{ color: 'grey' }}>Địa chỉ của bạn</Text>
+                  <TextInput
+                    style={{ fontSize: 18 }}
+                    defaultValue={inforuser.address}
+                    placeholder="Địa chỉ"
+                    onChangeText={(text) => setAddressText(text)}
+                  />
+                </View>
+                <SimpleLineIcons
+                  style={{
+                    justifyContent: 'flex-end',
+                    alignContent: 'flex-end',
+                    alignItems: 'flex-end',
+                  }}
+                  name="arrow-right"
+                  size={14}
+                  color="grey"
+                />
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginBottom: 26,
+                  //   justifyContent: 'space-between',
+                  alignItems: 'center',
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: COLORS.gray2,
+                }}
+              >
+                <Entypo style={{ marginRight: 5 }} name="phone" size={28} color="green" />
+                <View style={{ flexDirection: 'column', alignSelf: 'flex-start', flex: 1 }}>
+                  <Text style={{ color: 'grey' }}>Số điện thoại</Text>
+                  <TextInput
+                    style={{ fontSize: 18 }}
+                    defaultValue={'0' + inforuser.phoneNumber.toString()}
+                    placeholder="Số điện thoại"
+                    onChangeText={(text) => setPhoneNbText(text)}
+                  />
+                </View>
+              </View>
+            </View>
+            <View>
+              <Text style={styles.placeToShip}>Hình thức giao hàng</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginBottom: 26,
+                  alignItems: 'center',
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: COLORS.gray2,
+                }}
+              >
+                <MaterialCommunityIcons
+                  style={{ marginRight: 5 }}
+                  name="truck-cargo-container"
+                  size={28}
+                  color="green"
+                />
+                <Text style={{ fontSize: 16 }}>Vận chuyển nhanh</Text>
+              </View>
+            </View>
+            <View
               style={{
-                justifyContent: 'flex-end',
-                alignContent: 'flex-end',
-                alignItems: 'flex-end',
+                flexDirection: 'colunm',
+                marginBottom: 26,
+                borderBottomWidth: 0.5,
+                borderBottomColor: COLORS.gray2,
               }}
-              name="arrow-right"
-              size={14}
-              color="grey"
-            />
+            >
+              <Text style={styles.placeToShip}>Phương thức thanh toán</Text>
+              <View
+                style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10 }}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <BouncyCheckbox
+                    isChecked={isVnpayChecked}
+                    fillColor="green"
+                    disableBuiltInState
+                    onPress={() => {
+                      setVnpayChecked((pre) => {
+                        if (!pre) {
+                          setCodChecked(false);
+                        }
+                        return !pre;
+                      });
+                    }}
+                  />
+                  <Text>VNPAY</Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <BouncyCheckbox
+                    isChecked={isCodChecked}
+                    fillColor="green"
+                    disableBuiltInState
+                    onPress={() => {
+                      setCodChecked((pre) => {
+                        if (!pre) {
+                          setVnpayChecked(false);
+                        }
+                        return !pre;
+                      });
+                    }}
+                  />
+                  <Text>COD</Text>
+                </View>
+              </View>
+            </View>
           </View>
-        </View>
-        <View>
-          <Text style={styles.placeToShip}>Hình thức giao hàng</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              marginBottom: 26,
-              alignItems: 'center',
-              borderBottomWidth: 0.5,
-              borderBottomColor: COLORS.gray2,
-            }}
-          >
-            <MaterialCommunityIcons
-              style={{ marginRight: 5 }}
-              name="truck-cargo-container"
-              size={28}
-              color="green"
-            />
-            <Text style={{ fontSize: 16 }}>Vận chuyển nhanh</Text>
-          </View>
+          {isLoading ? (
+            <View
+              style={{
+                height: '30%',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <UIActivityIndicator size={30} color={COLORS.primary} />
+            </View>
+          ) : (
+            <View style={{ height: '40%' }}>
+              <View>
+                <Text style={styles.cartInShort}>Tóm tắt đơn hàng</Text>
+              </View>
+              <FlatList
+                // showsVerticalScrollIndicator={false}
+                style={{ height: '100%' }}
+                showsHorizontalScrollIndicator={false}
+                data={data}
+                renderItem={({ item }) => <CartItem item={item} />}
+                keyExtractor={(item) => item._id}
+                ListEmptyComponent={
+                  <View
+                    style={{
+                      height: Dimensions.get('window').height * 0.25,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Text>Rất tiếc, không có sản phẩm nào.</Text>
+                  </View>
+                }
+              />
+            </View>
+          )}
         </View>
         <View
           style={{
-            flexDirection: 'colunm',
-            marginBottom: 26,
-            borderBottomWidth: 0.5,
-            borderBottomColor: COLORS.gray2,
+            width: '100%',
+            padding: 10,
+
+            position: 'absolute',
+            bottom: 0,
           }}
         >
-          <Text style={styles.placeToShip}>Phương thức thanh toán</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <BouncyCheckbox
-                isChecked={isVnpayChecked}
-                fillColor="green"
-                onPress={() => setVnpayChecked(!isVnpayChecked)}
-              />
-              <Text>VNPAY</Text>
-            </View>
-
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <BouncyCheckbox
-                isChecked={isCodChecked}
-                fillColor="green"
-                onPress={() => setCodChecked(!isCodChecked)}
-              />
-              <Text>COD</Text>
-            </View>
-          </View>
-        </View>
-        <View>
-          <Text style={styles.cartInShort}>Tóm tắt đơn hàng</Text>
-        </View>
-        {isLoading ? (
-          <View
-            style={{
-              height: '70%',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <UIActivityIndicator size={30} color={COLORS.primary} />
-          </View>
-        ) : (
-          <View style={{ height: '45%' }}>
-            <FlatList
-              data={data}
-              renderItem={({ item }) => <CartItem item={item} />}
-              keyExtractor={(item) => item._id}
-              ListEmptyComponent={
-                <View
-                  style={{
-                    height: Dimensions.get('window').height * 0.25,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Text>Rất tiếc, không có sản phẩm nào.</Text>
-                </View>
-              }
-            />
-          </View>
-        )}
-        <View style={{ flexDirection: 'column' }}>
           <View style={{ flexDirection: 'column' }}>
-            <Text style={{ fontSize: 18, color: COLORS.red, textAlign: 'center' }}>
+            <Text style={{ fontSize: 18, color: COLORS.red, textAlign: 'right' }}>
               Tổng thanh toán: ₫{totalPrice.toLocaleString()}
             </Text>
-            <TouchableOpacity style={styles.buttonBuy}>
-              <Text style={styles.textBuy}>Thanh toán</Text>
+            <TouchableOpacity style={styles.buttonBuy} onPress={() => handleSubmit()}>
+              <Text style={styles.textBuy}>Đặt hàng</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 };
 
@@ -285,6 +396,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: COLORS.red,
   },
   quantity: {
     fontSize: 16,
@@ -301,21 +413,20 @@ const styles = StyleSheet.create({
   cartDetailTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 30,
   },
   cartInShort: {
     fontSize: 18,
     fontWeight: 'normal',
-    marginBottom: 16,
   },
   placeToShip: {
     fontSize: 18,
     fontWeight: 'normal',
-    marginBottom: 16,
+    marginBottom: 5,
   },
   buttonBuy: {
     height: 48,
-    backgroundColor: 'black',
+    backgroundColor: 'green',
     borderRadius: 5,
     justifyContent: 'center',
     alignItems: 'center',

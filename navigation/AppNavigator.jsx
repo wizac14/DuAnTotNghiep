@@ -24,6 +24,9 @@ import { useContext } from 'react';
 import { AppContext } from '../components/ultil/AppContext';
 import BottomTabNavigation from './BottomTabNavigation';
 import CartDetail from '../screens/Home/CartDetail';
+import SearchDetail from '../screens/Home/SearchDetail';
+import VnPayWebView from '../screens/Payment/VnPayWebView';
+import CodPayment from '../screens/Payment/CodPayment';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -68,6 +71,17 @@ const AuthNavigator = () => {
       />
       <Stack.Screen name="Cart" component={Cart} options={{ headerShown: false }} />
       <Stack.Screen name="CartDetail" component={CartDetail} options={{ headerShown: false }} />
+      <Stack.Screen name="SearchDetail" component={SearchDetail} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="VnPayWebView"
+        component={VnPayWebView}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      {/* <Stack.Screen
+        name="CodPayment"
+        component={CodPayment}
+        options={{ headerShown: false, gestureEnabled: false }}
+      /> */}
     </Stack.Navigator>
   );
 };
