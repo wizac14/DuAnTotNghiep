@@ -69,7 +69,7 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('All');
   const [isProductLoading, setIsProductLoading] = useState(true);
-  const {inforuser}=useContext(AppContext);
+  const { inforuser } = useContext(AppContext);
 
   useEffect(() => {
     const getBrands = async () => {
@@ -137,27 +137,30 @@ const Home = () => {
             gap: 8,
           }}
         >
-        {inforuser.image!=''
-        ?(<Image style={{
-              width: 52,
-              aspectRatio: 1,
-              borderRadius: 52,
-            }}
-            resizeMode="cover" source={{ uri: inforuser?.image }} />):
-          (<Image
-            source={{
-              uri: AVATAR_URL,
-            }}
-            style={{
-              width: 52,
-              aspectRatio: 1,
-              borderRadius: 52,
-            }}
-            resizeMode="cover"
-          />)
+          {inforuser.image != '' ? (
+            <Image
+              style={{
+                width: 52,
+                aspectRatio: 1,
+                borderRadius: 52,
+              }}
+              resizeMode="cover"
+              source={{ uri: inforuser?.image }}
+            />
+          ) : (
+            <Image
+              source={{
+                uri: AVATAR_URL,
+              }}
+              style={{
+                width: 52,
+                aspectRatio: 1,
+                borderRadius: 52,
+              }}
+              resizeMode="cover"
+            />
+          )}
 
-        }
-          
           <View style={{ flex: 1 }}>
             <Text
               style={{
@@ -181,6 +184,9 @@ const Home = () => {
             </Text>
           </View>
           <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Favourite');
+            }}
             style={{
               width: 52,
               aspectRatio: 1,

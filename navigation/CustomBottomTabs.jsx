@@ -1,30 +1,24 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
-} from "react-native";
-import React from "react";
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Icons from "@expo/vector-icons/MaterialIcons";
-import { ParamListBase, useTheme } from "@react-navigation/native";
+import { View, Text, TouchableOpacity, Pressable, StyleSheet } from 'react-native';
+import React from 'react';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Icons from '@expo/vector-icons/MaterialIcons';
+import { ParamListBase, useTheme } from '@react-navigation/native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
-} from "react-native-reanimated";
+} from 'react-native-reanimated';
 
 const CustomBottomTabs = (props) => {
   const { colors } = useTheme();
   return (
-    <SafeAreaView edges={["bottom"]} style={{ backgroundColor: colors.card }}>
+    <SafeAreaView edges={['bottom']} style={{ backgroundColor: colors.card }}>
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: 'row',
+          alignItems: 'center',
           paddingHorizontal: 16,
         }}
       >
@@ -58,9 +52,9 @@ const TabItem = ({ routeName, isActive, navigation }) => {
       onPress={onTap}
       style={{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
         paddingVertical: 8,
       }}
     >
@@ -69,22 +63,22 @@ const TabItem = ({ routeName, isActive, navigation }) => {
           {
             width: 36,
             height: 36,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
             borderRadius: 32,
-            backgroundColor: isActive ? colors.primary : "transparent",
+            backgroundColor: isActive ? colors.primary : 'transparent',
           },
         ]}
       >
         <Icons
           name={
-            routeName === "Trang chủ"
-              ? "home"
-              : routeName === "Giỏ hàng"
-              ? "shopping-cart"
-              : routeName === "Yêu thích"
-              ? "favorite"
-              : "person"
+            routeName === 'Trang chủ'
+              ? 'home'
+              : routeName === 'Giỏ hàng'
+              ? 'shopping-cart'
+              : routeName === 'Tìm kiếm'
+              ? 'search'
+              : 'person'
           }
           size={24}
           color={isActive ? colors.card : colors.text}
@@ -98,7 +92,7 @@ const TabItem = ({ routeName, isActive, navigation }) => {
           style={{
             marginLeft: 4,
             fontSize: 12,
-            fontWeight: "600",
+            fontWeight: '600',
             color: colors.text,
           }}
         >

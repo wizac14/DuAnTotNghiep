@@ -1,25 +1,21 @@
-import { View, Text } from "react-native";
-import React from "react";
-import {
-  BottomTabScreenProps,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
-import Icons from "@expo/vector-icons/MaterialIcons";
-import CustomBottomTabs from "../navigation/CustomBottomTabs";
-import Home from "../screens/Home/Home";
-import Cart from "../screens/Home/Cart";
-import Profile from "../screens/Home/Profile";
-import ItemListHistory from "../components/item/ItemListHistory";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import FilterScreen from "../screens/Home/FilterScreen";
-import FavoriteScreen from "../screens/FavoriteScreen";
+import { View, Text } from 'react-native';
+import React from 'react';
+import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icons from '@expo/vector-icons/MaterialIcons';
+import CustomBottomTabs from '../navigation/CustomBottomTabs';
+import Home from '../screens/Home/Home';
+import Cart from '../screens/Home/Cart';
+import Profile from '../screens/Home/Profile';
+import ItemListHistory from '../components/item/ItemListHistory';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import FilterScreen from '../screens/Home/FilterScreen';
+import SearchDetail from '../screens/Home/SearchDetail';
+import FavoriteScreen from '../screens/FavoriteScreen';
 
 const TabsStack = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-
 const TabsNavigator = () => {
-
   return (
     <TabsStack.Navigator
       screenOptions={{
@@ -38,6 +34,16 @@ const TabsNavigator = () => {
         }}
       />
       <TabsStack.Screen
+        name="Tìm kiếm"
+        component={SearchDetail}
+        options={{
+          headerShown: false,
+          tabBarIcon(props) {
+            return <Icons name="search" {...props} />;
+          },
+        }}
+      />
+      <TabsStack.Screen
         name="Giỏ hàng"
         component={Cart}
         options={{
@@ -47,16 +53,7 @@ const TabsNavigator = () => {
           },
         }}
       />
-      <TabsStack.Screen
-        name="Yêu thích"
-        component={FavoriteScreen}
-        options={{
-          headerShown: false,
-          tabBarIcon(props) {
-            return <Icons name="favorite" {...props} />;
-          },
-        }}
-      />
+
       <TabsStack.Screen
         name="Bạn"
         component={Profile}
