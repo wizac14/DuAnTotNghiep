@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import noImageAvailable from '../../assets/images/no_image_available.jpg';
@@ -7,10 +7,13 @@ import { COLORS } from '../../constants';
 import { PanGestureHandler, Swipeable } from 'react-native-gesture-handler';
 import DeleteConfirmationModal from '../../screens/DeleteConfirmationModal';
 import { StatusBar } from 'expo-status-bar';
+import { useNavigation, useTheme } from '@react-navigation/native';
 
 const ItemCart = (props) => {
   const { dulieu, removeItemFromCart } = props;
   const [count, setCount] = useState(dulieu?.quantity || 1);
+  const navigation = useNavigation();
+
   // console.log(count); //so luong san pham trong gio hang
 
   const fetchProductQuantity = async () => {
@@ -83,7 +86,12 @@ const ItemCart = (props) => {
   return (
     <Swipeable renderRightActions={rightSwipe}>
       <View style={styles.container}>
-        <View style={styles.imageContainer}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('ProductDetail', { id: dulieu?.idProduct?._id });
+          }}
+          style={styles.imageContainer}
+        >
           {dulieu?.idProduct?.variances[0]?.images[0]?.url ? (
             <Image
               style={styles.image}
@@ -95,7 +103,7 @@ const ItemCart = (props) => {
           ) : (
             <Image resizeMode="contain" source={noImageAvailable} style={styles.noImage} />
           )}
-        </View>
+        </Pressable>
         <View style={styles.detailsContainer}>
           <Text style={styles.title}>{dulieu.idProduct?.title}</Text>
           <View style={styles.colorSizeContainer}>

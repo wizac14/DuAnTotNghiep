@@ -1,11 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-
-import Icons from '@expo/vector-icons/MaterialIcons';
-import CustomBottomTabs from './CustomBottomTabs';
-import Home from '../screens/Home/Home';
 import Cart from '../screens/Home/Cart';
-import Profile from '../screens/Home/Profile';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabsNavigator from './TabsNavigator';
 import Intro from '../screens/Intro';
@@ -18,12 +13,13 @@ import ProductDetail from '../components/products/ProductDetail';
 import PhoneScreen from '../screens/PhoneScreen';
 import EmailScreen from '../screens/EmailScreen';
 import NewPassword from '../screens/NewPassword';
-import ItemListHistory from '../components/item/ItemListHistory';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext } from 'react';
 import { AppContext } from '../components/ultil/AppContext';
-import BottomTabNavigation from './BottomTabNavigation';
 import CartDetail from '../screens/Home/CartDetail';
+import SearchDetail from '../screens/Home/SearchDetail';
+import VnPayWebView from '../screens/Payment/VnPayWebView';
+import CodPayment from '../screens/Payment/CodPayment';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -68,6 +64,17 @@ const AuthNavigator = () => {
       />
       <Stack.Screen name="Cart" component={Cart} options={{ headerShown: false }} />
       <Stack.Screen name="CartDetail" component={CartDetail} options={{ headerShown: false }} />
+      <Stack.Screen name="SearchDetail" component={SearchDetail} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="VnPayWebView"
+        component={VnPayWebView}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="CodPayment"
+        component={CodPayment}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
     </Stack.Navigator>
   );
 };

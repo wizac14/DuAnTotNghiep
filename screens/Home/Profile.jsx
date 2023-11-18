@@ -1,88 +1,126 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput,Button } from 'react-native'
-import React, { useContext, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { SIZES } from "../../constants/index";
-import { Ionicons } from "@expo/vector-icons";
-import { COLORS } from "../../constants/index";
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { SIZES } from '../../constants/index';
+import { Ionicons } from '@expo/vector-icons';
+import { COLORS } from '../../constants/index';
 import { AppContext } from '../../components/ultil/AppContext';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { launchCameraAsync } from 'expo-image-picker';
 import { ToastAndroid } from 'react-native';
-
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 const Profile = () => {
-  const { inforuser, setinforuser} = useContext(AppContext);
-  const updateprofile= async ()=>
-    {
-        const response=await AxiosIntance().post("/user/update",{name:inforuser.name,email:inforuser.email,address:inforuser.address,phoneNumber:inforuser.phoneNumber, dob:inforuser.dob,image:inforuser.image,gender:inforuser.gender});
-        if(response.result)
-        {
-            ToastAndroid.show("Cập nhật thành công",ToastAndroid.SHORT);
-        }
-        else
-        {
-            ToastAndroid.show("Cập nhật không thành công",ToastAndroid.SHORT);
-
-        }
+  const { inforuser, setinforuser } = useContext(AppContext);
+  const handleSubmit = async () => {
+    const response = await AxiosIntance().post('/user/update', {
+      name: inforuser.name,
+      email: inforuser.email,
+      address: inforuser.address,
+      phoneNumber: inforuser.phoneNumber,
+      dob: inforuser.dob,
+      image: inforuser.image,
+      gender: inforuser.gender,
+    });
+    if (response.result) {
+      ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Cập nhật không thành công', ToastAndroid.SHORT);
     }
-    const capture= async ()=>
-    {
-        const result= await launchCameraAsync();
-        console.log(result.assets[0].uri);
-        const formdata=new FormData();
-        formdata.append('image',{
-            uri: result.assets[0].uri,
-            type:'image/jpeg',
-            name:'image.jpg',
+  };
 
+  const emailValidation = yup
+    .string()
+    .email('Email không hợp lệ')
+    .matches(
+      // Regular expression để kiểm tra định dạng email
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+      'Email không hợp lệ'
+    )
+    .required('Hãy điền Email của bạn');
 
-        });
-        // const response= await AxiosIntance("multipart/form-data").post('/media/upload',formdata);
-        // console.log(response.data.path);
-        // setinforuser({...inforuser,avatar: response.data.path});
-        const response= await AxiosIntance('multipart/form-data').post('/user/upload-image',formdata);
-        console.log("aaa"+response);
-        setinforuser({...inforuser,image: response.link});
-    };
+  const nameValidation = yup
+    .string()
+    .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt')
+    .required('Hãy điền tên của bạn');
+
+  const phoneValidation = yup
+    .string()
+    .matches(/^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, 'Số điện thoại không hợp lệ')
+    .required('Hãy nhập số điện thoại');
+
+  const validationSchema = yup.object().shape({
+    email: emailValidation,
+    name: nameValidation,
+    address: yup.string().required('Hãy điền địa chỉ'),
+    phoneNumber: phoneValidation,
+  });
+
+  const initialValues = {
+    name: inforuser.name,
+    email: inforuser.email,
+    address: inforuser.address,
+    phoneNumber: inforuser.phoneNumber,
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-    <View>
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <TouchableOpacity onPress={capture}  style={styles.circle}>
-      
-      
-            {
-                inforuser.image == ""
-                    ? <Image style={styles.image} source={require('../../assets/images/fn2.jpg')}></Image>
-                    : <Image style={styles.image} source={{ uri: inforuser.image }} />
+    <View style={styles.container}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
+          <View>
+            <TextInput style={styles.input} placeholder="Email" value={values.email} />
+            {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
 
-            }
-          </TouchableOpacity>
-        <Image style={{ marginTop: 70, marginLeft: -10 }} source={require('../../assets/images/editing.png')}></Image>
-      </View>
-      <TextInput style={styles.textHint} placeholder="Email" value={inforuser.email} onChangeText={(text)=> setinforuser({...inforuser,email: text})}
-        placeholderTextColor="gray"></TextInput>
-      <TextInput style={styles.textHint} value={inforuser.name} onChangeText={(text)=> setinforuser({...inforuser,name: text})} placeholder="Martias Duarte"
-        placeholderTextColor="gray"></TextInput>
-      <TextInput style={styles.textHint}  value={inforuser.address} onChangeText={(text)=> setinforuser({...inforuser,address: text})} placeholder="Address"
-        placeholderTextColor="gray"></TextInput>
-      <TextInput style={styles.textHint}  value={"0"+inforuser.phoneNumber} onChangeText={(text)=> setinforuser({...inforuser,phoneNumber: text})} placeholder="Phone number"
-        placeholderTextColor="gray" ></TextInput>
-      <TextInput style={styles.textHint} placeholder="gender" value={inforuser.gender} onChangeText={(text)=> setinforuser({...inforuser,gender: text})}
-        placeholderTextColor="gray" ></TextInput>
-      <TextInput style={[styles.textHint,{marginBottom:30}]} placeholder="Birthday" value={inforuser.dob} onChangeText={(text)=> setinforuser({...inforuser,dob: text})}
-        placeholderTextColor="gray"  ></TextInput>
-      
-      <Button 
-      onPress={updateprofile}
-       color="black"
-        title="Press me"
-      />
-      </View>
-     
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              onChangeText={(text) => {
+                handleChange('name')(text);
+                setinforuser({ ...inforuser, name: text });
+              }}
+              // onBlur={handleBlur('name')}
+              value={inforuser.name}
+            />
+            {touched.name && errors.name && <Text style={styles.error}>{errors.name}</Text>}
 
+            <TextInput
+              style={styles.input}
+              placeholder="Sđt"
+              onChangeText={(text) => {
+                handleChange('phoneNumber')(text);
+                setinforuser({ ...inforuser, phoneNumber: text });
+              }}
+              // onBlur={handleBlur('phoneNumber')}
+              value={inforuser.phoneNumber.toString()}
+            />
+            {touched.phoneNumber && errors.phoneNumber && (
+              <Text style={styles.error}>{errors.phoneNumber}</Text>
+            )}
 
-  </SafeAreaView>
+            <TextInput
+              style={styles.input}
+              placeholder="Địa chỉ"
+              onChangeText={(text) => {
+                handleChange('address')(text);
+                setinforuser({ ...inforuser, address: text });
+              }}
+              // onBlur={handleBlur('address')}
+              value={inforuser.address}
+            />
+            {touched.address && errors.address && (
+              <Text style={styles.error}>{errors.address}</Text>
+            )}
+
+            <Button color={COLORS.black} title="CẬP NHẬT THÔNG TIN" onPress={handleSubmit} />
+          </View>
+        )}
+      </Formik>
+    </View>
   );
 };
 
@@ -91,35 +129,23 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    marginStart: 10,
-    marginEnd: 10,
-    marginBottom: 20
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    overflow: 'hidden',
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    marginTop: 15,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 350,
+    fontSize: 18,
+    marginBottom: 5,
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+  error: {
+    color: 'red',
+    // marginBottom: 5,
   },
-  textHint: {
-    marginVertical: 0,
-    marginHorizontal: 10,
-    marginTop: 25,
-    height: 50,
-    color: "black",
-    fontSize: 16,
-    lineHeight: 24,
-    backgroundColor: "#FFFAF0"
-    // borderWidth:1
-  },
-  btn: {
-   
-    marginTop:20
-  }
 });
