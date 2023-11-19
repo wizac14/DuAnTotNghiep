@@ -24,6 +24,8 @@ import Animated from 'react-native-reanimated';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Layout } from 'react-native-reanimated';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
+
 const Home = () => {
   const AVATAR_URL =
     'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/4225f4a7-dc73-4926-a99f-a677f56346fe/cortez-se-shoes-Pfr5Qh.png';
@@ -145,7 +147,8 @@ const Home = () => {
   return (
     // <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
     <ScrollView>
-      <SafeAreaView style={{ paddingVertical: 24, gap: 24 }}>
+      <StatusBar style="auto" />
+      <SafeAreaView style={{ paddingVertical: 14, gap: 24 }}>
         <Animated.View
           layout={Layout}
           entering={FadeIn.duration(1000)}
@@ -193,6 +196,9 @@ const Home = () => {
               <MaterialCommunityIcons name="clipboard-list-outline" size={24} color="black" />
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Favorite');
+              }}
               style={{
                 width: 52,
                 aspectRatio: 1,
@@ -560,7 +566,7 @@ const Home = () => {
                     onPress={() => handleBrandSelect(item.name)}
                     style={{
                       backgroundColor: isSelected ? COLORS.black : COLORS.white,
-                      paddingHorizontal: 20,
+                      // paddingHorizontal: 20,
                       paddingVertical: 12,
                       borderRadius: 10,
                       borderWidth: 1,
@@ -638,6 +644,7 @@ const Home = () => {
                       borderWidth: 0.7,
                       borderColor: COLORS.gray2,
                       paddingBottom: 45,
+                      borderRadius: 5,
                     }}
                     onPress={() => {
                       navigation.navigate('ProductDetail', {
@@ -659,7 +666,7 @@ const Home = () => {
                         bottom: 0,
                         flexDirection: 'column',
                         color: 'white',
-                        fontSize: 16,
+                        fontSize: 18,
                         textAlign: 'center',
                         justifyContent: 'center',
                         paddingLeft: 10,
@@ -683,7 +690,7 @@ const Home = () => {
                           textAlign: 'left',
                           color: 'white',
                           backgroundColor: 'black',
-                          fontSize: 18,
+                          fontSize: 16,
                           letterSpacing: 0.5,
                           width: 100,
                         }}

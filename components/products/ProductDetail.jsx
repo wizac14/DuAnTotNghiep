@@ -21,10 +21,10 @@ import { useContext } from 'react';
 import { AppContext } from '../ultil/AppContext';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Skeleton } from 'moti/skeleton';
-import { MotiView } from 'moti';
 import Animated from 'react-native-reanimated';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Layout } from 'react-native-reanimated';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetail = (props) => {
   const { navigation } = props;
@@ -35,21 +35,15 @@ const ProductDetail = (props) => {
   const { width, height } = Dimensions.get('window');
 
   const { colors } = useTheme();
-  const insets = useSafeAreaInsets();
   const [count, setCount] = useState(1);
   const [imageHeight, setImageHeight] = useState();
   const [isImageFlex, setIsImageFlex] = useState();
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
+
   const [sliderImages, setSliderImages] = useState([]);
-  const [colorVariances, setColorVariances] = useState([]);
   const { inforuser } = useContext(AppContext);
-  const [sizeVariances, setSizeVariances] = useState([]);
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [sizesForSelectedColor, setSizesForSelectedColor] = useState([]);
-  const [quantityVariences, setQuantityVariences] = useState([]);
   const [remainingQuantity, setRemainingQuantity] = useState(null);
   const [showSizes, setShowSizes] = useState(false);
   const [product, setProduct] = useState('');
@@ -59,7 +53,8 @@ const ProductDetail = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [showImageView, setShowImageView] = useState(false);
-  const [isLoadingSkeleton, setIsLoadingSkeleton] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const openImageViewer = (index) => {
     setSelectedImageIndex(index);
     setShowImageView(true);
@@ -68,6 +63,70 @@ const ProductDetail = (props) => {
   const closeImageViewer = () => {
     setSelectedImageIndex(null);
     setShowImageView(false);
+  };
+
+  //thêm vào ds yêu thích
+  const addToFavorites = async () => {
+    try {
+      const response = await AxiosIntance().post('/favorite/add-to-favorites', {
+        idUser: inforuser._id,
+        idProduct: product._id,
+      });
+
+      if (response.result) {
+        ToastAndroid.show('Đã thêm vào danh sách yêu thích', ToastAndroid.SHORT);
+        setIsFavorite(true);
+      } else {
+        ToastAndroid.show('Thêm vào danh sách yêu thích thất bại', ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      console.error('Error adding to favorites:', error);
+      ToastAndroid.show('Lỗi kết nối', ToastAndroid.SHORT);
+    }
+  };
+
+  //xóa khỏi ds yêu thích
+  const removeFromFavorites = async () => {
+    try {
+      if (isFavorite) {
+        const response = await AxiosIntance().delete(
+          `/favorite/remove-from-favorites/${inforuser._id}/${params.id}`
+        );
+
+        if (response.result) {
+          ToastAndroid.show('Đã xóa khỏi danh sách yêu thích', ToastAndroid.SHORT);
+          setIsFavorite(false);
+        } else {
+          ToastAndroid.show('Xóa khỏi danh sách yêu thích thất bại', ToastAndroid.SHORT);
+        }
+      } else {
+        // Nếu sản phẩm chưa có trong danh sách yêu thích, gọi API để thêm sản phẩm vào
+        const response = await AxiosIntance().post('/favorite/add-to-favorites', {
+          idUser: inforuser._id,
+          idProduct: product._id,
+        });
+
+        if (response.result) {
+          setIsFavorite(true);
+        } else {
+          ToastAndroid.show('Thêm vào danh sách yêu thích thất bại', ToastAndroid.SHORT);
+        }
+      }
+    } catch (error) {
+      console.error('Error removing favorite:', error);
+    }
+  };
+
+  const handleFavoriteToggle = async () => {
+    try {
+      if (isFavorite) {
+        await removeFromFavorites();
+      } else {
+        await addToFavorites();
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
   };
 
   const Spacer = ({ height = 26 }) => <View style={{ height }} />;
@@ -95,7 +154,6 @@ const ProductDetail = (props) => {
     setSelectedSize(selectedSize);
     setCount(1);
 
-    // Đặt biến isSizeSelected thành true khi chọn kích thước
     setIsSizeSelected(true);
 
     // Tìm kích thước tương ứng và lấy số lượng sản phẩm còn lại
@@ -143,19 +201,15 @@ const ProductDetail = (props) => {
       size: parseInt(selectedSize.size),
       quantity: parseInt(count), //so luong san pham khi chon
     });
-    // console.log(count);
 
     if (response.result) {
       ToastAndroid.show('Thêm vào giỏ hành thành công', ToastAndroid.SHORT);
-      // navigation.navigate('Cart');
       setCartItemCount(cartItemCount + 1);
     } else {
       ToastAndroid.show('Thêm thất bại! Hãy kiểm tra lại?', ToastAndroid.SHORT);
     }
-    // console.log(count); //so luong san pham user da chon
   };
 
-  //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
       try {
@@ -164,33 +218,14 @@ const ProductDetail = (props) => {
           const productData = response.product;
           setProduct(productData);
           const imageUrls = [];
-          // const varianceShoes = [];
-          // const sizeOfShoes = [];
-          // const quantityOfShoes = [];
 
           productData?.variances?.forEach((variance) => {
-            // varianceShoes.push(variance);
-
             variance?.images?.forEach((image) => {
               imageUrls.push(image?.url);
             });
-
-            // variance?.varianceDetail.forEach((sizes) => {
-            //   sizeOfShoes.push(sizes?.size);
-            // });
-            // variance?.varianceDetail.forEach((quantity) => {
-            //   quantityOfShoes.push(quantity?.quantity);
-            // });
           });
 
-          // //lấy dữ liệu thành công
-          // setTitle(response.product?.title);
-          // setDescription(response.product.description);
-          // setPrice(response.product.price);
           setSliderImages(imageUrls);
-          // setColorVariances(varianceShoes);
-          // setSizeVariances(sizeOfShoes);
-          // setQuantityVariences(quantityOfShoes);
         } else {
           ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
         }
@@ -201,11 +236,26 @@ const ProductDetail = (props) => {
         setIsLoading(false);
       }
     };
-
+    checkIfFavorite();
     getDetails();
 
     return () => {};
   }, []);
+
+  const checkIfFavorite = async () => {
+    try {
+      const response = await AxiosIntance().get(
+        `/favorite/check-favorite/${inforuser?._id}/${params.id}`
+      );
+      if (response.isFavorite === true) {
+        setIsFavorite(true);
+      } else {
+        setIsFavorite(false);
+      }
+    } catch (error) {
+      console.error('Error checking favorite:', error);
+    }
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -244,11 +294,11 @@ const ProductDetail = (props) => {
           />
         </>
       )}
-      {/* {!showImageView && isLoading && (
+      {!showImageView && isLoading && (
         <View style={{ padding: 16 }}>
           <SkeletonLoading />
         </View>
-      )} */}
+      )}
       {!showImageView && !isLoading && (
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1 }}>
@@ -301,6 +351,10 @@ const ProductDetail = (props) => {
                 </TouchableOpacity>
                 <View style={{ flex: 1 }} />
                 <TouchableOpacity
+                  onPress={handleFavoriteToggle}
+                  onLongPress={() => {
+                    navigation.navigate('Favorite');
+                  }}
                   style={{
                     width: 52,
                     aspectRatio: 1,
@@ -308,10 +362,10 @@ const ProductDetail = (props) => {
                     justifyContent: 'center',
                     borderRadius: 52,
                     borderWidth: 2,
-                    borderColor: COLORS.black,
+                    borderColor: isFavorite ? COLORS.red : COLORS.gray2,
                   }}
                 >
-                  <Icons name="favorite-border" size={24} color={COLORS.black} />
+                  <Icons name="favorite" size={24} color={isFavorite ? COLORS.red : COLORS.gray2} />
                 </TouchableOpacity>
               </Animated.View>
             </SafeAreaView>

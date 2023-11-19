@@ -100,13 +100,6 @@ const Cart = (props) => {
           <View style={styles.rightContent}>
             <Text style={styles.text}>GIỎ HÀNG</Text>
           </View>
-          {/* <View style={{ flexDirection: 'row' }}>
-            {cartCount > 0 && ( // Hiển thị số lượng item nếu có ít nhất một item trong giỏ hàng
-              <Text style={{ fontSize: 18, marginRight: 3 }}>{cartCount}</Text>
-            )}
-            <Text style={{ fontSize: 18 }}>SẢN PHẨM</Text>
-            <View style={{}}></View>
-          </View> */}
         </View>
 
         {isLoading ? (

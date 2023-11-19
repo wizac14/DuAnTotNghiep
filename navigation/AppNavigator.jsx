@@ -20,6 +20,7 @@ import CartDetail from '../screens/Home/CartDetail';
 import SearchDetail from '../screens/Home/SearchDetail';
 import VnPayWebView from '../screens/Payment/VnPayWebView';
 import CodPayment from '../screens/Payment/CodPayment';
+import FavoriteScreen from '../screens/Home/FavoriteScreen';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -73,6 +74,11 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="CodPayment"
         component={CodPayment}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="Favorite"
+        component={FavoriteScreen}
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
