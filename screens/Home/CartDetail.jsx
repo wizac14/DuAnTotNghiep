@@ -33,11 +33,10 @@ const CartDetail = (props) => {
     return () => {};
   }, []);
   useEffect(() => {
-    // Tính tổng giá trị các sản phẩm trong giỏ hàng khi danh sách sản phẩm thay đổi
     const calculateTotalPrice = () => {
       let total = 0;
       for (const item of data) {
-        // Tính giá trị của mỗi sản phẩm và cộng vào tổng giá trị
+        //tính giá trị của mỗi sản phẩm và cộng vào tổng giá trị
         total += item?.idProduct?.price * item?.quantity;
       }
       setTotalPrice(total);
@@ -72,14 +71,13 @@ const CartDetail = (props) => {
         cartData: data,
         totalAmount: totalPrice,
       });
-      console.log('aaa', phoneNbText);
-      console.log(addressText);
-    } else {
-      Alert.alert(
-        'Chọn phương thức thanh toán',
-        'Vui lòng chọn phương thức thanh toán trước khi thanh toán.'
-      );
     }
+    // else {
+    //   Alert.alert(
+    //     'Chọn phương thức thanh toán',
+    //     'Vui lòng chọn phương thức thanh toán trước khi thanh toán.'
+    //   );
+    // }
     if (isCodChecked) {
       navigation.navigate('CodPayment', {
         address: addressText,

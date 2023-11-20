@@ -24,7 +24,6 @@ import { Skeleton } from 'moti/skeleton';
 import Animated from 'react-native-reanimated';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Layout } from 'react-native-reanimated';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductDetail = (props) => {
   const { navigation } = props;

@@ -37,8 +37,7 @@ const Profile = () => {
       // Regular expression để kiểm tra định dạng email
       /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
       'Email không hợp lệ'
-    )
-    .required('Hãy điền Email của bạn');
+    );
 
   const nameValidation = yup
     .string()
@@ -47,8 +46,7 @@ const Profile = () => {
 
   const phoneValidation = yup
     .string()
-    .matches(/^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, 'Số điện thoại không hợp lệ')
-    .required('Hãy nhập số điện thoại');
+    .matches(/^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, 'Số điện thoại không hợp lệ');
 
   const validationSchema = yup.object().shape({
     email: emailValidation,

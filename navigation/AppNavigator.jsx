@@ -21,6 +21,8 @@ import SearchDetail from '../screens/Home/SearchDetail';
 import VnPayWebView from '../screens/Payment/VnPayWebView';
 import CodPayment from '../screens/Payment/CodPayment';
 import FavoriteScreen from '../screens/Home/FavoriteScreen';
+import OrderProcessing from '../components/order/OrderProcessing';
+import OrderProgress from '../screens/Home/OrderProgress';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -79,6 +81,11 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="Favorite"
         component={FavoriteScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="OrderProgress"
+        component={OrderProgress}
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>

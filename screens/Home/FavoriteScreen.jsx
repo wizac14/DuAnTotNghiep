@@ -52,7 +52,7 @@ const FavoriteScreen = () => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar style="auto" />
       <SafeAreaView style={{ paddingVertical: 14, gap: 24 }}>
         <View

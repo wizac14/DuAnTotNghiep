@@ -34,85 +34,91 @@ const Home = () => {
   const bottomSheetModalRef = useRef(null);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
+  const [newProducts, setNewProducts] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
   const [isProductLoading, setIsProductLoading] = useState(true);
   const { inforuser } = useContext(AppContext);
-  const newFirstProduct = products[0];
-  const newSecondProduct = products[1];
-  const [page, setPage] = useState(1);
+  const lastProductIndex = products.length - 1;
+  const newFirstProduct = newProducts[0];
+  const newSecondProduct = newProducts[1];
+  const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isAllLoaded, setIsAllLoaded] = useState(false);
-  const pageSize = 6;
-  let offset = 0;
+  const pageSize = 8;
+  const [offset, setOffset] = useState(0);
   const paddingPercentage = 2;
   const { width, height } = Dimensions.get('window');
-
-  // const loadMoreProducts = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await AxiosIntance().get(`/product/get-limited?limit=4&offset=${offset}`);
-  //     if (response.result) {
-  //       const newProducts = response.products;
-  //       setProducts((oldProducts) => [...oldProducts, ...newProducts]);
-  //       offset += 4;
-  //       console.log(offset);
-  //     } else {
-  //       ToastAndroid.show('Lấy data thất bại');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching more products:', error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   useEffect(() => {
-    getBrands();
+    // getBrands();
     getProducts();
+    getNewProducts();
   }, []);
-
-  // useEffect(() => {
-  //   loadMoreProducts();
-  // }, []);
-
-  // const handleScroll = (event) => {
-  //   // console.log('hi');
-  //   const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-  //   // Kiểm tra nếu người dùng đã cuộn đến cuối trang và chưa tải hết sản phẩm
-  //   if (
-  //     layoutMeasurement.height + contentOffset.y >= contentSize.height - 20 &&
-  //     !isLoading &&
-  //     !isAllLoaded
-  //   ) {
-  //     loadMoreProducts();
-  //   }
-  // };
 
   //lấy all product
   const getProducts = async () => {
-    const response = await AxiosIntance().get('/product/get-all');
-    if (response.result) {
-      // Đảo ngược danh sách sản phẩm
-      const reversedProducts = response?.products.reverse();
-      // Giới hạn chỉ hiển thị 12 sản phẩm
-      // const limitedProducts = reversedProducts.slice(0, 4);
+    setShowActivityIndicator(true);
+    try {
+      const response = await AxiosIntance().get(
+        `product/get-all?offset=${offset}&pageSize=${pageSize}`
+      );
 
-      setProducts(reversedProducts);
-      setIsProductLoading(false);
-    } else {
-      ToastAndroid.show('Lấy data thất bại');
+      if (response?.result) {
+        // Đảo ngược danh sách sản phẩm
+        const reversedProducts = await response?.products;
+
+        if (reversedProducts.length === 0) {
+          setIsAllLoaded(true);
+        } else {
+          setOffset(response?.metaData?.offset);
+          setProducts((pre) => [...pre, ...reversedProducts]);
+        }
+        setIsProductLoading(false);
+        setIsLoading(false);
+      } else {
+        ToastAndroid.show('Lấy data thất bại');
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    } finally {
+      setShowActivityIndicator(false);
+    }
+  };
+
+  const getNewProducts = async () => {
+    try {
+      const response = await AxiosIntance().get('/product/get-all');
+      if (response.result) {
+        // Đảo ngược danh sách sản phẩm
+        const newRevProducts = response?.products.reverse();
+
+        setNewProducts(newRevProducts);
+        setIsProductLoading(false);
+        setIsLoading(false);
+      } else {
+        ToastAndroid.show('Lấy data thất bại');
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
     }
   };
 
   const getBrands = async () => {
-    const response = await AxiosIntance().get('/brand/get-all-brands');
-    const allProduct = {
-      name: 'Tất Cả',
-    };
-    if (response.result) {
-      setBrands([allProduct, ...response.brands]);
-    } else {
-      console.log('Lấy data thất bại');
+    try {
+      const response = await AxiosIntance().get('/brand/get-all-brands');
+      const allProduct = {
+        name: 'Tất Cả',
+      };
+      if (response.result) {
+        setBrands([allProduct, ...response.brands]);
+      } else {
+        console.log('Lấy data thất bại');
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -128,7 +134,7 @@ const Home = () => {
       const response = await AxiosIntance().get(url);
 
       if (response.products) {
-        const reversedProducts = response?.products.reverse();
+        const reversedProducts = response?.products;
         // const limitedProducts = reversedProducts.slice(0, 4);
 
         setProducts(reversedProducts);
@@ -139,15 +145,56 @@ const Home = () => {
     }
   };
 
-  //mở filter view
-  const openFilterModal = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
+  //load thêm sản phẩm khi kéo xuống dưới cùng
+  const handleLoadMore = () => {
+    if (!isLoading && !isAllLoaded) {
+      setIsLoading(true);
+      const nextPage = page + 1;
+      const newOffset = nextPage * pageSize;
+      getProducts(newOffset);
+      setPage(nextPage);
+    }
+  };
+
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
+
   const navigation = useNavigation();
+
+  const renderLoadMore = () => {
+    if (isLoading || showActivityIndicator) {
+      return (
+        <View
+          style={{
+            height: Dimensions.get('window').height * 0.1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            // marginVertical: 10,
+          }}
+        >
+          <UIActivityIndicator size={30} color={COLORS.black} />
+        </View>
+      );
+    } else {
+      return null;
+    }
+  };
+
   return (
-    // <ScrollView onScroll={handleScroll} scrollEventThrottle={16}>
-    <ScrollView>
+    <ScrollView
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      onScroll={({ nativeEvent }) => {
+        if (isCloseToBottom(nativeEvent)) {
+          handleLoadMore();
+        }
+      }}
+      scrollEventThrottle={400}
+    >
       <StatusBar style="auto" />
+
       <SafeAreaView style={{ paddingVertical: 14, gap: 24 }}>
         <Animated.View
           layout={Layout}
@@ -183,6 +230,9 @@ const Home = () => {
           </View>
           <View style={{ flexDirection: 'row', gap: 5 }}>
             <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('OrderProgress');
+              }}
               style={{
                 width: 52,
                 aspectRatio: 1,
@@ -241,7 +291,17 @@ const Home = () => {
             </Text>
           </View>
           <View style={{ flexDirection: 'row', height: 250, gap: 12 }}>
-            {newFirstProduct ? (
+            {isProductLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <UIActivityIndicator size={30} color={COLORS.black} />
+              </View>
+            ) : newFirstProduct ? (
               <View style={{ flex: 1, gap: 6 }}>
                 <View style={{ gap: 6, flexDirection: 'row' }}>
                   <View
@@ -384,7 +444,17 @@ const Home = () => {
             )}
           </View>
           <View style={{ flexDirection: 'row', height: 250, gap: 12, marginTop: 100 }}>
-            {newSecondProduct ? (
+            {isProductLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <UIActivityIndicator size={30} color={COLORS.black} />
+              </View>
+            ) : newSecondProduct ? (
               <View style={{ flex: 1, gap: 6 }}>
                 <View style={{ gap: 6, flexDirection: 'row' }}>
                   <View
@@ -544,7 +614,7 @@ const Home = () => {
                 textAlign: 'left',
               }}
             >
-              KHÁM PHÁ
+              KHÁM PHÁ THÊM
             </Text>
           </View>
           <FlatList
@@ -606,6 +676,7 @@ const Home = () => {
           </View>
         ) : (
           <MasonryList
+            ListFooterComponent={renderLoadMore()}
             data={products}
             numColumns={2}
             contentContainerStyle={{
