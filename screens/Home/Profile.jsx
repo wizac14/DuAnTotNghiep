@@ -8,7 +8,7 @@ import {
   Button,
   KeyboardAvoidingView,
   Alert,
-  Platform
+  Platform,
 } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,8 +21,11 @@ import { launchCameraAsync, launchImageLibraryAsync } from 'expo-image-picker';
 import { ToastAndroid } from 'react-native';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import { Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 
 const Profile = () => {
+  const navigation = useNavigation();
   const { inforuser, setinforuser } = useContext(AppContext);
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -33,7 +36,7 @@ const Profile = () => {
       email: inforuser.email,
       address: inforuser.address,
       phoneNumber: inforuser.phoneNumber,
-      dob:dob,
+      dob: dob,
       image: inforuser.image,
       gender: inforuser.gender,
     });
@@ -105,7 +108,6 @@ const Profile = () => {
       if (Platform.OS === 'android') {
         toggleDatePicker();
         setDob(formatDate(currentDate));
-        
       }
     } else {
       toggleDatePicker();
@@ -116,7 +118,6 @@ const Profile = () => {
     let day = date.getDate();
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
-   
 
     //Bé hơn 10 thì thêm số 0
     month = month < 10 ? `0${month}` : `${month}`;
@@ -130,6 +131,16 @@ const Profile = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
+        <View style={styles.profile}>
+          <View>
+            <TouchableOpacity onPress={()=>{ navigation.goBack() }}>
+              <Ionicons name="arrow-back-outline" size={30} />
+            </TouchableOpacity>
+          </View>
+          <View>
+            <Text style={styles.title}>Thông tin người dùng</Text>
+          </View>
+        </View>
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <TouchableOpacity onPress={dialogImageChoose} style={styles.circle}>
             {inforuser.image == '' ? (
@@ -144,41 +155,51 @@ const Profile = () => {
           ></Image>
         </View>
         <KeyboardAvoidingView>
-          <TextInput
-            style={styles.textHint}
-            placeholder="Email"
-            value={inforuser.email}
-            onChangeText={(text) => setinforuser({ ...inforuser, email: text })}
-            placeholderTextColor="gray"
-          ></TextInput>
-          <TextInput
-            style={styles.textHint}
-            value={inforuser.name}
-            onChangeText={(text) => setinforuser({ ...inforuser, name: text })}
-            placeholder="Martias Duarte"
-            placeholderTextColor="gray"
-          ></TextInput>
-          <TextInput
-            style={styles.textHint}
-            value={inforuser.address}
-            onChangeText={(text) => setinforuser({ ...inforuser, address: text })}
-            placeholder="Address"
-            placeholderTextColor="gray"
-          ></TextInput>
-          <TextInput
-            style={styles.textHint}
-            value={'0' + inforuser.phoneNumber}
-            onChangeText={(text) => setinforuser({ ...inforuser, phoneNumber: text })}
-            placeholder="Phone number"
-            placeholderTextColor="gray"
-          ></TextInput>
-          <TextInput
-            style={styles.textHint}
-            placeholder="gender"
-            value={inforuser.gender}
-            onChangeText={(text) => setinforuser({ ...inforuser, gender: text })}
-            placeholderTextColor="gray"
-          ></TextInput>
+          <View style={styles.viewItem}>
+            <TextInput
+              style={styles.textHint}
+              value={inforuser.email}
+              onChangeText={(text) => setinforuser({ ...inforuser, email: text })}
+              placeholder="Email"
+              placeholderTextColor="gray"
+            ></TextInput>
+          </View>
+          <View style={styles.viewItem}>
+            <TextInput
+              style={styles.textHint}
+              value={inforuser.name}
+              onChangeText={(text) => setinforuser({ ...inforuser, name: text })}
+              placeholder="Martias Duarte"
+              placeholderTextColor="gray"
+            ></TextInput>
+          </View>
+          <View style={styles.viewItem}>
+            <TextInput
+              style={styles.textHint}
+              value={inforuser.address}
+              onChangeText={(text) => setinforuser({ ...inforuser, address: text })}
+              placeholder="Address"
+              placeholderTextColor="gray"
+            ></TextInput>
+          </View>
+          <View style={styles.viewItem}>
+            <TextInput
+              style={styles.textHint}
+              value={'0' + inforuser.phoneNumber}
+              onChangeText={(text) => setinforuser({ ...inforuser, phoneNumber: text })}
+              placeholder="Phone number"
+              placeholderTextColor="gray"
+            ></TextInput>
+          </View>
+          <View style={styles.viewItem}>
+            <TextInput
+              style={styles.textHint}
+              placeholder="gender"
+              value={inforuser.gender}
+              onChangeText={(text) => setinforuser({ ...inforuser, gender: text })}
+              placeholderTextColor="gray"
+            ></TextInput>
+          </View>
           <View>
             {showPicker && (
               <RNDateTimePicker
@@ -186,13 +207,13 @@ const Profile = () => {
                 display="spinner"
                 value={date}
                 onChange={onChange}
-                positiveButton={{ label: 'OK', textColor: COLORS.black}}
-                negativeButton={{ label: 'Cancel', textColor: COLORS.tertiary}}
+                positiveButton={{ label: 'OK', textColor: COLORS.black }}
+                negativeButton={{ label: 'Cancel', textColor: COLORS.tertiary }}
               />
             )}
-            <Pressable onPress={toggleDatePicker}>
+            <Pressable onPress={toggleDatePicker} style={[styles.viewItem, { marginBottom: 20 }]}>
               <TextInput
-                style={[styles.textHint, {marginBottom:30}]}
+                style={styles.textHint}
                 placeholder="Birthday"
                 editable={false}
                 value={dob}
@@ -200,7 +221,9 @@ const Profile = () => {
               ></TextInput>
             </Pressable>
           </View>
-          <Button onPress={updateprofile} color="black" title="Press me" />
+          <Pressable style={styles.btn} onPress={updateprofile}>
+            <Text style={styles.btnUpdate}>CẬP NHẬT</Text>
+          </Pressable>
         </KeyboardAvoidingView>
       </View>
     </SafeAreaView>
@@ -217,6 +240,16 @@ const styles = StyleSheet.create({
     marginEnd: 10,
     marginBottom: 20,
   },
+  profile: {
+    flexDirection: 'row',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginRight: 70,
+    marginBottom: 20,
+  },
   circle: {
     width: 100,
     height: 100,
@@ -228,18 +261,32 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  textHint: {
+  viewItem: {
     marginVertical: 0,
     marginHorizontal: 10,
     marginTop: 25,
     height: 50,
-    color: 'black',
-    fontSize: 16,
-    lineHeight: 24,
-    backgroundColor: '#FFFAF0',
+    backgroundColor: '#F5F7F8',
+    borderRadius: 10,
     // borderWidth:1
   },
+  textHint: {
+    marginLeft: 10,
+    lineHeight: 24,
+    top: '20%',
+    color: 'black',
+    fontSize: 16,
+  },
   btn: {
-    marginTop: 20,
+    backgroundColor: 'black',
+    height: 50,
+    borderRadius: 10,
+  },
+  btnUpdate: {
+    color: 'white',
+    textAlign: 'center',
+    top: '20%',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

@@ -13,10 +13,21 @@ import ItemListHistory from "../components/item/ItemListHistory";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FilterScreen from "../screens/Home/FilterScreen";
 import FavoriteScreen from "../screens/FavoriteScreen";
+import Person from "../screens/Home/Person";
+import ChangePassword from '../screens/Home/ChangePassword';
 
 const TabsStack = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+const StackSetting = () => {
+  return (
+    <Stack.Navigator initialRouteName="Person" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Person" component={Person} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+    </Stack.Navigator>
+  )
+}
 
 const TabsNavigator = () => {
 
@@ -59,7 +70,7 @@ const TabsNavigator = () => {
       />
       <TabsStack.Screen
         name="Bạn"
-        component={Profile}
+        component={StackSetting}
         options={{
           headerShown: false,
           tabBarIcon(props) {
