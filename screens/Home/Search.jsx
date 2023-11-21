@@ -21,7 +21,7 @@ import CustomBackdrop from "../../components/home/CustomBackdrop";
 import ImageSlider from "../../components/home/ImagesSlider";
 import { Pressable } from "react-native";
 import FilterView from "../../components/home/FilterView";
-import AxiosIntance from "../../components/ultil/AxiosIntance";
+import AxiosInstance from "../../components/ultil/AxiosInstance";
 import { TextInput } from "react-native-gesture-handler";
 import SearchTitle from "./SearchTitle";
 
@@ -31,7 +31,7 @@ const Search = () => {
     const [searchText, setSearchText] = useState("");
 
     const handleSearch = async () => {
-        const response = await AxiosIntance().get(`/product/search?title=${searchText}`);
+        const response = await AxiosInstance().get(`/product/search?title=${searchText}`);
         if (response.result) {
             setdataNe(response.products)
         } else {

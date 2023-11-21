@@ -10,6 +10,9 @@ import Home from "../screens/Home/Home";
 import Cart from "../screens/Home/Cart";
 import Profile from "../screens/Home/Profile";
 import ItemListHistory from "../components/item/ItemListHistory";
+import { COLORS } from "../constants/index";
+import Favorite from "../screens/Home/Favorite";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const TabsStack = createBottomTabNavigator();
 
@@ -58,6 +61,18 @@ const TabsNavigator = () => {
           headerShown: false,
           tabBarIcon(props) {
             return <Icons name="person" {...props} />;
+          },
+        }}
+      />
+
+
+      <TabsStack.Screen
+        name="Yêu thích"
+        component={Favorite}
+        options={{
+          headerShown: false,
+          tabBarIcon(props) {
+            return <Icons name="favorite" {...props} />;
           },
         }}
       />

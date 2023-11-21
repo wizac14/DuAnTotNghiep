@@ -25,6 +25,7 @@ import { AppContext } from "../components/ultil/AppContext";
 import BottomTabNavigation from "./BottomTabNavigation";
 import Search from "../screens/Home/Search";
 import SearchTitle from "../screens/Home/SearchTitle";
+import Favorite from "../screens/Home/Favorite";
 
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
@@ -121,6 +122,13 @@ const AuthNavigator = () => {
         component={SearchTitle}
         options={{ headerShown: false }}
       />
+
+      <Stack.Screen
+        name="Favorite"
+        component={Favorite}
+        options={{ headerShown: false }} />
+
+        
     </Stack.Navigator>
   );
 };

@@ -6,6 +6,8 @@ import Search from "../screens/Search";
 import Profile from "../screens/Home/Profile";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/index";
+import Favorite from "../screens/Home/Favorite";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -68,6 +70,22 @@ const BottomTabNavigation = () => {
             return (
               <Ionicons
                 name={focused ? "person" : "person-outline"}
+                size={24}
+                color={focused ? COLORS.primary : COLORS.gray2}
+              />
+            );
+          },
+        }}
+      />
+
+      <Tab.Screen
+        name="Favorite"
+        component={Favorite}
+        options={{
+          tabBarIcon: ({ focused }) => {
+            return (
+              <MaterialIcons
+                name={focused ? "favorite" : "favorite-outline"}
                 size={24}
                 color={focused ? COLORS.primary : COLORS.gray2}
               />

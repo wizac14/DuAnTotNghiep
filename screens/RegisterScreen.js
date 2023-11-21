@@ -17,7 +17,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Axios } from "axios";
-import AxiosIntance from "../components/ultil/AxiosIntance";
+import AxiosInstance from "../components/ultil/AxiosInstance";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -26,10 +26,12 @@ const RegisterScreen = () => {
   const navigation = useNavigation();
   const [isSecureEntry, setIsSecureEntry] = useState(true);
 
+
+
   const RegisterUser = async () => {
     console.log(email, password);
     try {
-      const response = await AxiosIntance().post("/user/register", {
+      const response = await AxiosInstance().post("/user/register", {
         email: email,
         password: password,
         name: name,

@@ -21,8 +21,9 @@ import CustomBackdrop from "../../components/home/CustomBackdrop";
 import ImageSlider from "../../components/home/ImagesSlider";
 import { Pressable } from "react-native";
 import FilterView from "../../components/home/FilterView";
-import AxiosIntance from "../../components/ultil/AxiosIntance";
+import AxiosInstance from "../../components/ultil/AxiosInstance";
 import { TextInput } from "react-native-gesture-handler";
+import Favorite from "./Favorite";
 
 const Home = () => {
   const BRANDS = [
@@ -76,6 +77,8 @@ const Home = () => {
   const bottomSheetModalRef = useRef(null);
   const [dataNe, setdataNe] = useState([]);
   const [searchText, setSearchText] = useState("");
+  
+
 
   const handleSearch = async () => {
     const response = await AxiosIntance().get(`/product/search?search=${searchText}`);
@@ -87,7 +90,7 @@ const Home = () => {
   };
   useEffect(() => {
     const getProducts = async () => {
-      const response = await AxiosIntance().get("/product/get-all");
+      const response = await AxiosInstance().get("/product/get-all");
       console.log(response.products);
       if (response.result) {
         setdataNe(response.products)
@@ -317,6 +320,7 @@ const Home = () => {
                       id: item._id
                     });
                   }}
+                 
                 >
                   <Image
                     source={{
@@ -365,6 +369,7 @@ const Home = () => {
                         name="favorite-border"
                         size={20}
                         color={colors.text}
+                        
                       />
                     </View>
                   </View>

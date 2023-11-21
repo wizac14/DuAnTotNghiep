@@ -9,19 +9,18 @@ import Icons from "@expo/vector-icons/MaterialIcons";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../../constants";
 import BottomSheet from "@gorhom/bottom-sheet";
-import AxiosIntance from "../../components/ultil/AxiosIntance";
-
-const SIZES = ["38", "39", "40", "41", "42", "43", "44"];
+import AxiosInstance from "../../components/ultil/AxiosInstance"
 
 const ProductDetail = (props) => {
   const { navigation } = props;
   const { route } = props;
   const { params } = route;
 
+
+  const [sizes, setSizes] = useState([]);
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [count, setCount] = useState(1);
-  const [size, setSize] = useState(SIZES[1]);
   const [imageHeight, setImageHeight] = useState();
   const [isImageFlex, setIsImageFlex] = useState();
 
@@ -29,11 +28,21 @@ const ProductDetail = (props) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [wishlist, setWishlist] = useState([]);
+
+  const handleIconClick = () => {
+    setIsFavorite(!isFavorite);
+    if (!isFavorite) {
+      setWishlist([...wishlist, "Item"]); // Thay "Item" bằng thông tin của mục trong danh sách yêu thích
+    }
+  };
+
 
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
     const getDetails = async () => {
-      const response = await AxiosIntance().get(
+      const response = await AxiosInstance().get(
         "/product/get-by-id?id=" + params.id
       );
       console.log(response);
@@ -44,6 +53,7 @@ const ProductDetail = (props) => {
         setTitle(response.product.title);
         setDescription(response.product.description);
         setPrice(response.product.price);
+        setSizes(response.product.sizes);
       } else {
         ToastAndroid.show("Lấy dữ liệu thất bại", ToastAndroid.SHORT);
       }
@@ -51,8 +61,27 @@ const ProductDetail = (props) => {
 
     getDetails();
 
-    return () => {};
+    return () => { };
   }, []);
+
+
+  useEffect(() => {
+    const addFavorite = async () => {
+      const response = await AxiosInstance().post("/favorite//add-new", {
+        id: params.id,
+      });
+      console.log(response);
+      if (response.result === true) {
+        //lấy dữ liệu thành công
+        ToastAndroid.show("Thêm vào yêu thích thành công", ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show("Thêm vào yêu thích thất bại", ToastAndroid.SHORT);
+      }
+    };
+
+    addFavorite ();
+    return () => { };
+  }, [wishlist]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -93,6 +122,7 @@ const ProductDetail = (props) => {
           </TouchableOpacity>
           <View style={{ flex: 1 }} />
           <TouchableOpacity
+            onPress={handleIconClick}
             style={{
               width: 52,
               aspectRatio: 1,
@@ -103,7 +133,9 @@ const ProductDetail = (props) => {
               borderColor: COLORS.black,
             }}
           >
-            <Icons name="favorite-border" size={24} color={COLORS.black} />
+            <Icons name={isFavorite ? "favorite" : "favorite-border"}
+              size={24}
+              color={isFavorite ? COLORS.red : COLORS.black} />
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -231,7 +263,7 @@ const ProductDetail = (props) => {
                 marginTop: 6,
               }}
             >
-              {SIZES.map((s, i) => (
+              {sizes.map((s, i) => (
                 <TouchableOpacity
                   key={i}
                   onPress={() => setSize(s)}
