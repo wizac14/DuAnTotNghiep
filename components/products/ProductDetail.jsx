@@ -9,9 +9,12 @@ import Icons from "@expo/vector-icons/MaterialIcons";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../../constants";
 import BottomSheet from "@gorhom/bottom-sheet";
-import AxiosInstance from "../../components/ultil/AxiosInstance"
+import AxiosInstance from "../../components/ultil/AxiosInstance";
+
+const SIZES = ["35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46"];
 
 const ProductDetail = (props) => {
+  const size = "";
   const { navigation } = props;
   const { route } = props;
   const { params } = route;
@@ -21,6 +24,7 @@ const ProductDetail = (props) => {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const [count, setCount] = useState(1);
+  // const [size, setSize] = useState(SIZES[1]);
   const [imageHeight, setImageHeight] = useState();
   const [isImageFlex, setIsImageFlex] = useState();
 
@@ -38,6 +42,13 @@ const ProductDetail = (props) => {
     }
   };
 
+
+  const [selectedSize, setSelectedSize] = useState(null);
+
+  const handleSizeSelect = (size) => {
+    console.log("Kích cỡ đã chọn:", size);
+    setSelectedSize(size);
+  };
 
   //Hiển thị chi tiết sản phẩm theo ID
   useEffect(() => {
@@ -263,31 +274,41 @@ const ProductDetail = (props) => {
                 marginTop: 6,
               }}
             >
-              {sizes.map((s, i) => (
+              {SIZES.map((size, i) => (
                 <TouchableOpacity
                   key={i}
-                  onPress={() => setSize(s)}
+                  onPress={() => handleSizeSelect(size)}
                   style={{
                     width: 44,
                     height: 44,
                     alignItems: "center",
                     justifyContent: "center",
-                    backgroundColor: s === size ? colors.primary : colors.card,
+                    backgroundColor:
+                      selectedSize === size ? COLORS.black : COLORS.lightWhite,
                     borderRadius: 44,
                   }}
                 >
                   <Text
                     style={{
-                      color: s === size ? colors.card : colors.text,
+                      color: selectedSize === size ? colors.card : colors.text,
                       fontWeight: "600",
                       fontSize: 16,
                     }}
                   >
-                    {s}
+                    {size}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
+            <Text
+              style={{
+                color: selectedSize === size ? COLORS.black : colors.text,
+                fontWeight: "600",
+                fontSize: 16,
+              }}
+            >
+              {/* Kích cỡ đã chọn: {selectedSize} */}
+            </Text>
           </View>
 
           <View>
