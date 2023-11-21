@@ -7,11 +7,11 @@ const AxiosInstance = (contentType = "application/json") => {
   });
   axiosInstance.interceptors.request.use(
     async (config) => {
-      const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem('token');
       config.headers = {
         Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-        "Content-Type": contentType,
+        Accept: 'application/json',
+        'Content-Type': contentType,
       };
       return config;
     },

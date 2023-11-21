@@ -27,6 +27,7 @@ import EmailScreen from "./screens/EmailScreen";
 import NewPassword from "./screens/NewPassword";
 import AppNavigator from "./navigation/AppNavigator";
 import { AppContextProvider } from "./components/ultil/AppContext";
+import FilterScreen from "./screens/Home/FilterScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +68,7 @@ export default function App() {
           </NavigationContainer>
         </AppContextProvider>
       </GestureHandlerRootView>
+      {/* <FilterScreen></FilterScreen> */}
     </SafeAreaProvider>
   );
 }
