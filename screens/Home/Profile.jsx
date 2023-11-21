@@ -1,15 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Button,
-  KeyboardAvoidingView,
-  Alert,
-  Platform,
-} from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SIZES } from '../../constants/index';
@@ -17,26 +6,20 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/index';
 import { AppContext } from '../../components/ultil/AppContext';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
-import { launchCameraAsync, launchImageLibraryAsync } from 'expo-image-picker';
+import { launchCameraAsync } from 'expo-image-picker';
 import { ToastAndroid } from 'react-native';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
-import { Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 const Profile = () => {
-  const navigation = useNavigation();
   const { inforuser, setinforuser } = useContext(AppContext);
-  const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
-  const [dob, setDob] = useState(inforuser.dob);
-  const updateprofile = async () => {
-    const response = await AxiosIntance().put('/user/update/' + inforuser._id, {
+  const handleSubmit = async () => {
+    const response = await AxiosIntance().post('/user/update', {
       name: inforuser.name,
       email: inforuser.email,
       address: inforuser.address,
       phoneNumber: inforuser.phoneNumber,
-      dob: dob,
+      dob: inforuser.dob,
       image: inforuser.image,
       gender: inforuser.gender,
     });
@@ -46,187 +29,96 @@ const Profile = () => {
       ToastAndroid.show('Cập nhật không thành công', ToastAndroid.SHORT);
     }
   };
-  const dialogImageChoose = () => {
-    return Alert.alert('Thông báo', 'Chọn phương thức lấy ảnh', [
-      {
-        text: 'Chụp ảnh ',
-        onPress: () => {
-          capture();
-        },
-      },
-      {
-        text: 'Tải ảnh lên',
-        onPress: () => {
-          getImageLibrary();
-        },
-      },
-      {
-        text: 'Hủy',
-      },
-    ]);
-  };
-  const capture = async () => {
-    const result = await launchCameraAsync();
-    console.log(result.assets[0].uri);
-    const formdata = new FormData();
-    formdata.append('image', {
-      uri: result.assets[0].uri,
-      type: 'image/jpeg',
-      name: 'image.jpg',
-    });
-    const response = await AxiosIntance('multipart/form-data').post('/user/upload-image', formdata);
-    console.log(response.link);
-    if (response.result) {
-      setinforuser({ ...inforuser, image: response.link });
-      ToastAndroid.show('Upload Image Success', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('Upload Image Failed', ToastAndroid.SHORT);
-    }
-  };
-  const getImageLibrary = async () => {
-    const result = await launchImageLibraryAsync();
-    console.log(result.assets[0].uri);
-    const formData = new FormData();
-    formData.append('image', {
-      uri: result.assets[0].uri,
-      type: 'image/jpeg',
-      name: 'image.jpg',
-    });
-    const response = await AxiosIntance('multipart/form-data').post('/user/upload-image', formData);
-    console.log(response.link);
-    if (response.result) {
-      setinforuser({ ...inforuser, image: response.link });
-      ToastAndroid.show('Upload Image Success', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show('Upload Image Failed', ToastAndroid.SHORT);
-    }
-  };
-  const onChange = ({ type }, selectedDate) => {
-    if (type == 'set') {
-      const currentDate = selectedDate;
-      setDate(currentDate);
-      if (Platform.OS === 'android') {
-        toggleDatePicker();
-        setDob(formatDate(currentDate));
-      }
-    } else {
-      toggleDatePicker();
-    }
-  };
-  const formatDate = (rawDate) => {
-    let date = new Date(rawDate);
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
 
-    //Bé hơn 10 thì thêm số 0
-    month = month < 10 ? `0${month}` : `${month}`;
-    day = day < 10 ? `0${day}` : `${day}`;
-    return `${day}-${month}-${year}`;
-  };
-  const toggleDatePicker = () => {
-    setShowPicker(!showPicker);
+  const emailValidation = yup
+    .string()
+    .email('Email không hợp lệ')
+    .matches(
+      // Regular expression để kiểm tra định dạng email
+      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+      'Email không hợp lệ'
+    );
+
+  const nameValidation = yup
+    .string()
+    .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt')
+    .required('Hãy điền tên của bạn');
+
+  const phoneValidation = yup
+    .string()
+    .matches(/^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, 'Số điện thoại không hợp lệ');
+
+  const validationSchema = yup.object().shape({
+    email: emailValidation,
+    name: nameValidation,
+    address: yup.string().required('Hãy điền địa chỉ'),
+    phoneNumber: phoneValidation,
+  });
+
+  const initialValues = {
+    name: inforuser.name,
+    email: inforuser.email,
+    address: inforuser.address,
+    phoneNumber: inforuser.phoneNumber,
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <View style={styles.profile}>
+    <View style={styles.container}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}
+      >
+        {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
           <View>
-            <TouchableOpacity onPress={()=>{ navigation.goBack() }}>
-              <Ionicons name="arrow-back-outline" size={30} />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text style={styles.title}>Thông tin người dùng</Text>
-          </View>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity onPress={dialogImageChoose} style={styles.circle}>
-            {inforuser.image == '' ? (
-              <Image style={styles.image} source={require('../../assets/images/fn2.jpg')}></Image>
-            ) : (
-              <Image style={styles.image} source={{ uri: inforuser.image }} />
-            )}
-          </TouchableOpacity>
-          <Image
-            style={{ marginTop: 70, marginLeft: -10 }}
-            source={require('../../assets/images/editing.png')}
-          ></Image>
-        </View>
-        <KeyboardAvoidingView>
-          <View style={styles.viewItem}>
+            <TextInput style={styles.input} placeholder="Email" value={values.email} />
+            {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
+
             <TextInput
-              style={styles.textHint}
-              value={inforuser.email}
-              onChangeText={(text) => setinforuser({ ...inforuser, email: text })}
-              placeholder="Email"
-              placeholderTextColor="gray"
-            ></TextInput>
-          </View>
-          <View style={styles.viewItem}>
-            <TextInput
-              style={styles.textHint}
+              style={styles.input}
+              placeholder="Name"
+              onChangeText={(text) => {
+                handleChange('name')(text);
+                setinforuser({ ...inforuser, name: text });
+              }}
+              // onBlur={handleBlur('name')}
               value={inforuser.name}
-              onChangeText={(text) => setinforuser({ ...inforuser, name: text })}
-              placeholder="Martias Duarte"
-              placeholderTextColor="gray"
-            ></TextInput>
-          </View>
-          <View style={styles.viewItem}>
+            />
+            {touched.name && errors.name && <Text style={styles.error}>{errors.name}</Text>}
+
             <TextInput
-              style={styles.textHint}
-              value={inforuser.address}
-              onChangeText={(text) => setinforuser({ ...inforuser, address: text })}
-              placeholder="Address"
-              placeholderTextColor="gray"
-            ></TextInput>
-          </View>
-          <View style={styles.viewItem}>
-            <TextInput
-              style={styles.textHint}
-              value={'0' + inforuser.phoneNumber}
-              onChangeText={(text) => setinforuser({ ...inforuser, phoneNumber: text })}
-              placeholder="Phone number"
-              placeholderTextColor="gray"
-            ></TextInput>
-          </View>
-          <View style={styles.viewItem}>
-            <TextInput
-              style={styles.textHint}
-              placeholder="gender"
-              value={inforuser.gender}
-              onChangeText={(text) => setinforuser({ ...inforuser, gender: text })}
-              placeholderTextColor="gray"
-            ></TextInput>
-          </View>
-          <View>
-            {showPicker && (
-              <RNDateTimePicker
-                mode="date"
-                display="spinner"
-                value={date}
-                onChange={onChange}
-                positiveButton={{ label: 'OK', textColor: COLORS.black }}
-                negativeButton={{ label: 'Cancel', textColor: COLORS.tertiary }}
-              />
+              style={styles.input}
+              placeholder="Sđt"
+              onChangeText={(text) => {
+                handleChange('phoneNumber')(text);
+                setinforuser({ ...inforuser, phoneNumber: text });
+              }}
+              // onBlur={handleBlur('phoneNumber')}
+              value={inforuser.phoneNumber.toString()}
+            />
+            {touched.phoneNumber && errors.phoneNumber && (
+              <Text style={styles.error}>{errors.phoneNumber}</Text>
             )}
-            <Pressable onPress={toggleDatePicker} style={[styles.viewItem, { marginBottom: 20 }]}>
-              <TextInput
-                style={styles.textHint}
-                placeholder="Birthday"
-                editable={false}
-                value={dob}
-                onChangeText={(text) => setDob({ dob: text })}
-              ></TextInput>
-            </Pressable>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Địa chỉ"
+              onChangeText={(text) => {
+                handleChange('address')(text);
+                setinforuser({ ...inforuser, address: text });
+              }}
+              // onBlur={handleBlur('address')}
+              value={inforuser.address}
+            />
+            {touched.address && errors.address && (
+              <Text style={styles.error}>{errors.address}</Text>
+            )}
+
+            <Button color={COLORS.black} title="CẬP NHẬT THÔNG TIN" onPress={handleSubmit} />
           </View>
-          <Pressable style={styles.btn} onPress={updateprofile}>
-            <Text style={styles.btnUpdate}>CẬP NHẬT</Text>
-          </Pressable>
-        </KeyboardAvoidingView>
-      </View>
-    </SafeAreaView>
+        )}
+      </Formik>
+    </View>
   );
 };
 
@@ -235,58 +127,23 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    marginStart: 10,
-    marginEnd: 10,
-    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  profile: {
-    flexDirection: 'row',
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 0.5,
+    marginTop: 15,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 350,
+    fontSize: 18,
+    marginBottom: 5,
   },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginLeft: 10,
-    marginRight: 70,
-    marginBottom: 20,
-  },
-  circle: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    overflow: 'hidden',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  viewItem: {
-    marginVertical: 0,
-    marginHorizontal: 10,
-    marginTop: 25,
-    height: 50,
-    backgroundColor: '#F5F7F8',
-    borderRadius: 10,
-    // borderWidth:1
-  },
-  textHint: {
-    marginLeft: 10,
-    lineHeight: 24,
-    top: '20%',
-    color: 'black',
-    fontSize: 16,
-  },
-  btn: {
-    backgroundColor: 'black',
-    height: 50,
-    borderRadius: 10,
-  },
-  btnUpdate: {
-    color: 'white',
-    textAlign: 'center',
-    top: '20%',
-    fontSize: 16,
-    fontWeight: 'bold',
+  error: {
+    color: 'red',
+    // marginBottom: 5,
   },
 });

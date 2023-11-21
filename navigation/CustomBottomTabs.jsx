@@ -1,30 +1,20 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
-} from "react-native";
-import React from "react";
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Icons from "@expo/vector-icons/MaterialIcons";
-import { ParamListBase, useTheme } from "@react-navigation/native";
-import Animated, {
-  interpolateColor,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-} from "react-native-reanimated";
+import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Icons from '@expo/vector-icons/MaterialIcons';
+import { useTheme, useIsFocused } from '@react-navigation/native';
+import Animated from 'react-native-reanimated';
+import { useContext } from 'react';
+import { AppContext } from '../components/ultil/AppContext';
 
 const CustomBottomTabs = (props) => {
   const { colors } = useTheme();
   return (
-    <SafeAreaView edges={["bottom"]} style={{ backgroundColor: colors.card }}>
+    <SafeAreaView edges={['bottom']} style={{ backgroundColor: colors.card }}>
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: 'row',
+          alignItems: 'center',
           paddingHorizontal: 16,
         }}
       >
@@ -47,7 +37,15 @@ const CustomBottomTabs = (props) => {
 export default CustomBottomTabs;
 
 const TabItem = ({ routeName, isActive, navigation }) => {
+  const isFocused = useIsFocused();
+  const { cartItemCount, setCartItemCount } = useContext(AppContext); // Truy cập cartItemCount từ AppContext
   const { colors } = useTheme();
+
+  // Sử dụng useEffect để theo dõi thay đổi của cartItemCount từ context
+  useEffect(() => {
+    // Lấy giá trị cartItemCount từ context hoặc từ nơi bạn lưu trữ giỏ hàng
+    setCartItemCount(cartItemCount);
+  }, [cartItemCount]); // Chú ý rằng bạn cần pass giá trị cần theo dõi vào mảng dependencies của useEffect
 
   const onTap = () => {
     navigation.navigate(routeName);
@@ -58,9 +56,9 @@ const TabItem = ({ routeName, isActive, navigation }) => {
       onPress={onTap}
       style={{
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row',
         paddingVertical: 8,
       }}
     >
@@ -69,22 +67,22 @@ const TabItem = ({ routeName, isActive, navigation }) => {
           {
             width: 36,
             height: 36,
-            alignItems: "center",
-            justifyContent: "center",
+            alignItems: 'center',
+            justifyContent: 'center',
             borderRadius: 32,
-            backgroundColor: isActive ? colors.primary : "transparent",
+            backgroundColor: isActive ? colors.primary : 'transparent',
           },
         ]}
       >
         <Icons
           name={
-            routeName === "Trang chủ"
-              ? "home"
-              : routeName === "Giỏ hàng"
-              ? "shopping-cart"
-              : routeName === "Yêu thích"
-              ? "favorite"
-              : "person"
+            routeName === 'Trang chủ'
+              ? 'home'
+              : routeName === 'Tìm kiếm'
+              ? 'search'
+              : routeName === 'Giỏ hàng'
+              ? 'shopping-cart'
+              : 'person'
           }
           size={24}
           color={isActive ? colors.card : colors.text}
@@ -92,13 +90,19 @@ const TabItem = ({ routeName, isActive, navigation }) => {
             opacity: isActive ? 1 : 0.5,
           }}
         />
+        {routeName === 'Giỏ hàng' && cartItemCount > 0 && (
+          // Hiển thị số lượng item trong giỏ hàng nếu có ít nhất một item
+          <View style={styles.cartItemCountBadge}>
+            <Text style={styles.cartItemCountText}>{cartItemCount}</Text>
+          </View>
+        )}
       </Animated.View>
       {isActive && (
         <Text
           style={{
             marginLeft: 4,
             fontSize: 12,
-            fontWeight: "600",
+            fontWeight: '600',
             color: colors.text,
           }}
         >
@@ -109,4 +113,20 @@ const TabItem = ({ routeName, isActive, navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  cartItemCountBadge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'red',
+    borderRadius: 10,
+    width: 15,
+    height: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartItemCountText: {
+    color: 'white',
+    fontSize: 13,
+  },
+});

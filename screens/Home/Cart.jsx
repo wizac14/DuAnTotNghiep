@@ -2,47 +2,61 @@ import { StyleSheet, Text, View, TouchableOpacity, FlatList, Pressable } from 'r
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SIZES } from '../../constants/index';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/index';
 import ItemCart from '../../components/item/ItemCart';
-import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { useEffect } from 'react';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { ToastAndroid } from 'react-native';
 import { useContext } from 'react';
 import { AppContext } from '../../components/ultil/AppContext';
-import { useIsFocused, useTheme } from '@react-navigation/native';
+import { useIsFocused, useTheme, useNavigation } from '@react-navigation/native';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
+import { COLORS } from '../../constants';
 
 const Cart = (props) => {
   const { navigation } = props;
   const [data, setdata] = useState([]);
   const { inforuser } = useContext(AppContext);
-  const [showTotalPrice, setShowTotalPrice] = useState(false);
+  const { cartItemCount, setCartItemCount } = useContext(AppContext); // Truy cập cartItemCount
+  const { cartCount, setCartCount } = useContext(AppContext); // Truy cập cartItemCount
   const [totalPrice, setTotalPrice] = useState(0);
 
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
   const { colors } = useTheme();
 
+  const calculateCartItemCount = () => {
+    let itemCount = 0;
+    data.forEach((item) => {
+      itemCount += 1;
+    });
+    return itemCount;
+  };
+
+  const calculateItemCount = () => {
+    let itemCartCount = 0;
+    data.forEach((item) => {
+      itemCartCount += 1;
+    });
+    return itemCartCount;
+  };
+
+  const itemCount = calculateCartItemCount();
+  const itemCartCount = calculateItemCount();
+
   useEffect(() => {
+    setCartItemCount(itemCount);
     if (isFocused) {
-      calculateTotalPrice();
+      calculateCartItemCount();
       getDetailByIdUser();
     }
     return () => {
+      setCartCount(itemCartCount);
       setdata([]);
       setTotalPrice(0);
       setIsLoading(true);
     };
   }, [isFocused]);
-
-  const handleToggleTotalPrice = () => {
-    setShowTotalPrice(!showTotalPrice);
-    calculateTotalPrice();
-  };
 
   const getDetailByIdUser = async () => {
     try {
@@ -59,18 +73,6 @@ const Cart = (props) => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const calculateTotalPrice = () => {
-    let total = 0;
-    data?.forEach((item) => {
-      const price = item?.idProduct.price; //lấy giá tiền của sản phẩm qua idProduct ms đúng
-      const quantity = item?.quantity;
-      const productTotal = price * quantity;
-      total += productTotal;
-      // console.log(productTotal);
-    });
-    setTotalPrice(total);
   };
 
   const removeItemFromCart = async (productId) => {
@@ -96,25 +98,15 @@ const Cart = (props) => {
 
         <View style={styles.viewContent}>
           <View style={styles.rightContent}>
-            <Text style={styles.text}>Giỏ hàng</Text>
-            <View style={styles.checkboxRow}>
-              <Text style={styles.checkboxText}>Tất cả</Text>
-              <BouncyCheckbox
-                size={30}
-                fillColor="red"
-                unfillColor="white"
-                innerIconStyle={{ borderWidth: 1, borderColor: 'black' }}
-                onPress={handleToggleTotalPrice}
-              />
-            </View>
+            <Text style={styles.text}>GIỎ HÀNG</Text>
           </View>
         </View>
+
         {isLoading ? (
           <View
             style={{
               // height: Dimensions.get('window').height * 0.75,
-              height: '75%',
-              // backgroundColor: 'red',
+              height: '74%',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -122,7 +114,7 @@ const Cart = (props) => {
             <UIActivityIndicator size={30} color={colors.text} />
           </View>
         ) : (
-          <View style={{ height: '75%' }}>
+          <View style={{ height: '74%' }}>
             <FlatList
               data={data}
               renderItem={({ item }) => (
@@ -137,7 +129,7 @@ const Cart = (props) => {
               ListEmptyComponent={
                 <View
                   style={{
-                    height: Dimensions.get('window').height * 0.25,
+                    height: Dimensions.get('window').height * 0.5,
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
@@ -148,24 +140,16 @@ const Cart = (props) => {
             />
           </View>
         )}
-        <View style={{ height: '25%' }}>
-          <View style={styles.viewBuy}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
+        <View style={{ height: '30%' }}>
+          <View>
+            <TouchableOpacity
+              style={styles.buttonBuy}
+              onPress={() => {
+                navigation.navigate('CartDetail', { data });
               }}
             >
-              <Text style={{ fontSize: 18, color: COLORS.red }}>
-                Tổng thanh toán: đ{showTotalPrice ? totalPrice.toLocaleString() : '0'}
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Pressable style={styles.buttonBuy}>
-              <Text style={styles.textBuy}>Mua hàng</Text>
-            </Pressable>
+              <Text style={styles.textBuy}>Tiếp tục</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -178,8 +162,6 @@ export default Cart;
 const styles = StyleSheet.create({
   container: {
     marginTop: 10,
-    marginEnd: 10,
-    marginLeft: 10,
     marginBottom: 30,
     flexDirection: 'column',
   },
@@ -187,6 +169,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 10,
     justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: COLORS.gray2,
   },
   textAndCheckbox: {
     flexDirection: 'row',
@@ -199,15 +183,13 @@ const styles = StyleSheet.create({
   },
   rightContent: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flex: 1,
+    marginBottom: 12,
   },
   text: {
     fontSize: 24,
     fontWeight: 'bold',
     marginLeft: 10,
-    marginRight: 100,
+    // marginRight: 100,
   },
   checkboxText: {
     fontSize: 18,
@@ -232,5 +214,17 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  cartItemCountBadge: {
+    backgroundColor: 'red',
+    borderRadius: 15,
+    width: 15,
+    height: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cartItemCountText: {
+    color: 'white',
+    fontSize: 13,
   },
 });
