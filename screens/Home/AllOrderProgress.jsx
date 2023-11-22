@@ -7,6 +7,7 @@ import {
   Pressable,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
 import { COLORS } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -122,15 +123,25 @@ const OrderItem = ({ item }) => {
             paddingTop: 20,
           }}
         >
-          <View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={{ fontSize: 18 }}>{moment(item?.createdAt).format('HH:mm')}, </Text>
-              <Text style={{ fontSize: 18 }}>{moment(item?.createdAt).format('DD-MM-YYYY')}</Text>
-            </View>
-            <View style={{ flexDirection: 'column' }}>
-              {/* <Text style={{ fontSize: 16 }}>{item?.productCount} mặt hàng</Text> */}
-              <View style={{}}>
-                <Text style={{ fontSize: 16, color: 'grey' }}>Nhấn để xem chi tiết</Text>
+          <View style={{}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image
+                style={{ height: 50, width: 50 }}
+                source={require('../../assets/images/logo.png')}
+              />
+              <View>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ fontSize: 18 }}>{moment(item?.createdAt).format('HH:mm')}, </Text>
+                  <Text style={{ fontSize: 18 }}>
+                    {moment(item?.createdAt).format('DD-MM-YYYY')}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: 'column' }}>
+                  {/* <Text style={{ fontSize: 16 }}>{item?.productCount} mặt hàng</Text> */}
+                  <View style={{}}>
+                    <Text style={{ fontSize: 16, color: 'grey' }}>Nhấn để xem chi tiết</Text>
+                  </View>
+                </View>
               </View>
             </View>
           </View>
