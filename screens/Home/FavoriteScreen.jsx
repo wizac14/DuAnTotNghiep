@@ -30,7 +30,7 @@ const FavoriteScreen = () => {
 
   useFocusEffect(
     React.useCallback(() => {
-      fetchFavorites(); // Gọi lại hàm fetchFavorites khi màn hình FavoriteScreen được focus
+      fetchFavorites();
     }, [])
   );
 
@@ -40,7 +40,7 @@ const FavoriteScreen = () => {
 
   const fetchFavorites = async () => {
     try {
-      const userId = inforuser._id; // Thay đổi với userId của người dùng
+      const userId = inforuser._id;
       const response = await AxiosIntance().get(`/favorite/${userId}`);
       setFavorites(response.favorites);
       //   console.log(response.favorites);
@@ -67,7 +67,7 @@ const FavoriteScreen = () => {
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={{
-              width: 42,
+              width: 32,
               aspectRatio: 1,
               alignItems: 'center',
               justifyContent: 'center',
@@ -198,16 +198,5 @@ const FavoriteScreen = () => {
     </ScrollView>
   );
 };
-
-//   return (
-//     <View>
-//       <Text>SẢN PHẨM YÊU THÍCH</Text>
-//       <FlatList
-//         data={favorites}
-//         renderItem={renderFavoriteItem}
-//         keyExtractor={(item) => item._id.toString()}
-//       />
-//     </View>
-//   );
 
 export default FavoriteScreen;

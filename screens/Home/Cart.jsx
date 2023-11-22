@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, Pressable } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  FlatList,
+  Pressable,
+  Button,
+} from 'react-native';
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -12,6 +20,7 @@ import { useIsFocused, useTheme, useNavigation } from '@react-navigation/native'
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
 import { COLORS } from '../../constants';
+import FixedBottom from './FixedBottom';
 
 const Cart = (props) => {
   const { navigation } = props;
@@ -105,8 +114,7 @@ const Cart = (props) => {
         {isLoading ? (
           <View
             style={{
-              // height: Dimensions.get('window').height * 0.75,
-              height: '74%',
+              height: '90%',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -114,7 +122,7 @@ const Cart = (props) => {
             <UIActivityIndicator size={30} color={colors.text} />
           </View>
         ) : (
-          <View style={{ height: '74%' }}>
+          <View style={{ height: '90%' }}>
             <FlatList
               data={data}
               renderItem={({ item }) => (
@@ -129,7 +137,7 @@ const Cart = (props) => {
               ListEmptyComponent={
                 <View
                   style={{
-                    height: Dimensions.get('window').height * 0.5,
+                    height: Dimensions.get('window').height * 0.75,
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}
@@ -140,18 +148,18 @@ const Cart = (props) => {
             />
           </View>
         )}
-        <View style={{ height: '30%' }}>
-          <View>
-            <TouchableOpacity
-              style={styles.buttonBuy}
-              onPress={() => {
-                navigation.navigate('CartDetail', { data });
-              }}
-            >
-              <Text style={styles.textBuy}>Tiếp tục</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      </View>
+      <View>
+        <FixedBottom>
+          <TouchableOpacity
+            style={styles.buttonBuy}
+            onPress={() => {
+              navigation.navigate('CartDetail', { data });
+            }}
+          >
+            <Text style={styles.textBuy}>Tiếp tục</Text>
+          </TouchableOpacity>
+        </FixedBottom>
       </View>
     </SafeAreaView>
   );
@@ -161,8 +169,6 @@ export default Cart;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
-    marginBottom: 30,
     flexDirection: 'column',
   },
   viewContent: {
@@ -200,18 +206,19 @@ const styles = StyleSheet.create({
   },
   viewBuy: {
     // flexDirection: 'row',
-    paddingTop: 20,
+    // paddingTop: 20,
   },
   buttonBuy: {
-    height: 48,
     backgroundColor: 'black',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    // marginTop: 10,
+    paddingHorizontal: 20,
   },
   textBuy: {
-    color: '#FFFFFF',
+    textAlign: 'center',
+    color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
   },
