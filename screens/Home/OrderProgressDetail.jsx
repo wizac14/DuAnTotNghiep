@@ -360,20 +360,19 @@ const OrderProgressDetail = ({ route }) => {
             </TouchableOpacity>
           </View>
 
-          <View style={{ flexDirection: 'colunm', marginTop: 15 }}>
-            <Text style={{ fontSize: 40, color: 'grey', fontWeight: 'bold', paddingLeft: 10 }}>
-              Shop in
-            </Text>
-            <Text style={{ fontSize: 40, color: 'grey', fontWeight: 'bold', paddingLeft: 10 }}>
-              Styles!
-            </Text>
-          </View>
-          <View style={{ flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start' }}>
-            <Image
-              style={{ height: 60, width: 60 }}
-              source={require('../../assets/images/logo.png')}
-            />
-            <Text style={{ fontSize: 18, color: 'grey' }}>THEFIVEMENSSHOES SHOP</Text>
+          <View style={{ alignItems: 'center', marginTop: 30 }}>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontSize: 40, color: 'grey', fontWeight: 'bold', paddingLeft: 10 }}>
+                Shop in Styles!
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image
+                style={{ height: 60, width: 60 }}
+                source={require('../../assets/images/logo.png')}
+              />
+              <Text style={{ fontSize: 18, color: 'grey' }}>THEFIVEMENSSHOES</Text>
+            </View>
           </View>
         </View>
       </ScrollView>

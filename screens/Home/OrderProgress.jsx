@@ -22,6 +22,7 @@ const OrderProgress = () => {
             paddingHorizontal: 10,
             alignItems: 'center',
             marginBottom: 10,
+            paddingVertical: 10,
           }}
         >
           <TouchableOpacity

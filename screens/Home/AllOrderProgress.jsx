@@ -146,18 +146,14 @@ const OrderItem = ({ item }) => {
             </View>
           </View>
 
-          <View style={{ flexDirection: 'column', gap: 0 }}>
+          <View style={{ flexDirection: 'column', gap: 0, alignSelf: 'center' }}>
             <Text style={{ fontSize: 14, textAlign: 'right', color: statusColor }}>
               {statusPayment}
             </Text>
 
-            <View style={{}}>
-              <View>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'right' }}>
-                  {item?.totalAmount.toLocaleString()}đ
-                </Text>
-              </View>
-            </View>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'right' }}>
+              {item?.totalAmount.toLocaleString()}đ
+            </Text>
           </View>
         </TouchableOpacity>
       </View>

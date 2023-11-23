@@ -173,9 +173,9 @@ const styles = StyleSheet.create({
   },
   viewContent: {
     flexDirection: 'row',
-    marginBottom: 10,
+    margin: 15,
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderColor: COLORS.gray2,
   },
   textAndCheckbox: {
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   },
   rightContent: {
     flexDirection: 'row',
-    marginBottom: 12,
+    // marginBottom: 12,
   },
   text: {
     fontSize: 24,

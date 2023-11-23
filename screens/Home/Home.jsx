@@ -240,7 +240,7 @@ const Home = () => {
                 justifyContent: 'center',
                 borderRadius: 52,
                 borderWidth: 1,
-                borderColor: colors.border,
+                borderColor: 'lightgrey',
               }}
             >
               <MaterialCommunityIcons name="clipboard-list-outline" size={24} color="black" />
@@ -256,7 +256,7 @@ const Home = () => {
                 justifyContent: 'center',
                 borderRadius: 52,
                 borderWidth: 1,
-                borderColor: colors.border,
+                borderColor: 'lightgrey',
               }}
             >
               <MaterialIcons name="favorite-border" size={24} color={colors.text} />
@@ -273,8 +273,8 @@ const Home = () => {
               // justifyContent: 'center',
               marginBottom: 16,
               borderBottomWidth: 1,
-              borderBottomColor: COLORS.gray2,
-              borderTopColor: COLORS.gray2,
+              borderBottomColor: 'lightgrey',
+              borderTopColor: 'lightgrey',
             }}
           >
             <Text
@@ -310,7 +310,7 @@ const Home = () => {
                       flexDirection: 'column',
                       gap: 6,
                       borderBottomWidth: 1,
-                      borderBottomColor: COLORS.gray2,
+                      borderBottomColor: 'lightgrey',
                     }}
                   >
                     <View
@@ -463,7 +463,7 @@ const Home = () => {
                       flexDirection: 'column',
                       gap: 6,
                       borderBottomWidth: 1,
-                      borderBottomColor: COLORS.gray2,
+                      borderBottomColor: 'lightgrey',
                     }}
                   >
                     <View
@@ -599,7 +599,7 @@ const Home = () => {
               alignItems: 'center',
               marginBottom: 16,
               borderBottomWidth: 1,
-              borderBottomColor: COLORS.gray2,
+              borderBottomColor: 'lightgrey',
               marginTop: 60,
               // width: '100%',
             }}
@@ -640,7 +640,7 @@ const Home = () => {
                       paddingVertical: 12,
                       borderRadius: 10,
                       borderWidth: 1,
-                      borderColor: colors.border,
+                      borderColor: 'lightgrey',
                       width: 130,
                       justifyContent: 'center',
                     }}
@@ -713,7 +713,7 @@ const Home = () => {
                       width: '100%',
                       height: '100%',
                       borderWidth: 0.7,
-                      borderColor: COLORS.gray2,
+                      borderColor: 'lightgrey',
                       paddingBottom: 45,
                       borderRadius: 5,
                     }}

@@ -24,6 +24,9 @@ import FavoriteScreen from '../screens/Home/FavoriteScreen';
 import OrderProcessing from '../components/order/OrderProcessing';
 import OrderProgress from '../screens/Home/OrderProgress';
 import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
+import ProductListScreen from '../screens/Home/ProductListScreen';
+import SearchResultScreen from '../screens/Home/SearchResultScreen';
+import SearchAllResultScreen from '../screens/Home/SearchAllResultScreen';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -92,6 +95,21 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="OrderProgressDetail"
         component={OrderProgressDetail}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="ProductListScreen"
+        component={ProductListScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="SearchResultScreen"
+        component={SearchResultScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="SearchAllResultScreen"
+        component={SearchAllResultScreen}
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>
