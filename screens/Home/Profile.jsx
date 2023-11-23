@@ -41,8 +41,7 @@ const Profile = () => {
 
   const nameValidation = yup
     .string()
-    .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt')
-    .required('Hãy điền tên của bạn');
+    .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt');
 
   const phoneValidation = yup
     .string()
@@ -94,7 +93,7 @@ const Profile = () => {
                 setinforuser({ ...inforuser, phoneNumber: text });
               }}
               // onBlur={handleBlur('phoneNumber')}
-              value={inforuser.phoneNumber.toString()}
+              value={inforuser.phoneNumber}
             />
             {touched.phoneNumber && errors.phoneNumber && (
               <Text style={styles.error}>{errors.phoneNumber}</Text>

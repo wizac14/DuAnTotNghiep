@@ -23,6 +23,7 @@ import CodPayment from '../screens/Payment/CodPayment';
 import FavoriteScreen from '../screens/Home/FavoriteScreen';
 import OrderProcessing from '../components/order/OrderProcessing';
 import OrderProgress from '../screens/Home/OrderProgress';
+import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -88,27 +89,11 @@ const AuthNavigator = () => {
         component={OrderProgress}
         options={{ headerShown: false, gestureEnabled: false }}
       />
-
       <Stack.Screen
-        name="Search"
-        component={Search}
-        options={{ headerShown: false }}
+        name="OrderProgressDetail"
+        component={OrderProgressDetail}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
-
-
-
-      <Stack.Screen
-        name="SearchTitle"
-        component={SearchTitle}
-        options={{ headerShown: false }}
-      />
-
-      <Stack.Screen
-        name="Favorite"
-        component={Favorite}
-        options={{ headerShown: false }} />
-
-        
     </Stack.Navigator>
   );
 };
