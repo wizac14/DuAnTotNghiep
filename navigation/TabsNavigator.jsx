@@ -47,7 +47,7 @@ const TabsNavigator = () => {
 
       <TabsStack.Screen
         name="Tìm kiếm"
-        component={SearchDetail}
+        component={SearchProduct}
         options={{
           headerShown: false,
           tabBarIcon(props) {
