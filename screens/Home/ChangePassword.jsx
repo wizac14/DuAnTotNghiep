@@ -9,7 +9,7 @@ const ChangePassword = () => {
   const [isSecureEntry1, setIsSecureEntry1] = useState(true);
   const [isSecureEntry2, setIsSecureEntry2] = useState(true);
   const [isSecureEntry3, setIsSecureEntry3] = useState(true);
-  const { inforuser, } = useContext(AppContext);
+  const { inforuser } = useContext(AppContext);
   const [email, setEmail] = useState('');
 
   const [oldPassword, setOldPassword] = useState('')
@@ -36,11 +36,13 @@ const ChangePassword = () => {
   }, [])
   const changePassword = async () => {
     try {
+      console.log(email);
+      console.log(oldPassword);
+      console.log(confirmPass);
       const response = await AxiosIntance().put("user/change-password", { email: email, oldPassword: oldPassword, newPassword: confirmPass });
       if (response.result) {
         ToastAndroid.show("Đổi mật khẩu thành công", ToastAndroid.SHORT);
         navigation.navigate('Person');
-        setIsLogin(false)
       }
       else {
         ToastAndroid.show("Đổi mật khẩu thất bại", ToastAndroid.SHORT);

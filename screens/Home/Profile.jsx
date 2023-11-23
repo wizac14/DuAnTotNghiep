@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, Button, Pressable } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SIZES } from '../../constants/index';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/index';
+import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../components/ultil/AppContext';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { launchCameraAsync } from 'expo-image-picker';
@@ -12,9 +13,10 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 
 const Profile = () => {
+  const navigation = useNavigation();
   const { inforuser, setinforuser } = useContext(AppContext);
   const handleSubmit = async () => {
-    const response = await AxiosIntance().post('/user/update', {
+    const response = await AxiosIntance().put('/user/update/'+ inforuser._id,{
       name: inforuser.name,
       email: inforuser.email,
       address: inforuser.address,
@@ -25,6 +27,7 @@ const Profile = () => {
     });
     if (response.result) {
       ToastAndroid.show('Cập nhật thành công', ToastAndroid.SHORT);
+      navigation.navigate('Person');
     } else {
       ToastAndroid.show('Cập nhật không thành công', ToastAndroid.SHORT);
     }
@@ -64,18 +67,34 @@ const Profile = () => {
 
   return (
     <View style={styles.container}>
+      <View style={{ flexDirection: 'row', top: "10%"}}>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <Ionicons name="arrow-back-outline" size={30}/>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text style={styles.title}>Cập nhật thông tin</Text>
+        </View>
+      </View>
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
-          <View>
-            <TextInput style={styles.input} placeholder="Email" value={values.email} />
-            {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
-
+          <View > 
+            <View style={styles.viewItem}>
+              <TextInput style={styles.textHint} placeholder="Email" value={values.email} editable={false} />
+              {touched.email && errors.email && <Text style={styles.error}>{errors.email}</Text>}
+            </View>
+            <View style={styles.viewItem} >
             <TextInput
-              style={styles.input}
+              style={styles.textHint}
               placeholder="Name"
               onChangeText={(text) => {
                 handleChange('name')(text);
@@ -86,8 +105,11 @@ const Profile = () => {
             />
             {touched.name && errors.name && <Text style={styles.error}>{errors.name}</Text>}
 
+            </View> 
+
+            <View style={styles.viewItem}>
             <TextInput
-              style={styles.input}
+              style={styles.textHint}
               placeholder="Sđt"
               onChangeText={(text) => {
                 handleChange('phoneNumber')(text);
@@ -99,9 +121,10 @@ const Profile = () => {
             {touched.phoneNumber && errors.phoneNumber && (
               <Text style={styles.error}>{errors.phoneNumber}</Text>
             )}
-
+            </View>
+            <View style={styles.viewItem}>
             <TextInput
-              style={styles.input}
+              style={styles.textHint}
               placeholder="Địa chỉ"
               onChangeText={(text) => {
                 handleChange('address')(text);
@@ -113,8 +136,10 @@ const Profile = () => {
             {touched.address && errors.address && (
               <Text style={styles.error}>{errors.address}</Text>
             )}
-
-            <Button color={COLORS.black} title="CẬP NHẬT THÔNG TIN" onPress={handleSubmit} />
+            </View>
+            <Pressable style={styles.btn} onPress={handleSubmit}>
+            <Text style={styles.btnUpdate}>CẬP NHẬT THÔNG TIN</Text>
+            </Pressable>
           </View>
         )}
       </Formik>
@@ -127,23 +152,47 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 0.5,
-    marginTop: 15,
-    paddingHorizontal: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 350,
-    fontSize: 18,
-    marginBottom: 5,
+    flexDirection: 'column',
+    marginStart: 10,
+    marginEnd: 10,
+    marginBottom: 20,
   },
   error: {
     color: 'red',
-    // marginBottom: 5,
+    marginTop:5
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginRight: 70,
+    marginBottom: 30,
+  },
+  viewItem: {
+    marginTop: 25,
+    height: 55,
+    width:'100%',
+    backgroundColor: '#F5F7F8',
+    borderRadius: 10,
+  },
+  textHint: {
+    marginLeft: 10,
+    lineHeight: 24,
+    top: '20%',
+    color: 'black',
+    fontSize: 16,
+  },
+  btn: {
+    marginTop:50,
+    backgroundColor: 'black',
+    height: 50,
+    borderRadius: 10,
+  },
+  btnUpdate: {
+    color: 'white',
+    textAlign: 'center',
+    top: '20%',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
