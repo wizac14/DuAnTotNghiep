@@ -4,7 +4,7 @@ import { COLORS } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useContext } from 'react';
 import { AppContext } from '../../components/ultil/AppContext';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
@@ -47,7 +47,7 @@ const CartDetail = (props) => {
 
   const getDetailByIdUser = async () => {
     try {
-      const response = await AxiosIntance().get('/cart/get-by-idUser?idUser=' + inforuser._id);
+      const response = await AxiosInstance().get('/cart/get-by-idUser?idUser=' + inforuser._id);
       if (response?.result === true) {
         setdata(response?.cart);
         console.log(response?.cart[0]);

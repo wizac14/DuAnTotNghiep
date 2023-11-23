@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../constants/index';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { Pressable } from 'react-native';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { UIActivityIndicator } from 'react-native-indicators';
 import noImageAvailable from '../../assets/images/no_image_available.jpg';
 import { AppContext } from '../../components/ultil/AppContext';
@@ -47,8 +47,8 @@ const SearchDetail = () => {
 
   const handleSearch = async (name) => {
     try {
-      // Gọi hàm tìm kiếm từ AxiosIntance
-      const response = await AxiosIntance().get(`/product/search-by-name?query=${name}`);
+      // Gọi hàm tìm kiếm từ AxiosInstance
+      const response = await AxiosInstance().get(`/product/search-by-name?query=${name}`);
       if (response?.products) {
         setSearchResults(response?.products);
         setNoResults(response.products.length === 0);

@@ -1,17 +1,55 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AllOrderProgress from './AllOrderProgress';
 import { SafeAreaView } from 'react-native-safe-area-context';
+<<<<<<< Updated upstream
 import PaidOrder from './PaidOrder';
 import UnPaidOrder from './UnPaidOrder';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../../constants';
 import Icons from '@expo/vector-icons/MaterialIcons';
+=======
+import AxiosInstance from '../../components/ultil/AxiosInstance';
+import { AppContext } from '../../components/ultil/AppContext';
+import { UIActivityIndicator } from 'react-native-indicators';
+import { Dimensions } from 'react-native';
+>>>>>>> Stashed changes
 import { useNavigation } from '@react-navigation/native';
 
 const Tab = createMaterialTopTabNavigator();
 
 const OrderProgress = () => {
   const navigation = useNavigation();
+<<<<<<< Updated upstream
+=======
+  const { width, height } = Dimensions.get('window');
+  const paddingPercentage = 2;
+
+  //api lấy ds đơn hàng của usser
+  const fetchProducts = async () => {
+    try {
+      const userId = inforuser._id;
+
+      const response = await AxiosInstance().get(`order/user-orders/${userId}`);
+      //   console.log(response);
+
+      if (response.orders) {
+        const reverseOrders = await response?.orders.reverse();
+        setOrders(reverseOrders);
+      } else {
+        console.error('Failed to fetch products:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+>>>>>>> Stashed changes
   return (
     <>
       <SafeAreaView>

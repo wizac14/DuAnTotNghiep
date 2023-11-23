@@ -10,6 +10,7 @@ import ItemListHistory from '../components/item/ItemListHistory';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SearchProduct from '../screens/Home/SearchProduct';
 import SearchDetail from '../screens/Home/SearchDetail';
+import FavoriteScreen from '../screens/Home/FavoriteScreen';
 
 const TabsStack = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -68,7 +69,7 @@ const TabsNavigator = () => {
 
       <TabsStack.Screen
         name="Yêu thích"
-        component={Favorite}
+        component={FavoriteScreen}
         options={{
           headerShown: false,
           tabBarIcon(props) {

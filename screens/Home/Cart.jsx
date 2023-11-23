@@ -12,7 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ItemCart from '../../components/item/ItemCart';
 import { useEffect } from 'react';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { ToastAndroid } from 'react-native';
 import { useContext } from 'react';
 import { AppContext } from '../../components/ultil/AppContext';
@@ -69,7 +69,7 @@ const Cart = (props) => {
 
   const getDetailByIdUser = async () => {
     try {
-      const response = await AxiosIntance().get('/cart/get-by-idUser?idUser=' + inforuser._id);
+      const response = await AxiosInstance().get('/cart/get-by-idUser?idUser=' + inforuser._id);
       if (response?.result === true) {
         setdata(response?.cart);
         // console.log(response?.cart[0]);
@@ -86,7 +86,7 @@ const Cart = (props) => {
 
   const removeItemFromCart = async (productId) => {
     try {
-      const response = await AxiosIntance().delete(`/cart/remove-from-cart/${productId}`);
+      const response = await AxiosInstance().delete(`/cart/remove-from-cart/${productId}`);
       console.log(response);
       if (response?.result === true) {
         //xóa sản phẩm thành công

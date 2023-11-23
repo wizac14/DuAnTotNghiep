@@ -23,7 +23,14 @@ import CodPayment from '../screens/Payment/CodPayment';
 import FavoriteScreen from '../screens/Home/FavoriteScreen';
 import OrderProcessing from '../components/order/OrderProcessing';
 import OrderProgress from '../screens/Home/OrderProgress';
+<<<<<<< Updated upstream
 import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
+=======
+import Search from '../screens/Home/Search';
+import SearchTitle from '../screens/Home/SearchTitle';
+
+
+>>>>>>> Stashed changes
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -94,6 +101,21 @@ const AuthNavigator = () => {
         component={OrderProgressDetail}
         options={{ headerShown: false, gestureEnabled: false }}
       />
+<<<<<<< Updated upstream
+=======
+
+
+
+      <Stack.Screen
+        name="SearchTitle"
+        component={SearchTitle}
+        options={{ headerShown: false }}
+      />
+
+   
+
+        
+>>>>>>> Stashed changes
     </Stack.Navigator>
   );
 };

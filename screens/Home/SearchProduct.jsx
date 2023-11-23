@@ -21,7 +21,7 @@ import CustomBackdrop from '../../components/home/CustomBackdrop';
 import ImageSlider from '../../components/home/ImagesSlider';
 import { Pressable } from 'react-native';
 import FilterView from '../../components/home/FilterView';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { UIActivityIndicator } from 'react-native-indicators';
 import noImageAvailable from '../../assets/images/no_image_available.jpg';
 import { AppContext } from '../../components/ultil/AppContext';
@@ -47,7 +47,7 @@ const SearchProduct = () => {
 
   useEffect(() => {
     const getBrands = async () => {
-      const response = await AxiosIntance().get('/brand/get-all-brands');
+      const response = await AxiosInstance().get('/brand/get-all-brands');
       //   const allProduct = {
       //     name: 'Tất Cả',
       //   };
@@ -60,7 +60,7 @@ const SearchProduct = () => {
 
     //lấy all product
     const getProducts = async () => {
-      const response = await AxiosIntance().get('/product/get-all');
+      const response = await AxiosInstance().get('/product/get-all');
       if (response.result) {
         setProducts(response.products);
         // setIsProductLoading(false);
@@ -83,7 +83,7 @@ const SearchProduct = () => {
       //   if (brandName === 'Tất Cả') {
       //     url = `/product/get-all`;
       //   }
-      const response = await AxiosIntance().get(url);
+      const response = await AxiosInstance().get(url);
 
       if (response.products) {
         setProducts(response?.products);

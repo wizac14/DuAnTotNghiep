@@ -5,7 +5,7 @@ import { SIZES } from '../../constants/index';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/index';
 import { AppContext } from '../../components/ultil/AppContext';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { launchCameraAsync } from 'expo-image-picker';
 import { ToastAndroid } from 'react-native';
 import { Formik } from 'formik';
@@ -14,7 +14,7 @@ import * as yup from 'yup';
 const Profile = () => {
   const { inforuser, setinforuser } = useContext(AppContext);
   const handleSubmit = async () => {
-    const response = await AxiosIntance().post('/user/update', {
+    const response = await AxiosInstance().post('/user/update', {
       name: inforuser.name,
       email: inforuser.email,
       address: inforuser.address,
@@ -75,7 +75,7 @@ const Profile = () => {
 
             <TextInput
               style={styles.input}
-              placeholder="Name"
+              placeholder="Tên"
               onChangeText={(text) => {
                 handleChange('name')(text);
                 setinforuser({ ...inforuser, name: text });
@@ -87,13 +87,17 @@ const Profile = () => {
 
             <TextInput
               style={styles.input}
-              placeholder="Sđt"
+              placeholder="Số điện thoại"
               onChangeText={(text) => {
                 handleChange('phoneNumber')(text);
                 setinforuser({ ...inforuser, phoneNumber: text });
               }}
               // onBlur={handleBlur('phoneNumber')}
+<<<<<<< Updated upstream
               value={inforuser.phoneNumber}
+=======
+              // value={inforuser.phoneNumber.toString()}
+>>>>>>> Stashed changes
             />
             {touched.phoneNumber && errors.phoneNumber && (
               <Text style={styles.error}>{errors.phoneNumber}</Text>

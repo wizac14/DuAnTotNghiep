@@ -16,7 +16,7 @@ import { StatusBar } from 'expo-status-bar';
 import { COLORS } from '../../constants';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { SliderBox } from 'react-native-image-slider-box';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { useContext } from 'react';
 import { AppContext } from '../ultil/AppContext';
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -69,7 +69,7 @@ const ProductDetail = (props) => {
   //thêm vào ds yêu thích
   const addToFavorites = async () => {
     try {
-      const response = await AxiosIntance().post('/favorite/add-to-favorites', {
+      const response = await AxiosInstance().post('/favorite/add-to-favorites', {
         idUser: inforuser._id,
         idProduct: product._id,
       });
@@ -90,7 +90,7 @@ const ProductDetail = (props) => {
   const removeFromFavorites = async () => {
     try {
       if (isFavorite) {
-        const response = await AxiosIntance().delete(
+        const response = await AxiosInstance().delete(
           `/favorite/remove-from-favorites/${inforuser._id}/${params.id}`
         );
 
@@ -102,7 +102,7 @@ const ProductDetail = (props) => {
         }
       } else {
         // Nếu sản phẩm chưa có trong danh sách yêu thích, gọi API để thêm sản phẩm vào
-        const response = await AxiosIntance().post('/favorite/add-to-favorites', {
+        const response = await AxiosInstance().post('/favorite/add-to-favorites', {
           idUser: inforuser._id,
           idProduct: product._id,
         });
@@ -195,7 +195,7 @@ const ProductDetail = (props) => {
   }
   // http://localhost:3000/api/cart/new-to-cart
   const addNewCart = async () => {
-    const response = await AxiosIntance().post('/cart/new-to-cart', {
+    const response = await AxiosInstance().post('/cart/new-to-cart', {
       idUser: inforuser._id,
       idProduct: product._id,
       color: selectedColor,
@@ -214,7 +214,7 @@ const ProductDetail = (props) => {
   useEffect(() => {
     const getDetails = async () => {
       try {
-        const response = await AxiosIntance().get('/product/get-by-id?id=' + params.id);
+        const response = await AxiosInstance().get('/product/get-by-id?id=' + params.id);
         if (response.result === true) {
           const productData = response.product;
           setProduct(productData);
@@ -245,7 +245,7 @@ const ProductDetail = (props) => {
 
   const checkIfFavorite = async () => {
     try {
-      const response = await AxiosIntance().get(
+      const response = await AxiosInstance().get(
         `/favorite/check-favorite/${inforuser?._id}/${params.id}`
       );
       if (response.isFavorite === true) {
