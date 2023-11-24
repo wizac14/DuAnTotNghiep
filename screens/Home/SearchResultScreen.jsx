@@ -100,7 +100,9 @@ const SearchResultScreen = ({ route }) => {
             <Icons name="arrow-back" size={24} color={COLORS.black} />
           </TouchableOpacity>
 
-          <Text style={{ fontSize: 22, color: 'black', marginRight: 5 }}>Tìm kiếm sản phẩm</Text>
+          <Text style={{ fontSize: 22, color: 'black', marginRight: 5 }}>
+            Kết quả tìm kiếm cho "{searchText}"
+          </Text>
         </View>
         {isLoading ? (
           <View
