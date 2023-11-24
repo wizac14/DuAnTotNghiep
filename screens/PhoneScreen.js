@@ -15,11 +15,22 @@ import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig } from "../config";
 import firebase from "firebase/compat/app";
 import { TextInput } from "react-native-paper";
+import AxiosInstance from "../components/ultil/AxiosInstance";
+import { ToastAndroid } from "react-native";
+import { Dimensions } from "react-native";
+
+
+
+const inputs = Array(6).fill();
+let newInputIndex = 0;
 
 const PhoneScreen = () => {
   const navigation = useNavigation();
-
+  const [code, setCode] = useState({ 0: "", 1: "", 2: "", 3: "", 4: "", 5: "" });
+  const [nextInputIndex, setNextInputIndex] = useState(0);
   const [count, setCount] = useState(60);
+
+
   useEffect(() => {
     const interval = setInterval(() => {
       if (count == 0) {
@@ -32,46 +43,69 @@ const PhoneScreen = () => {
   }, [count]);
 
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [code, setCode] = useState("");
   const [verificationId, setVerificationId] = useState(null);
   const recaptchaVerifier = useRef(null);
 
-  const sendVerification = async () => {
+
+  const input = useRef();
+  const handleChangeText = (text, index) => {
+    const newOTP = { ...code };
+    newOTP[index] = text;
+    setCode(newOTP);
+
+    const lastInputIndex = inputs.length - 1;
+    if (!text) {
+      newInputIndex = index === 0 ? 0 : index - 1;
+      setNextInputIndex(newInputIndex);
+    } else {
+      newInputIndex = index === lastInputIndex ? lastInputIndex : index + 1;
+      setNextInputIndex(newInputIndex);
+    }
+
+  };
+
+  useEffect(() => {
+    input.current.focus();
+  }, [nextInputIndex]);
+
+  const sendOTP = async () => {
     try {
-      const phoneProvider = new firebase.auth.PhoneAuthProvider();
-      await phoneProvider
-        .verifyPhoneNumber(phoneNumber, recaptchaVerifier.current)
-        .then(setVerificationId);
-      setPhoneNumber("");
+      const result = await AxiosInstance().post("user/send-otp-phone", { phoneNumber: phoneNumber });
+      console.log(result);
+      if (result) {
+        ToastAndroid.show("Gửi OTP thành công", ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show("Gửi OTP không thành công", ToastAndroid.SHORT);
+        console.log(err.result.data);
+      }
     } catch (err) {
-      console.log(err);
+      console.log(err.result);
+      ToastAndroid.show("Lỗi khi gửi OTP", ToastAndroid.SHORT);
     }
   };
 
-  const confirmCode = () => {
-    const credential = firebase.auth.PhoneAuthProvider.credential(
-      verificationId,
-      code
-    );
-    firebase
-      .auth()
-      .signInWithCredential(credential)
-      .then((result) => {
-        setCode("");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    Alert.alert("Successful!");
-    navigation.navigate("New Password");
-  };
+
+  const confirmCode = async () => {
+    try{
+      const otpCode = parseInt(Object.values(code).join(''), 10);
+      const response = await AxiosInstance().post("user/verify-otp-phone", { phoneNumber: phoneNumber, otpCode: otpCode });
+      if (response) {
+        ToastAndroid.show("Xác nhận OTP thành công", ToastAndroid.SHORT);
+        navigation.navigate("New Password Phone", { phoneNumber: phoneNumber });
+      } else {
+        ToastAndroid.show("Xác nhận OTP không thành công", ToastAndroid.SHORT);
+        console.log(err.response.data);
+      }
+    } catch (err) {
+      ToastAndroid.show("Lỗi khi xác nhận OTP", ToastAndroid.SHORT);
+      console.log(err.response.data);
+    }
+  }
+
+
   return (
     <KeyboardAvoidingView style={styles.container}>
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={firebaseConfig}
-      />
-
+    
       <Text
         style={{
           fontSize: 20,
@@ -106,7 +140,7 @@ const PhoneScreen = () => {
       />
 
       <TouchableOpacity
-        onPress={sendVerification}
+        onPress={sendOTP}
         style={{
           width: 300,
           backgroundColor: "#D80032",
@@ -128,61 +162,23 @@ const PhoneScreen = () => {
         </Text>
       </TouchableOpacity>
 
-      <View style={styles.otpView}>
-        <TextInput
-          onChangeText={setCode}
-          maxLength={1}
-          keyboardType="numeric"
-          style={[
-            styles.inputView,
-            { borderColor: code.length >= 1 ? "blue" : "black" },
-          ]}
-        />
-        <TextInput
-          onChangeText={setCode}
-          maxLength={1}
-          keyboardType="numeric"
-          style={[
-            styles.inputView,
-            { borderColor: code.length >= 1 ? "blue" : "black" },
-          ]}
-        />
-        <TextInput
-          onChangeText={setCode}
-          maxLength={1}
-          keyboardType="numeric"
-          style={[
-            styles.inputView,
-            { borderColor: code.length >= 1 ? "blue" : "black" },
-          ]}
-        />
-        <TextInput
-          onChangeText={setCode}
-          maxLength={1}
-          keyboardType="numeric"
-          style={[
-            styles.inputView,
-            { borderColor: code.length >= 1 ? "blue" : "black" },
-          ]}
-        />
-        <TextInput
-          onChangeText={setCode}
-          maxLength={1}
-          keyboardType="numeric"
-          style={[
-            styles.inputView,
-            { borderColor: code.length >= 1 ? "blue" : "black" },
-          ]}
-        />
-        <TextInput
-          onChangeText={setCode}
-          maxLength={1}
-          keyboardType="numeric"
-          style={[
-            styles.inputView,
-            { borderColor: code.length >= 1 ? "blue" : "black" },
-          ]}
-        />
+      <View style={styles.otpContainer}>
+        {inputs.map((inp, index) => {
+          return (
+            <View key={index.toString()} style={styles.inputContainer} >
+              <TextInput
+                value={code[index]}
+                onChangeText={(text) => handleChangeText(text, index)}
+                style={styles.input}
+                placeholder="0"
+                keyboardType='numeric'
+                maxLength={1}
+                ref={nextInputIndex === index ? input : null}
+              />
+            </View>
+          )
+        })}
+
       </View>
 
       {/* lhjo */}
@@ -204,11 +200,34 @@ const PhoneScreen = () => {
 
 export default PhoneScreen;
 
+const { width } = Dimensions.get("window")
+const inputWidth = Math.round(width / 8)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  otpContainer: {
+    flexDirection: "row",
+
+    marginTop: 40,
+    paddingHorizontal: inputWidth / 2,
+
+  },
+
+  inputContainer: {
+    width: inputWidth,
+    height: inputWidth,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#D80032',
+    textAlign: "center",
+  },
+
+  input: {
+    fontSize: 25
   },
 
   title: {

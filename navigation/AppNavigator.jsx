@@ -12,7 +12,7 @@ import ResetPassword from '../screens/ResetPassword';
 import ProductDetail from '../components/products/ProductDetail';
 import PhoneScreen from '../screens/PhoneScreen';
 import EmailScreen from '../screens/EmailScreen';
-import NewPassword from '../screens/NewPassword';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext } from 'react';
 import { AppContext } from '../components/ultil/AppContext';
@@ -23,14 +23,13 @@ import CodPayment from '../screens/Payment/CodPayment';
 import FavoriteScreen from '../screens/Home/FavoriteScreen';
 import OrderProcessing from '../components/order/OrderProcessing';
 import OrderProgress from '../screens/Home/OrderProgress';
-<<<<<<< Updated upstream
-import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
-=======
 import Search from '../screens/Home/Search';
 import SearchTitle from '../screens/Home/SearchTitle';
+import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
+import NewPasswordEmail from '../screens/NewPasswordEmail';
+import NewPasswordPhone from '../screens/NewPasswordPhone';
 
 
->>>>>>> Stashed changes
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -53,7 +52,9 @@ const NotAuthNavigator = () => {
 
       <Stack.Screen name="Email Screen" component={EmailScreen} options={{ headerShown: false }} />
 
-      <Stack.Screen name="New Password" component={NewPassword} options={{ headerShown: false }} />
+      <Stack.Screen name="New Password Email" component={NewPasswordEmail} options={{ headerShown: false }} />
+
+      <Stack.Screen name="New Password Phone" component={NewPasswordPhone} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
@@ -101,8 +102,6 @@ const AuthNavigator = () => {
         component={OrderProgressDetail}
         options={{ headerShown: false, gestureEnabled: false }}
       />
-<<<<<<< Updated upstream
-=======
 
 
 
@@ -115,7 +114,6 @@ const AuthNavigator = () => {
    
 
         
->>>>>>> Stashed changes
     </Stack.Navigator>
   );
 };

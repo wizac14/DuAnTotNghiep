@@ -24,7 +24,7 @@ import AxiosInstance from "../components/ultil/AxiosInstance";
 import { useRoute } from "@react-navigation/native";
 
 
-const NewPassword = (props) => {
+const NewPasswordEmail = (props) => {
   const navigation = useNavigation();
   const route = useRoute();
   const [isSecureEntry1, setIsSecureEntry1] = useState(true);
@@ -167,7 +167,7 @@ const NewPassword = (props) => {
   );
 };
 
-export default NewPassword;
+export default NewPasswordEmail;
 
 const styles = StyleSheet.create({
   container: {

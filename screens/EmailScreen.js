@@ -122,7 +122,7 @@ const EmailScreen = () => {
       console.log(result);
       if (result) {
         ToastAndroid.show("Xác thực OTP thành công", ToastAndroid.SHORT);
-        navigation.navigate("New Password", { email: email });
+        navigation.navigate("New Password Email", { email: email });
       } else {
         ToastAndroid.show("Xác thực OTP không thành công", ToastAndroid.SHORT);
       }

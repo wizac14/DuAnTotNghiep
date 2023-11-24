@@ -40,13 +40,8 @@ const FavoriteScreen = () => {
 
   const fetchFavorites = async () => {
     try {
-<<<<<<< Updated upstream
-      const userId = inforuser._id;
-      const response = await AxiosIntance().get(`/favorite/${userId}`);
-=======
       const userId = inforuser._id; // Thay đổi với userId của người dùng
       const response = await AxiosInstance().get(`/favorite/${userId}`);
->>>>>>> Stashed changes
       setFavorites(response.favorites);
       //   console.log(response.favorites);
     } catch (error) {

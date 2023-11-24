@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { COLORS } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { AppContext } from '../../components/ultil/AppContext';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
@@ -32,7 +32,7 @@ const PaidOrder = () => {
     try {
       const userId = inforuser._id;
 
-      const response = await AxiosIntance().get(`order/user-orders/${userId}`);
+      const response = await AxiosInstance().get(`order/user-orders/${userId}`);
 
       if (response.orders) {
         const reverseOrders = await response?.orders.reverse();

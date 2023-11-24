@@ -93,11 +93,7 @@ const Profile = () => {
                 setinforuser({ ...inforuser, phoneNumber: text });
               }}
               // onBlur={handleBlur('phoneNumber')}
-<<<<<<< Updated upstream
-              value={inforuser.phoneNumber}
-=======
               // value={inforuser.phoneNumber.toString()}
->>>>>>> Stashed changes
             />
             {touched.phoneNumber && errors.phoneNumber && (
               <Text style={styles.error}>{errors.phoneNumber}</Text>
