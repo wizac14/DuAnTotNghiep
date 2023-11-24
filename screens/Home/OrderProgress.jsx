@@ -1,17 +1,61 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import AllOrderProgress from './AllOrderProgress';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import PaidOrder from './PaidOrder';
-import UnPaidOrder from './UnPaidOrder';
-import { Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  Pressable,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from 'react-native';
 import { COLORS } from '../../constants';
 import Icons from '@expo/vector-icons/MaterialIcons';
+import Icon from '@expo/vector-icons/Ionicons';
+import AllOrderProgress from './AllOrderProgress';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
+import { AppContext } from '../../components/ultil/AppContext';
+import { UIActivityIndicator } from 'react-native-indicators';
+import { Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import PaidOrder from './PaidOrder';
+import UnPaidOrder from './UnPaidOrder';
+
 
 const Tab = createMaterialTopTabNavigator();
 
 const OrderProgress = () => {
   const navigation = useNavigation();
+  const { width, height } = Dimensions.get('window');
+  const paddingPercentage = 2;
+
+  //api lấy ds đơn hàng của usser
+  const fetchProducts = async () => {
+    try {
+      const userId = inforuser._id;
+
+      const response = await AxiosInstance().get(`order/user-orders/${userId}`);
+      //   console.log(response);
+
+      if (response.orders) {
+        const reverseOrders = await response?.orders.reverse();
+        setOrders(reverseOrders);
+      } else {
+        console.error('Failed to fetch products:', response.message);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
   return (
     <>
       <SafeAreaView>

@@ -17,7 +17,7 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import MasonryList from 'reanimated-masonry-list';
 import ImageSlider from '../../components/home/ImagesSlider';
 import { Pressable } from 'react-native';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { AppContext } from '../../components/ultil/AppContext';
 import Animated from 'react-native-reanimated';
@@ -60,7 +60,7 @@ const Home = () => {
   const getProducts = async () => {
     setShowActivityIndicator(true);
     try {
-      const response = await AxiosIntance().get(
+      const response = await AxiosInstance().get(
         `product/get-all?offset=${offset}&pageSize=${pageSize}`
       );
 
@@ -89,7 +89,7 @@ const Home = () => {
 
   const getNewProducts = async () => {
     try {
-      const response = await AxiosIntance().get('/product/get-all');
+      const response = await AxiosInstance().get('/product/get-all');
       if (response.result) {
         // Đảo ngược danh sách sản phẩm
         const newRevProducts = response?.products.reverse();
@@ -108,7 +108,7 @@ const Home = () => {
 
   const getBrands = async () => {
     try {
-      const response = await AxiosIntance().get('/brand/get-all-brands');
+      const response = await AxiosInstance().get('/brand/get-all-brands');
       const allProduct = {
         name: 'Tất Cả',
       };
@@ -131,7 +131,7 @@ const Home = () => {
       if (brandName === 'Tất Cả') {
         url = `/product/get-all`;
       }
-      const response = await AxiosIntance().get(url);
+      const response = await AxiosInstance().get(url);
 
       if (response.products) {
         const reversedProducts = response?.products;

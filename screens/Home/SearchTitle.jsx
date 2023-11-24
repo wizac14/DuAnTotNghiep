@@ -19,8 +19,6 @@ const SearchTitle = ({ item }) => {
 
                 <View style={styles.textContainer}>
                     <Text style={styles.productTitle}>Sản phẩm: {item.title}</Text>
-                    <Text style={{ color: COLORS.gray }}>Size: {item.size}</Text>
-                    <Text style={{ color: COLORS.gray }}>Màu: {item.color}</Text>
                     <Text style={{ color: COLORS.red }}>Giá: {item.price}$</Text>
                 </View>
             </TouchableOpacity>

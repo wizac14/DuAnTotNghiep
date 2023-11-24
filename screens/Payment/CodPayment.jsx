@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import OrderProcessingStatusEnum from '../../components/ultil/OrderProcessingStatusEnum';
 import OrderProcessing from '../../components/order/OrderProcessing';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { useNavigation } from '@react-navigation/native';
 const CodPayment = (props) => {
   const { address, phoneNumber, inforuser, cartData, totalAmount } = props.route.params;
@@ -30,7 +30,7 @@ const CodPayment = (props) => {
         isPaid: false,
         paymentTransactionRef: '',
       };
-      await AxiosIntance().post('order', data);
+      await AxiosInstance().post('order', data);
       setOrderProcessingStatus(OrderProcessingStatusEnum.SUCCESSED);
 
     } catch (error) {

@@ -7,6 +7,9 @@ import { useNavigation } from "@react-navigation/native";
 const ForgotPassword = () => {
   const navigation = useNavigation();
   const [isClicked, setIsClicked] = useState(false);
+
+
+
   const buttonStyle = (button) => {
     if (button === isClicked) {
       isClicked === "button1" ? navigation.navigate("Email Screen") : null;

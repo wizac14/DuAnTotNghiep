@@ -82,7 +82,8 @@ const TabItem = ({ routeName, isActive, navigation }) => {
               ? 'search'
               : routeName === 'Giỏ hàng'
               ? 'shopping-cart'
-              : 'person'
+              : routeName === 'Yêu thích'
+              ? 'favorite' : 'person'
           }
           size={24}
           color={isActive ? colors.card : colors.text}

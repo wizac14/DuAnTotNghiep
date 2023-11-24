@@ -9,7 +9,7 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SIZES, COLORS } from "../constants";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,12 +20,46 @@ import { Alert } from "react-native";
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import CheckBox from "react-native-check-box";
 import { Button } from "react-native";
+import AxiosInstance from "../components/ultil/AxiosInstance";
+import { useRoute } from "@react-navigation/native";
 
-const NewPassword = () => {
-  const [password, setPassword] = useState("");
-  const [repassword, setRePassword] = useState("");
+
+const NewPasswordEmail = (props) => {
+  const navigation = useNavigation();
+  const route = useRoute();
   const [isSecureEntry1, setIsSecureEntry1] = useState(true);
   const [isSecureEntry2, setIsSecureEntry2] = useState(true);
+
+  
+  const { email } = route.params;
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPass, setConfirmPass] = useState('')
+
+
+
+  const handleChangePassword = async () => {
+    if(newPassword !== confirmPass){
+      Alert.alert("Mật khẩu không trùng khớp");
+      return;
+    }
+    try {
+      console.log("Email log : ",email);
+      console.log("New Password log:",newPassword);
+      console.log("Confirm password log ", confirmPass);
+
+      const response = await AxiosInstance().put("user/change-forgot-password", {   email: email, newPassword: confirmPass  });
+      console.log(response);
+      if (response.result === true) {
+        Alert.alert('Thành công', 'Đã đổi mật khẩu thành công.');
+        navigation.navigate("Login");
+      }
+      else {
+        Alert.alert('Lỗi', 'Đã xảy ra lỗi khi đổi mật khẩu.');
+      }
+    } catch (error) {
+
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -60,10 +94,9 @@ const NewPassword = () => {
             color="grey"
           />
           <TextInput
-            value={password}
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={setNewPassword} value={newPassword}
             secureTextEntry={isSecureEntry1}
-            style={{ width: 250,  }}
+            style={{ width: 250, }}
             placeholder="Password"
           />
           <Ionicons
@@ -92,10 +125,9 @@ const NewPassword = () => {
             color="grey"
           />
           <TextInput
-            value={repassword}
-            onChangeText={(text) => setRePassword(text)}
+            onChangeText={setConfirmPass} value={confirmPass}
             secureTextEntry={isSecureEntry2}
-            style={{ width: 250,  }}
+            style={{ width: 250, }}
             placeholder="Re-Password"
           />
           <Ionicons
@@ -110,6 +142,7 @@ const NewPassword = () => {
         <View style={{ marginTop: 30 }} />
 
         <TouchableOpacity
+          onPress={handleChangePassword}
           style={{
             width: 300,
             backgroundColor: "#D80032",
@@ -134,7 +167,7 @@ const NewPassword = () => {
   );
 };
 
-export default NewPassword;
+export default NewPasswordEmail;
 
 const styles = StyleSheet.create({
   container: {

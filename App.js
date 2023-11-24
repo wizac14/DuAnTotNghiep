@@ -24,7 +24,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import TabsNavigator from "./navigation/TabsNavigator";
 import PhoneScreen from "./screens/PhoneScreen";
 import EmailScreen from "./screens/EmailScreen";
-import NewPassword from "./screens/NewPassword";
+
 import AppNavigator from "./navigation/AppNavigator";
 import { AppContextProvider } from "./components/ultil/AppContext";
 import FilterScreen from "./screens/Home/FilterScreen";
