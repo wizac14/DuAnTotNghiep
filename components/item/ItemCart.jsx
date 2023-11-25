@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, Pressable } fro
 import React, { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import noImageAvailable from '../../assets/images/no_image_available.jpg';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import { COLORS } from '../../constants';
 import { PanGestureHandler, Swipeable } from 'react-native-gesture-handler';
 import DeleteConfirmationModal from '../../screens/DeleteConfirmationModal';
@@ -18,7 +18,7 @@ const ItemCart = (props) => {
 
   const fetchProductQuantity = async () => {
     try {
-      const response = await AxiosIntance().get(
+      const response = await AxiosInstance().get(
         `/product/get-quantity?product_id=${dulieu?.idProduct?._id}&size=${dulieu?.size}&color=${dulieu?.color}`
       );
       const apiQuantity = response?.result;
@@ -43,7 +43,7 @@ const ItemCart = (props) => {
       id: dulieu?._id,
       quantity: updatedQuantity,
     };
-    AxiosIntance().post(`/cart/update-quantity`, data);
+    AxiosInstance().post(`/cart/update-quantity`, data);
   };
 
   const handleDecrease = () => {

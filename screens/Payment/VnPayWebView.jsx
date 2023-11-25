@@ -11,7 +11,7 @@ import { UIActivityIndicator } from 'react-native-indicators';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
 import OrderProcessing from '../../components/order/OrderProcessing';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 import OrderProcessingStatusEnum from '../../components/ultil/OrderProcessingStatusEnum';
 export default function VnPayWebView(props) {
   const [paymentUrl, setPaymentUrl] = useState('');
@@ -43,7 +43,7 @@ export default function VnPayWebView(props) {
   useEffect(() => {
     const getVnPayPaymentUrl = async () => {
       try {
-        const result = await AxiosIntance().get(
+        const result = await AxiosInstance().get(
           `payment/vnpay/create_payment_url?amount=${totalAmount}`
         );
         setPaymentUrl(result.url);
@@ -79,7 +79,7 @@ export default function VnPayWebView(props) {
         isPaid: true,
         paymentDetail: paymentResponse,
       };
-      await AxiosIntance().post('order', data);
+      await AxiosInstance().post('order', data);
       setOrderProcessingStatus(OrderProcessingStatusEnum.SUCCESSED);
     } catch (error) {
       setOrderProcessingStatus(OrderProcessingStatusEnum.FAILED);

@@ -18,7 +18,7 @@ import { Alert } from "react-native";
 import { Ionicons, Fontisto } from "@expo/vector-icons";
 import CheckBox from "react-native-check-box";
 import { axiosClient } from "../api/axiosClient";
-import AxiosIntance from "../components/ultil/AxiosIntance";
+import AxiosInstance from "../components/ultil/AxiosInstance";
 import { ToastAndroid } from "react-native";
 import { AppContext } from "../components/ultil/AppContext";
 import { useContext } from "react";
@@ -33,7 +33,7 @@ const LoginScreen = () => {
 
   const LoginUser = async () => {
     try {
-      const response = await AxiosIntance().post("/user/login", {
+      const response = await AxiosInstance().post("/user/login", {
         email: email,
         password: password,
       });

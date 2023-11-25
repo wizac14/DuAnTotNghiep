@@ -12,7 +12,7 @@ import { StyleSheet,
     import ItemCart from "../../components/item/ItemCart";
     import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useEffect } from 'react';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosInstance from '../../components/ultil/AxiosInstance';
 
 
 const FilterScreen = (props) => {
@@ -21,7 +21,7 @@ const FilterScreen = (props) => {
   const [data, setdata] = useState([])
 useEffect(()=>{
     const getFilterID = async () => {
-        const response = await AxiosIntance().get("/product/filter-by-brand?brand=" + params.id);
+        const response = await AxiosInstance().get("/product/filter-by-brand?brand=" + params.id);
         if (response.result == true) {
             setdata(response.recipe);
         }else

@@ -17,22 +17,28 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Axios } from "axios";
-import AxiosIntance from "../components/ultil/AxiosIntance";
+import AxiosInstance from "../components/ultil/AxiosInstance";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
   const navigation = useNavigation();
   const [isSecureEntry, setIsSecureEntry] = useState(true);
+
+
 
   const RegisterUser = async () => {
     console.log(email, password);
     try {
-      const response = await AxiosIntance().post("/user/register", {
+      const response = await AxiosInstance().post("/user/register", {
         email: email,
         password: password,
         name: name,
+        phoneNumber: phoneNumber,
+        address : address
       });
       console.log(response);
       if (response.result == true) {
@@ -82,6 +88,54 @@ const RegisterScreen = () => {
             onChangeText={(text) => setName(text)}
             style={{ width: 250 }}
             placeholder="Enter your name"
+          />
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 5,
+            borderRadius: 5,
+            borderWidth: 0.5,
+            marginTop: 15,
+          }}
+        >
+           <MaterialCommunityIcons
+            style={{ padding: 5 }}
+            name="phone"
+            size={24}
+            color="grey"
+          />
+          <TextInput
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(text)}
+            style={{ width: 250 }}
+            placeholder="Enter your phone number (+84)"
+          />
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 5,
+            borderRadius: 5,
+            borderWidth: 0.5,
+            marginTop: 15,
+          }}
+        >
+          <Ionicons
+            style={{ padding: 5 }}
+            name="location"
+            size={24}
+            color="grey"
+          />
+          <TextInput
+            value={address}
+            onChangeText={(text) => setAddress(text)}
+            style={{ width: 250 }}
+            placeholder="Enter your address"
           />
         </View>
 

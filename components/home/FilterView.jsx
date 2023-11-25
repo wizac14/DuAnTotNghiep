@@ -7,7 +7,7 @@ import PriceRangeSelector from "./PriceRangeSelector";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import TextTicker from "react-native-text-ticker";
 import ItemFilterBrand from "../item/ItemFilterBrand";
-import AxiosIntance from "../ultil/AxiosIntance";
+import AxiosInstance from "../ultil/AxiosInstance";
 
 const MAX_PRICE = 500;
 
@@ -67,7 +67,7 @@ const FilterView = () => {
 
   useEffect(() => {
     const getBrand=async()=>{
-      const response=await AxiosIntance().get("/brand/get-all");
+      const response=await AxiosInstance().get("/brand/get-all");
       console.log("aaa",response.brands);
       console.log(brandIndex);
       if(response.result==true)
