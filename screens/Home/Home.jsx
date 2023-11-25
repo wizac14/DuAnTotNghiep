@@ -8,69 +8,106 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useEffect, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../constants/index';
 import { MaterialIcons } from '@expo/vector-icons';
 import { SIZES } from '../../constants/index';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import Card from '../../components/home/Card';
 import MasonryList from 'reanimated-masonry-list';
-import CustomBackdrop from '../../components/home/CustomBackdrop';
 import ImageSlider from '../../components/home/ImagesSlider';
 import { Pressable } from 'react-native';
-import FilterView from '../../components/home/FilterView';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { UIActivityIndicator } from 'react-native-indicators';
-import noImageAvailable from '../../assets/images/no_image_available.jpg';
-const Home = () => {
-  const BRANDS = ['Nike', 'Adidas', 'Converse', 'New Balance', 'Vans', 'FILA', 'Other'];
+import { AppContext } from '../../components/ultil/AppContext';
+import Animated from 'react-native-reanimated';
+import { FadeIn, FadeOut } from 'react-native-reanimated';
+import { Layout } from 'react-native-reanimated';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 
+const Home = () => {
   const AVATAR_URL =
     'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/4225f4a7-dc73-4926-a99f-a677f56346fe/cortez-se-shoes-Pfr5Qh.png';
 
-  const MESONARY_LIST_DATA = [
-    {
-      imageUrl:
-        'https://product.hstatic.net/1000383440/product/dscf5501_4fff8f1b43554d7c83b7b29a3393d6bb_master.jpg',
-      title: "Nike Air Force 1 '07 LV8",
-      price: 160,
-    },
-    {
-      imageUrl:
-        'https://media.jdsports.com/i/jdsports/DR9761_002_P2?$default$&w=670&h=670&bg=rgb(237,237,237)',
-      title: 'Nike Tech Hera',
-      price: 180,
-    },
-    {
-      imageUrl:
-        'https://media.jdsports.com/i/jdsports/DM9537_002_P1?$default$&w=671&&h=671&bg=rgb(237,237,237)',
-      title: 'NIKE AIR MAX SYSTM',
-      price: 200,
-    },
-    {
-      imageUrl:
-        'https://media.jdsports.com/i/jdsports/FN7509_029_P1?$default$&w=671&&h=671&bg=rgb(237,237,237)',
-      title: 'Nike P-6000 Premium',
-      price: 180,
-    },
-    {
-      imageUrl:
-        'https://media.jdsports.com/i/jdsports/FQ8080_133_P1?$default$&w=671&&h=671&bg=rgb(237,237,237)',
-      title: 'NIKE DUNK LOW ATHLETIC',
-      price: 120,
-    },
-  ];
   const { colors } = useTheme();
   const bottomSheetModalRef = useRef(null);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState('All');
+  const [newProducts, setNewProducts] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState('');
   const [isProductLoading, setIsProductLoading] = useState(true);
+  const { inforuser } = useContext(AppContext);
+  const lastProductIndex = products.length - 1;
+  const newFirstProduct = newProducts[0];
+  const newSecondProduct = newProducts[1];
+  const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAllLoaded, setIsAllLoaded] = useState(false);
+  const pageSize = 8;
+  const [offset, setOffset] = useState(0);
+  const paddingPercentage = 2;
+  const { width, height } = Dimensions.get('window');
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   useEffect(() => {
-    const getBrands = async () => {
+    // getBrands();
+    getProducts();
+    getNewProducts();
+  }, []);
+
+  //lấy all product
+  const getProducts = async () => {
+    setShowActivityIndicator(true);
+    try {
+      const response = await AxiosIntance().get(
+        `product/get-all?offset=${offset}&pageSize=${pageSize}`
+      );
+
+      if (response?.result) {
+        // Đảo ngược danh sách sản phẩm
+        const reversedProducts = await response?.products;
+
+        if (reversedProducts.length === 0) {
+          setIsAllLoaded(true);
+        } else {
+          setOffset(response?.metaData?.offset);
+          setProducts((pre) => [...pre, ...reversedProducts]);
+        }
+        setIsProductLoading(false);
+        setIsLoading(false);
+      } else {
+        ToastAndroid.show('Lấy data thất bại');
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    } finally {
+      setShowActivityIndicator(false);
+    }
+  };
+
+  const getNewProducts = async () => {
+    try {
+      const response = await AxiosIntance().get('/product/get-all');
+      if (response.result) {
+        // Đảo ngược danh sách sản phẩm
+        const newRevProducts = response?.products.reverse();
+
+        setNewProducts(newRevProducts);
+        setIsProductLoading(false);
+        setIsLoading(false);
+      } else {
+        ToastAndroid.show('Lấy data thất bại');
+      }
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+    }
+  };
+
+  const getBrands = async () => {
+    try {
       const response = await AxiosIntance().get('/brand/get-all-brands');
       const allProduct = {
         name: 'Tất Cả',
@@ -80,29 +117,16 @@ const Home = () => {
       } else {
         console.log('Lấy data thất bại');
       }
-    };
-
-    //lấy all product
-    const getProducts = async () => {
-      const response = await AxiosIntance().get('/product/get-all');
-      if (response.result) {
-        setProducts(response.products);
-        setIsProductLoading(false);
-      } else {
-        ToastAndroid.show('Lấy data thất bại');
-      }
-    };
-
-    getProducts();
-    getBrands();
-  }, []);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //xử lý chọn thương hiệu
   const handleBrandSelect = async (brandName) => {
     setSelectedBrand(brandName);
     setIsProductLoading(true);
     try {
-      // gọi API hoặc truy vấn cơ sở dữ liệu để lấy danh sách sản phẩm của thương hiệu được chọn
       let url = `/product/get-by-brand?brandName=${brandName}`;
       if (brandName === 'Tất Cả') {
         url = `/product/get-all`;
@@ -110,7 +134,10 @@ const Home = () => {
       const response = await AxiosIntance().get(url);
 
       if (response.products) {
-        setProducts(response?.products);
+        const reversedProducts = response?.products;
+        // const limitedProducts = reversedProducts.slice(0, 4);
+
+        setProducts(reversedProducts);
         setIsProductLoading(false);
       }
     } catch (error) {
@@ -118,34 +145,67 @@ const Home = () => {
     }
   };
 
-  //mở filter view
-  const openFilterModal = useCallback(() => {
-    bottomSheetModalRef.current?.present();
-  }, []);
+  //load thêm sản phẩm khi kéo xuống dưới cùng
+  const handleLoadMore = () => {
+    if (!isLoading && !isAllLoaded) {
+      setIsLoading(true);
+      const nextPage = page + 1;
+      const newOffset = nextPage * pageSize;
+      getProducts(newOffset);
+      setPage(nextPage);
+    }
+  };
+
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 20;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+  };
+
   const navigation = useNavigation();
-  return (
-    <ScrollView>
-      <SafeAreaView style={{ paddingVertical: 24, gap: 24 }}>
-        {/* Header Section */}
+
+  const renderLoadMore = () => {
+    if (isLoading || showActivityIndicator) {
+      return (
         <View
           style={{
-            paddingHorizontal: 24,
+            height: Dimensions.get('window').height * 0.1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            // marginVertical: 10,
+          }}
+        >
+          <UIActivityIndicator size={30} color={COLORS.black} />
+        </View>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  return (
+    <ScrollView
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+      onScroll={({ nativeEvent }) => {
+        if (isCloseToBottom(nativeEvent)) {
+          handleLoadMore();
+        }
+      }}
+      scrollEventThrottle={400}
+    >
+      <StatusBar style="auto" />
+
+      <SafeAreaView style={{ paddingVertical: 14, gap: 24 }}>
+        <Animated.View
+          layout={Layout}
+          entering={FadeIn.duration(1000)}
+          style={{
+            paddingHorizontal: 16,
             flexDirection: 'row',
             alignItems: 'center',
             gap: 8,
           }}
         >
-          <Image
-            source={{
-              uri: AVATAR_URL,
-            }}
-            style={{
-              width: 52,
-              aspectRatio: 1,
-              borderRadius: 52,
-            }}
-            resizeMode="cover"
-          />
           <View style={{ flex: 1 }}>
             <Text
               style={{
@@ -156,7 +216,7 @@ const Home = () => {
               }}
               numberOfLines={1}
             >
-              Xin chào 👋
+              Xin chào {inforuser?.name} 👋
             </Text>
             <Text
               style={{
@@ -165,188 +225,449 @@ const Home = () => {
               }}
               numberOfLines={1}
             >
-              Tìm phong cách yêu thích của bạn
+              Tìm phong cách yêu thích của bạn {'>'}
             </Text>
           </View>
-          <TouchableOpacity
-            style={{
-              width: 52,
-              aspectRatio: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 52,
-              borderWidth: 1,
-              borderColor: colors.border,
-            }}
-          >
-            <MaterialIcons name="notifications" size={24} color={colors.text} />
-          </TouchableOpacity>
-        </View>
-        {/* Search Bar Section */}
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingHorizontal: 24,
-            gap: 12,
-          }}
-        >
-          <TouchableOpacity
-            style={{
-              flex: 1,
-              height: 52,
-              borderRadius: 52,
-              borderWidth: 1,
-              borderColor: colors.border,
-              alignItems: 'center',
-              paddingHorizontal: 24,
-              flexDirection: 'row',
-              gap: 12,
-            }}
-          >
-            <MaterialIcons name="search" size={24} color={colors.text} style={{ opacity: 0.5 }} />
-            <Text
+          <View style={{ flexDirection: 'row', gap: 5 }}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('OrderProgress');
+              }}
               style={{
-                flex: 1,
-                fontSize: 16,
-                color: colors.text,
-                opacity: 0.5,
+                width: 52,
+                aspectRatio: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 52,
+                borderWidth: 1,
+                borderColor: 'lightgrey',
               }}
             >
-              Tìm kiếm
-            </Text>
-          </TouchableOpacity>
+              <MaterialCommunityIcons name="clipboard-list-outline" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Favorite');
+              }}
+              style={{
+                width: 52,
+                aspectRatio: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 52,
+                borderWidth: 1,
+                borderColor: 'lightgrey',
+              }}
+            >
+              <MaterialIcons name="favorite-border" size={24} color={colors.text} />
+            </TouchableOpacity>
+          </View>
+        </Animated.View>
 
-          <TouchableOpacity
-            onPress={openFilterModal}
-            style={{
-              width: 52,
-              aspectRatio: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 52,
-              backgroundColor: colors.primary,
-            }}
-          >
-            <MaterialIcons name="tune" size={24} color={colors.background} />
-          </TouchableOpacity>
-        </View>
         <ImageSlider />
-        {/* Grid Collection View */}
-        <View style={{ paddingHorizontal: 24 }}>
-          {/* Title bar */}
+        <View style={{ paddingHorizontal: (width * paddingPercentage) / 100 }}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: 12,
+              // justifyContent: 'center',
+              marginBottom: 16,
+              borderBottomWidth: 1,
+              borderBottomColor: 'lightgrey',
+              borderTopColor: 'lightgrey',
             }}
           >
             <Text
               style={{
                 fontSize: 20,
-                fontWeight: '700',
-                color: colors.text,
+                fontWeight: '600',
+                color: COLORS.red,
+                marginBottom: 6,
+                marginTop: 6,
+                textAlign: 'left',
               }}
             >
-              Sản phẩm mới
+              SẢN PHẨM MỚI
             </Text>
-            <TouchableOpacity>
-              <Text
+          </View>
+          <View style={{ flexDirection: 'row', height: 250, gap: 12 }}>
+            {isProductLoading ? (
+              <View
                 style={{
-                  color: colors.primary,
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}
               >
-                Xem tất cả
-              </Text>
-            </TouchableOpacity>
+                <UIActivityIndicator size={30} color={COLORS.black} />
+              </View>
+            ) : newFirstProduct ? (
+              <View style={{ flex: 1, gap: 6 }}>
+                <View style={{ gap: 6, flexDirection: 'row' }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'column',
+                      gap: 6,
+                      borderBottomWidth: 1,
+                      borderBottomColor: 'lightgrey',
+                    }}
+                  >
+                    <View
+                      style={{
+                        aspectRatio: 1,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        height: 140,
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                      }}
+                    >
+                      <Pressable
+                        style={{ width: '100%', height: 200, flex: 1 }}
+                        onPress={() => {
+                          navigation.navigate('ProductDetail', { id: newFirstProduct?._id });
+                        }}
+                      >
+                        <Image
+                          style={{ height: 200, width: '100%', flex: 1, aspectRatio: 1 }}
+                          source={{ uri: newFirstProduct?.variances[0]?.images[0]?.url }}
+                        />
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            backgroundColor: 'red',
+                            color: 'white',
+                            padding: 6,
+                            borderBottomRightRadius: 10,
+                          }}
+                        >
+                          NEW
+                        </Text>
+                      </Pressable>
+
+                      <View
+                        style={[
+                          StyleSheet.absoluteFill,
+                          {
+                            padding: 12,
+                          },
+                        ]}
+                      >
+                        <View style={{}}></View>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        aspectRatio: 1,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        height: 140,
+                        borderRadius: 10,
+                        // elevation: 1,
+                      }}
+                    >
+                      <Pressable
+                        style={{ width: '100%', height: 200, flex: 1 }}
+                        onPress={() => {
+                          navigation.navigate('ProductDetail', { id: newFirstProduct?._id });
+                        }}
+                      >
+                        <Image
+                          style={{ height: 200, width: '100%', flex: 1, aspectRatio: 1 }}
+                          source={{ uri: newFirstProduct?.variances[0]?.images[1]?.url }}
+                        />
+                      </Pressable>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      aspectRatio: 3 / 4,
+                      position: 'relative',
+                      overflow: 'hidden',
+                      height: 310,
+                      borderRadius: 10,
+                      elevation: 1,
+                    }}
+                  >
+                    <Pressable
+                      style={{ width: '100%', flex: 1 }}
+                      onPress={() => {
+                        navigation.navigate('ProductDetail', { id: newFirstProduct?._id });
+                      }}
+                    >
+                      <Image
+                        style={{
+                          flex: 1,
+                          aspectRatio: 1,
+                        }}
+                        source={{ uri: newFirstProduct?.variances[0]?.images[2]?.url }}
+                      />
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          right: 0,
+                          backgroundColor: 'white',
+                          color: 'black',
+                          padding: 3,
+                          borderTopLeftRadius: 10,
+                          // width: 80,
+                          fontSize: 16,
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {newFirstProduct?.title.toUpperCase()}
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ fontSize: 16, color: colors.text }}>
+                  Rất tiếc, không có sản phẩm mới. Vui lòng quay lại sau!
+                </Text>
+              </View>
+            )}
           </View>
+          <View style={{ flexDirection: 'row', height: 250, gap: 12, marginTop: 100 }}>
+            {isProductLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <UIActivityIndicator size={30} color={COLORS.black} />
+              </View>
+            ) : newSecondProduct ? (
+              <View style={{ flex: 1, gap: 6 }}>
+                <View style={{ gap: 6, flexDirection: 'row' }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: 'column',
+                      gap: 6,
+                      borderBottomWidth: 1,
+                      borderBottomColor: 'lightgrey',
+                    }}
+                  >
+                    <View
+                      style={{
+                        aspectRatio: 1,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        height: 140,
+                        borderRadius: 10,
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                      }}
+                    >
+                      <Pressable
+                        style={{ width: '100%', height: 200, flex: 1 }}
+                        onPress={() => {
+                          navigation.navigate('ProductDetail', { id: newSecondProduct?._id });
+                        }}
+                      >
+                        <Image
+                          style={{ height: 200, width: '100%', flex: 1, aspectRatio: 1 }}
+                          source={{ uri: newSecondProduct?.variances[0]?.images[0]?.url }}
+                        />
+                        <Text
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            backgroundColor: 'red',
+                            color: 'white',
+                            padding: 6,
+                            borderBottomRightRadius: 10,
+                          }}
+                        >
+                          NEW
+                        </Text>
+                      </Pressable>
+
+                      <View
+                        style={[
+                          StyleSheet.absoluteFill,
+                          {
+                            padding: 12,
+                          },
+                        ]}
+                      >
+                        <View style={{}}></View>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        aspectRatio: 1,
+                        position: 'relative',
+                        overflow: 'hidden',
+                        height: 140,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <Pressable
+                        style={{ width: '100%', height: 200, flex: 1 }}
+                        onPress={() => {
+                          navigation.navigate('ProductDetail', { id: newSecondProduct?._id });
+                        }}
+                      >
+                        <Image
+                          style={{ height: 200, width: '100%', flex: 1, aspectRatio: 1 }}
+                          source={{ uri: newSecondProduct?.variances[0]?.images[1]?.url }}
+                        />
+                      </Pressable>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      aspectRatio: 3 / 4,
+                      position: 'relative',
+                      overflow: 'hidden',
+                      height: 310,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Pressable
+                      style={{ width: '100%', flex: 1 }}
+                      onPress={() => {
+                        navigation.navigate('ProductDetail', { id: newSecondProduct?._id });
+                      }}
+                    >
+                      <Image
+                        style={{ flex: 1, aspectRatio: 1 }}
+                        source={{ uri: newSecondProduct?.variances[0]?.images[2]?.url }}
+                      />
+                      <Text
+                        style={{
+                          position: 'absolute',
+                          bottom: 0,
+                          right: 0,
+                          backgroundColor: 'white',
+                          color: 'black',
+                          padding: 3,
+                          borderTopLeftRadius: 10,
+                          // width: 80,
+                          fontSize: 16,
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {newSecondProduct?.title.toUpperCase()}
+                      </Text>
+                    </Pressable>
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ fontSize: 16, color: colors.text }}>
+                  Rất tiếc, không có sản phẩm mới. Vui lòng quay lại sau!
+                </Text>
+              </View>
+            )}
+          </View>
+        </View>
+        <View style={{ paddingHorizontal: (width * paddingPercentage) / 100 }}>
           <View
             style={{
               flexDirection: 'row',
-              height: 200,
-              gap: 12,
+              alignItems: 'center',
+              marginBottom: 16,
+              borderBottomWidth: 1,
+              borderBottomColor: 'lightgrey',
+              marginTop: 60,
+              // width: '100%',
             }}
           >
-            <Card
-              onPress={() => {
-                navigation.navigate('ProductDetail', {
-                  // screen: "ProductDetail",
-                  id: '123',
-                });
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: '600',
+                color: COLORS.red,
+                marginBottom: 6,
+                marginTop: 6,
+                textAlign: 'left',
               }}
-              price={120}
-              imageUrl="https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/88dd90f5-a2a1-41f9-b44a-f5f1227c706c/cortez-se-shoes-Pfr5Qh.png"
-            />
-            <View style={{ flex: 1, gap: 12 }}>
-              <Card
-                onPress={() => {
-                  navigation.navigate('ProductDetail', {
-                    id: '456',
-                  });
-                }}
-                price={120}
-                imageUrl="https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/4225f4a7-dc73-4926-a99f-a677f56346fe/cortez-se-shoes-Pfr5Qh.png"
-              />
-              <Card
-                onPress={() => {
-                  navigation.navigate('ProductDetail', {
-                    id: '789',
-                  });
-                }}
-                price={120}
-                imageUrl="https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/cc4e52ff-007b-4934-9bac-368604f0d54d/cortez-se-shoes-Pfr5Qh.png"
-              />
-            </View>
+            >
+              KHÁM PHÁ THÊM
+            </Text>
           </View>
+          <FlatList
+            data={brands}
+            horizontal
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: (width * paddingPercentage) / 100,
+              gap: 6,
+              // marginTop: 90,
+            }}
+            renderItem={({ item, index }) => {
+              const isSelected = selectedBrand === item?.name;
+              return (
+                <View>
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleBrandSelect(item.name)}
+                    style={{
+                      backgroundColor: isSelected ? COLORS.black : COLORS.white,
+                      // paddingHorizontal: 20,
+                      paddingVertical: 12,
+                      borderRadius: 10,
+                      borderWidth: 1,
+                      borderColor: 'lightgrey',
+                      width: 130,
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: isSelected ? colors.background : colors.text,
+                        fontWeight: '600',
+                        fontSize: isSelected ? 18 : 16,
+                        opacity: isSelected ? 1 : 0.6,
+                        textAlign: 'center',
+                      }}
+                    >
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            }}
+          />
         </View>
-        {/* Brands Section */}
-        <FlatList
-          data={brands}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            gap: 12,
-          }}
-          renderItem={({ item, index }) => {
-            const isSelected = selectedBrand === item?.name;
-            return (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleBrandSelect(item.name)}
-                style={{
-                  backgroundColor: isSelected ? colors.text : colors.background,
-                  paddingHorizontal: 20,
-                  paddingVertical: 12,
-                  borderRadius: 100,
-                  borderWidth: 1,
-                  borderColor: colors.border,
-                  width: 120,
-                  justifyContent: 'center',
-                }}
-              >
-                <Text
-                  style={{
-                    color: isSelected ? colors.background : colors.text,
-                    fontWeight: '600',
-                    fontSize: 14,
-                    opacity: isSelected ? 1 : 0.6,
-                    textAlign: 'center',
-                  }}
-                >
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          }}
-        />
+
         {/* Mesonary */}
         {isProductLoading ? (
           <View
             style={{
               height: Dimensions.get('window').height * 0.25,
-              // backgroundColor: 'red',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -355,10 +676,16 @@ const Home = () => {
           </View>
         ) : (
           <MasonryList
+            ListFooterComponent={renderLoadMore()}
             data={products}
             numColumns={2}
-            contentContainerStyle={{ flex: 1, justifyContent: 'center' }}
+            contentContainerStyle={{
+              flex: 1,
+              justifyContent: 'center',
+              paddingHorizontal: (width * paddingPercentage) / 100,
+            }}
             showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
             ListEmptyComponent={
               <View
                 style={{
@@ -368,130 +695,81 @@ const Home = () => {
                 }}
               >
                 <Text>Rất tiếc, không có sản phẩm nào.</Text>
+                <Text>Hãy khám phá các thương hiệu khác nhé!</Text>
               </View>
             }
             renderItem={({ item, i }) => (
-              <View style={{ padding: 6 }}>
+              <View style={{ padding: 2, alignContent: 'center' }}>
                 <View
                   style={{
-                    aspectRatio: i === 0 ? 1 : 1,
+                    aspectRatio: i === 0 ? 2.5 / 4 : 2.5 / 4,
                     position: 'relative',
                     overflow: 'hidden',
-                    borderRadius: 24,
-                    elevation: 2,
+                    elevation: 0,
                   }}
                 >
                   <Pressable
-                    style={{ width: '100%', height: '100%' }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderWidth: 0.7,
+                      borderColor: 'lightgrey',
+                      paddingBottom: 45,
+                      borderRadius: 5,
+                    }}
                     onPress={() => {
                       navigation.navigate('ProductDetail', {
                         id: item._id,
                       });
                     }}
                   >
-                    {item?.variances[0]?.images[0]?.url ? (
-                      <Image
-                        style={{ flex: 1 }}
-                        source={{
-                          uri: item?.variances[0].images[0].url,
-                        }}
-                        resizeMode="contain"
-                      />
-                    ) : (
-                      <Image resizeMode="contain" source={noImageAvailable} />
-                    )}
-                  </Pressable>
-                  <View
-                    style={[
-                      StyleSheet.absoluteFill,
-                      {
-                        padding: 12,
-                      },
-                    ]}
-                  >
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        gap: 8,
-                        padding: 4,
+                    <Image
+                      style={{ flex: 1 }}
+                      source={{
+                        uri: item?.variances[0].images[0].url,
                       }}
-                    >
-                      <Text
-                        style={{
-                          flex: 1,
-                          fontSize: 14,
-                          fontWeight: '600',
-                          color: COLORS.gray,
-                          textShadowColor: 'rgba(0,0,0,0.1)',
-                          textShadowOffset: {
-                            height: 1,
-                            width: 0,
-                          },
-                          textShadowRadius: 15,
-                        }}
-                      >
-                        {item.title}
-                      </Text>
-                      <TouchableOpacity
-                        style={{
-                          // backgroundColor: colors.card,
-                          borderRadius: 100,
-                          height: 32,
-                          aspectRatio: 1,
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        <MaterialIcons name="favorite-border" size={20} color={colors.text} />
-                      </TouchableOpacity>
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                      }}
+                      resizeMode="contain"
                     />
+
                     <View
                       style={{
-                        flexDirection: 'row',
-                        backgroundColor: 'rgba(0,0,0,0)',
-                        alignItems: 'flex-end',
-                        overflow: 'hidden',
-                        justifyContent: 'space-between',
+                        position: 'absolute',
+                        bottom: 0,
+                        flexDirection: 'column',
+                        color: 'white',
+                        fontSize: 18,
+                        textAlign: 'center',
+                        justifyContent: 'center',
+                        paddingLeft: 10,
+                        gap: 3,
+                        paddingBottom: 10,
                       }}
-                      intensity={20}
                     >
+                      <View
+                        style={{
+                          backgroundColor: 'white',
+                          width: 140,
+                          alignItems: 'flex-start',
+                        }}
+                      >
+                        <Text style={{ textAlign: 'left', color: 'black', fontSize: 16 }}>
+                          {item?.title}
+                        </Text>
+                      </View>
                       <Text
                         style={{
-                          fontSize: 15,
-                          color: COLORS.black,
-                          marginLeft: 8,
-                          textShadowColor: 'rgba(0,0,0,0)',
-                          textShadowOffset: {
-                            height: 0,
-                            width: 0,
-                          },
-                          textShadowRadius: 15,
-                          marginTop: 25,
-                          backgroundColor: COLORS.lightWhite,
-                          borderRadius: 5,
+                          textAlign: 'left',
+                          color: 'white',
+                          backgroundColor: 'black',
+                          fontSize: 16,
+                          letterSpacing: 0.5,
+                          width: 100,
                         }}
-                        numberOfLines={1}
                       >
-                        {item.price.toLocaleString()} đ
+                        đ {item?.price.toLocaleString()}
                       </Text>
-                      <TouchableOpacity
-                        style={{
-                          paddingHorizontal: 12,
-                          paddingVertical: 8,
-                          borderRadius: 100,
-                          backgroundColor: 'rgba(0,0,0,0.1)',
-                          alignContent: 'flex-end',
-                        }}
-                      >
-                        <MaterialIcons name="add-shopping-cart" size={18} color="#000" />
-                      </TouchableOpacity>
                     </View>
-                  </View>
+                  </Pressable>
                 </View>
               </View>
             )}
@@ -500,22 +778,6 @@ const Home = () => {
           />
         )}
       </SafeAreaView>
-
-      <BottomSheetModal
-        snapPoints={['85%']}
-        index={0}
-        ref={bottomSheetModalRef}
-        backdropComponent={(props) => <CustomBackdrop {...props} />}
-        backgroundStyle={{
-          borderRadius: 24,
-          backgroundColor: colors.card,
-        }}
-        handleIndicatorStyle={{
-          backgroundColor: colors.primary,
-        }}
-      >
-        <FilterView />
-      </BottomSheetModal>
     </ScrollView>
   );
 };

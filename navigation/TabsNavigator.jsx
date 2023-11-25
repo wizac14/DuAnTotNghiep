@@ -1,17 +1,30 @@
-import { View, Text } from "react-native";
-import React from "react";
-import {
-  BottomTabScreenProps,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
-import Icons from "@expo/vector-icons/MaterialIcons";
-import CustomBottomTabs from "../navigation/CustomBottomTabs";
-import Home from "../screens/Home/Home";
-import Cart from "../screens/Home/Cart";
-import Profile from "../screens/Home/Profile";
-import ItemListHistory from "../components/item/ItemListHistory";
+import { View, Text } from 'react-native';
+import React, { useContext } from 'react';
+import { BottomTabScreenProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icons from '@expo/vector-icons/MaterialIcons';
+import CustomBottomTabs from '../navigation/CustomBottomTabs';
+import Home from '../screens/Home/Home';
+import Cart from '../screens/Home/Cart';
+import Profile from '../screens/Home/Profile';
+import ItemListHistory from '../components/item/ItemListHistory';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import SearchProduct from '../screens/Home/SearchProduct';
+import SearchDetail from '../screens/Home/SearchDetail';
+import Person from '../screens/Home/Person'
+import ChangePassword from '../screens/Home/ChangePassword'
 
 const TabsStack = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const StackSetting = () => {
+  return (
+    <Stack.Navigator initialRouteName="Person" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Person" component={Person} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+    </Stack.Navigator>
+  )
+}
 
 const TabsNavigator = () => {
   return (
@@ -31,29 +44,31 @@ const TabsNavigator = () => {
           },
         }}
       />
+
+      <TabsStack.Screen
+        name="Tìm kiếm"
+        component={SearchProduct}
+        options={{
+          headerShown: false,
+          tabBarIcon(props) {
+            return <Icons name="search" {...props} />;
+          },
+        }}
+      />
       <TabsStack.Screen
         name="Giỏ hàng"
         component={Cart}
         options={{
           headerShown: false,
-          tabBarIcon(props) {
+          tabBarBadge: '5',
+          tabBarIcon: (props) => {
             return <Icons name="shopping-cart" {...props} />;
           },
         }}
       />
       <TabsStack.Screen
-        name="Lịch sử"
-        component={ItemListHistory}
-        options={{
-          headerShown: false,
-          tabBarIcon(props) {
-            return <Icons name="account-balance-wallet" {...props} />;
-          },
-        }}
-      />
-      <TabsStack.Screen
         name="Bạn"
-        component={Profile}
+        component={StackSetting}
         options={{
           headerShown: false,
           tabBarIcon(props) {
