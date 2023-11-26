@@ -7,6 +7,9 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { COLORS } from '../../constants';
 import Icons from '@expo/vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import CompleteOrder from './CompleteOrder';
+import CanceledOrder from './CanceledOrder';
+import DeliveringOrder from './DeliveringOrder';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -21,7 +24,7 @@ const OrderProgress = () => {
             justifyContent: 'space-between',
             paddingHorizontal: 10,
             alignItems: 'center',
-            marginBottom: 10,
+            // marginBottom: 10,
             paddingVertical: 10,
           }}
         >
@@ -45,9 +48,11 @@ const OrderProgress = () => {
         </View>
       </SafeAreaView>
       <Tab.Navigator>
-        <Tab.Screen name="Tất cả" component={AllOrderProgress} />
-        <Tab.Screen name="Đã thanh toán" component={PaidOrder} />
-        <Tab.Screen name="Chưa thanh toán" component={UnPaidOrder} />
+        {/* <Tab.Screen name="Tất cả" component={AllOrderProgress} /> */}
+        <Tab.Screen name="Đã đặt hàng" component={PaidOrder} />
+        <Tab.Screen name="Đang giao hàng" component={DeliveringOrder} />
+        <Tab.Screen name="Đã giao hàng" component={CompleteOrder} />
+        <Tab.Screen name="Đã hủy" component={CanceledOrder} />
       </Tab.Navigator>
     </>
   );

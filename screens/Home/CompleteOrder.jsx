@@ -19,14 +19,12 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
 import { SimpleLineIcons } from '@expo/vector-icons';
 
-const PaidOrder = () => {
+const DeliveringOrder = () => {
   const [orders, setOrders] = useState([]);
   const { inforuser } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
-  const paidOrders = orders.filter(
-    (order) => order.status === 'PURCHASED' || order.status === 'ORDERED'
-  );
+  const paidOrders = orders.filter((order) => order.status === 'COMPLETED');
   const { width, height } = Dimensions.get('window');
   const paddingPercentage = 2;
 
@@ -50,6 +48,10 @@ const PaidOrder = () => {
     }
   };
 
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, []);
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -58,10 +60,6 @@ const PaidOrder = () => {
       fetchProducts();
     }
   }, [isFocused]);
-
-  // useEffect(() => {
-  //   fetchProducts();
-  // }, []);
 
   return (
     <SafeAreaView style={{}}>
@@ -180,7 +178,7 @@ const OrderItem = ({ item }) => {
   );
 };
 
-export default PaidOrder;
+export default DeliveringOrder;
 
 const styles = StyleSheet.create({
   orderList: {

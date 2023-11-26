@@ -16,19 +16,25 @@ import { AppContext } from '../../components/ultil/AppContext';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import moment from 'moment';
 import { SimpleLineIcons } from '@expo/vector-icons';
-
-const PaidOrder = () => {
+const CanceledOrder = () => {
   const [orders, setOrders] = useState([]);
   const { inforuser } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   const paidOrders = orders.filter(
-    (order) => order.status === 'PURCHASED' || order.status === 'ORDERED'
+    (order) => order.status === 'CANCELED' || order.status === 'REFUNDED'
   );
   const { width, height } = Dimensions.get('window');
   const paddingPercentage = 2;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchProducts();
+    }, [])
+  );
 
   //api lấy ds đơn hàng của usser
   const fetchProducts = async () => {
@@ -50,6 +56,10 @@ const PaidOrder = () => {
     }
   };
 
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, []);
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -58,10 +68,6 @@ const PaidOrder = () => {
       fetchProducts();
     }
   }, [isFocused]);
-
-  // useEffect(() => {
-  //   fetchProducts();
-  // }, []);
 
   return (
     <SafeAreaView style={{}}>
@@ -106,8 +112,8 @@ const PaidOrder = () => {
 const OrderItem = ({ item }) => {
   const { width, height } = Dimensions.get('window');
   const paddingPercentage = 2;
-  const statusColor = item.isPaid === true ? 'green' : 'orange';
-  const statusPayment = item.isPaid === true ? 'Đã thanh toán' : 'Chưa thanh toán';
+  const statusColor = item.status === 'REFUNDED' ? 'green' : 'transparent';
+  const statusPayment = item.status === 'REFUNDED' ? 'Đã hoàn tiền' : '';
   const navigation = useNavigation();
 
   //truyền dữ liệu từ order(item) qua detail
@@ -115,7 +121,7 @@ const OrderItem = ({ item }) => {
     navigation.navigate('OrderProgressDetail', { order: item });
   };
   return (
-    <View style={{ justifyContent: 'center', backgroundColor: COLORS.lightWhite }}>
+    <View style={{ justifyContent: 'center' }}>
       <View
         style={{
           justifyContent: 'center',
@@ -138,10 +144,10 @@ const OrderItem = ({ item }) => {
           <View style={{}}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image
-                style={{ height: 70, width: 70 }}
+                style={{ height: 50, width: 50 }}
                 source={require('../../assets/images/logo.png')}
               />
-              <View style={{ gap: 3 }}>
+              <View>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 18 }}>{moment(item?.createdAt).format('HH:mm')}, </Text>
                   <Text style={{ fontSize: 18 }}>
@@ -180,7 +186,7 @@ const OrderItem = ({ item }) => {
   );
 };
 
-export default PaidOrder;
+export default CanceledOrder;
 
 const styles = StyleSheet.create({
   orderList: {
