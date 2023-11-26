@@ -23,7 +23,7 @@ const Person = () => {
           <View style={styles.viewAvatar}>
             <Image style={styles.avatar} source={require('../../assets/images/logo.png')} />
           </View>
-          <Text style={{ textAlign: 'center', fontSize: 16, fontWeight: 'bold', marginBottom: 5 }}>
+          <Text style={{ textAlign: 'center', fontSize: 16, fontWeight: 'bold' }}>
             {inforuser?.name}
           </Text>
           <Text style={{ textAlign: 'center' }}>{inforuser?.email}</Text>

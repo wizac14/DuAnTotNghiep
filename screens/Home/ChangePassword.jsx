@@ -3,7 +3,7 @@ import React, { useState , useContext, useEffect} from "react";
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { AppContext } from '../../components/ultil/AppContext';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosIntance from '../../components/ultil/AxiosInstance';
 const ChangePassword = () => {
   const navigation = useNavigation();
   const [isSecureEntry1, setIsSecureEntry1] = useState(true);

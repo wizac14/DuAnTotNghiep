@@ -11,7 +11,7 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosIntance from '../../components/ultil/AxiosInstance';
 import MasonryList from 'reanimated-masonry-list';
 import { COLORS } from '../../constants';
 import { UIActivityIndicator } from 'react-native-indicators';

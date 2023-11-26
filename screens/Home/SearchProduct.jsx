@@ -14,7 +14,7 @@ import { COLORS } from '../../constants/index';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import ImageSlider from '../../components/home/ImagesSlider';
-import AxiosIntance from '../../components/ultil/AxiosIntance';
+import AxiosIntance from '../../components/ultil/AxiosInstance';
 import { AppContext } from '../../components/ultil/AppContext';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import FixedBottom from './FixedBottom';
