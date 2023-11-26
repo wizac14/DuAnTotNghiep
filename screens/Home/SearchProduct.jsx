@@ -126,7 +126,7 @@ const SearchProduct = () => {
         ))}
       </View>
 
-      <ImageSlider />
+      {/* <ImageSlider /> */}
     </ScrollView>
   );
 };
