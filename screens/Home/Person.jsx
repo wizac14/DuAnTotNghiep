@@ -117,9 +117,9 @@ const Person = () => {
             </View>
           </View>
         </TouchableOpacity>
-        {/* <TouchableOpacity
+        <TouchableOpacity
           onPress={() => {
-            navigation.navigate('ChangePassword');
+            navigation.navigate('Forgot Password');
           }}
         >
           <View style={styles.item}>
@@ -142,7 +142,7 @@ const Person = () => {
               <Ionicons name="chevron-forward-outline" size={25} />
             </View>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         <TouchableOpacity onPress={logOut}>
           <View style={styles.item}>
             <View
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginStart: 10,
     marginEnd: 10,
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   header: {
     height: '40%',
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'space-between',
     borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 10,
     alignItems: 'center',
   },
 });

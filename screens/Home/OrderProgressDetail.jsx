@@ -7,11 +7,13 @@ import { TouchableOpacity } from 'react-native';
 import { Dimensions } from 'react-native';
 import { COLORS } from '../../constants';
 import { AppContext } from '../../components/ultil/AppContext';
-import { ProgressSteps, ProgressStep } from 'react-native-progress-steps/index';
+import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
 import { useRef } from 'react';
 import Icons from '@expo/vector-icons/MaterialIcons';
 import Icon from '@expo/vector-icons/Ionicons';
 import Collapsible from 'react-native-collapsible';
+import AxiosIntance from '../../components/ultil/AxiosIntance';
+import { ToastAndroid } from 'react-native';
 
 const OrderProgressDetail = ({ route }) => {
   const { order } = route.params;
@@ -24,9 +26,15 @@ const OrderProgressDetail = ({ route }) => {
   const [collapsedDetail, setCollapsedDetail] = useState(false);
   const [collapsedProduct, setCollapsedProduct] = useState(true);
 
-  const statusBackgroundColor = order.status === 'PURCHASED' ? 'lightgrey' : 'red';
-  const statusColorPayment = order.status === 'PURCHASED' ? 'green' : 'orange';
-  const statusPayment = order.status === 'PURCHASED' ? 'Đã thanh toán' : 'Chưa thanh toán';
+  const statusBackgroundColor =
+    order.status === 'CANCELED' ||
+    order.status === 'DELIVERING' ||
+    order.status === 'COMPLETED' ||
+    order.status === 'REFUNDED'
+      ? 'lightgrey'
+      : 'red';
+  const statusColorPayment = order.status === 'COMPLETED' ? 'green' : 'orange';
+  const statusPayment = order.status === 'COMPLETED' ? 'Đã hoàn thành' : 'Chưa hoàn thành';
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
@@ -42,11 +50,36 @@ const OrderProgressDetail = ({ route }) => {
 
   useEffect(() => {
     if (order.status === 'PURCHASED') {
-      setOrderStatusIndex(1);
+      setOrderStatusIndex(0);
     } else if (order.status === 'ORDERED') {
       setOrderStatusIndex(0);
+    } else if (order.status === 'COMPLETED') {
+      setOrderStatusIndex(2);
+    } else if (order.status === 'DELIVERING') {
+      setOrderStatusIndex(1);
     }
   }, [order.status]);
+
+  const cancelOrder = async () => {
+    try {
+      let newStatus = 'CANCELED';
+      if (order.isPaid) {
+        newStatus = 'REFUNDED';
+      }
+
+      const response = await AxiosIntance().put('/order/update-status', {
+        orderId: order._id,
+        status: newStatus,
+      });
+
+      navigation.goBack();
+      ToastAndroid.show('Hủy đươn hàng thành công', ToastAndroid.SHORT);
+      console.log('Order status updated successfully', response.data);
+    } catch (error) {
+      ToastAndroid.show('Hủy đơn hàng thất bại', ToastAndroid.SHORT);
+      console.error('Error updating order status:', error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -86,34 +119,49 @@ const OrderProgressDetail = ({ route }) => {
             flex: 1,
           }}
         >
-          <View style={{ height: 100 }}>
-            <ProgressSteps activeStep={orderStatusIndex}>
-              <ProgressStep
-                labelFontSize={28}
-                label="Đặt hàng"
-                previousBtnDisabled
-                nextBtnDisabled
-                nextBtnText=""
-                previousBtnText=""
-              ></ProgressStep>
+          {order.status !== 'CANCELED' && order.status !== 'REFUNDED' ? (
+            <View style={{ height: 100 }}>
+              <ProgressSteps activeStep={orderStatusIndex}>
+                <ProgressStep
+                  labelFontSize={28}
+                  label="Đặt hàng"
+                  previousBtnDisabled
+                  nextBtnDisabled
+                  nextBtnText=""
+                  previousBtnText=""
+                ></ProgressStep>
 
-              <ProgressStep
-                label="Giao hàng"
-                previousBtnDisabled
-                nextBtnDisabled
-                nextBtnText=""
-                previousBtnText=""
-              ></ProgressStep>
+                <ProgressStep
+                  label="Giao hàng"
+                  previousBtnDisabled
+                  nextBtnDisabled
+                  nextBtnText=""
+                  previousBtnText=""
+                ></ProgressStep>
 
-              <ProgressStep
-                label="Đã nhận"
-                previousBtnDisabled
-                nextBtnDisabled
-                nextBtnText=""
-                previousBtnText=""
-              ></ProgressStep>
-            </ProgressSteps>
-          </View>
+                <ProgressStep
+                  label="Đã nhận"
+                  previousBtnDisabled
+                  nextBtnDisabled
+                  nextBtnText=""
+                  previousBtnText=""
+                ></ProgressStep>
+              </ProgressSteps>
+            </View>
+          ) : (
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: 'center',
+                marginBottom: 20,
+                marginTop: 20,
+                color: 'red',
+              }}
+            >
+              Bạn đã hủy đơn hàng này
+            </Text>
+          )}
 
           <View
             style={{
@@ -182,7 +230,10 @@ const OrderProgressDetail = ({ route }) => {
                   }}
                 >
                   <Text style={{ fontSize: 16, color: 'grey' }}>Trạng thái</Text>
+                  {/* <View> */}
                   <Text style={{ fontSize: 16, color: statusColorPayment }}>{statusPayment}</Text>
+                  {/* <Text style={{ fontSize: 16, color: statusColorPayment }}>{statusPaid}</Text> */}
+                  {/* </View> */}
                 </View>
               </View>
               <TouchableOpacity
@@ -340,12 +391,17 @@ const OrderProgressDetail = ({ route }) => {
               >
                 <Text style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>Tổng cộng</Text>
                 <Text style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>
-                  {order.totalAmount.toLocaleString()} VND
+                  {order?.totalAmount.toLocaleString()} VND
                 </Text>
               </View>
             </Collapsible>
             <TouchableOpacity
-              disabled={order.status === 'PURCHASED'}
+              onPress={cancelOrder}
+              disabled={
+                order?.status === 'CANCELED' ||
+                order.status === 'DELIVERING' ||
+                order.status === 'COMPLETED'
+              }
               style={{
                 justifyContent: 'center',
                 marginTop: 30,

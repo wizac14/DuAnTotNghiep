@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/index';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../components/ultil/AppContext';
-import AxiosInstance from '../../components/ultil/AxiosInstance';
+import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { launchCameraAsync } from 'expo-image-picker';
 import { ToastAndroid } from 'react-native';
 import { Formik } from 'formik';
@@ -25,7 +25,7 @@ const Profile = () => {
   const navigation = useNavigation();
   const { inforuser, setinforuser } = useContext(AppContext);
   const handleSubmit = async () => {
-    const response = await AxiosIntance().put('/user/update/' + inforuser._id, {
+    const response = await AxiosIntance().post('/user/update', {
       name: inforuser.name,
       email: inforuser.email,
       address: inforuser.address,
@@ -57,7 +57,7 @@ const Profile = () => {
 
   const phoneValidation = yup
     .string()
-    .matches(/^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, 'Số điện thoại không hợp lệ');
+    .matches(/^\+84[3|5|7|8|9][0-9]{8}\b/, 'Số điện thoại không hợp lệ (bắt đầu với +84)');
 
   const validationSchema = yup.object().shape({
     email: emailValidation,
@@ -128,7 +128,7 @@ const Profile = () => {
                   setinforuser({ ...inforuser, phoneNumber: text });
                 }}
                 // onBlur={handleBlur('phoneNumber')}
-                // value={inforuser.phoneNumber.toString()}
+                value={inforuser.phoneNumber}
               />
               {touched.phoneNumber && errors.phoneNumber && (
                 <Text style={styles.error}>{errors.phoneNumber}</Text>
