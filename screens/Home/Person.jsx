@@ -29,11 +29,12 @@ const Person = () => {
           <Text style={{ textAlign: 'center' }}>{inforuser?.email}</Text>
         </View>
 
-        <View style={{ padding: 10 }}>
+        <View style={{ padding: 10, marginBottom: 10 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Dành cho bạn</Text>
         </View>
 
         <TouchableOpacity
+          style={{ paddingHorizontal: 5 }}
           onPress={() => {
             navigation.navigate('OrderProgress');
           }}
@@ -61,6 +62,7 @@ const Person = () => {
         </TouchableOpacity>
 
         <TouchableOpacity
+          style={{ paddingHorizontal: 5 }}
           onPress={() => {
             navigation.navigate('Favorite');
           }}
@@ -87,11 +89,12 @@ const Person = () => {
           </View>
         </TouchableOpacity>
 
-        <View style={{ paddingBottom: 10, paddingLeft: 10 }}>
+        <View style={{ paddingBottom: 10, paddingLeft: 10, marginBottom: 10 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Cài đặt chung</Text>
         </View>
 
         <TouchableOpacity
+          style={{ paddingHorizontal: 5 }}
           onPress={() => {
             navigation.navigate('Profile');
           }}
@@ -118,6 +121,7 @@ const Person = () => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
+          style={{ paddingHorizontal: 5 }}
           onPress={() => {
             navigation.navigate('Forgot Password');
           }}
@@ -143,7 +147,7 @@ const Person = () => {
             </View>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={logOut}>
+        <TouchableOpacity style={{ paddingHorizontal: 5 }} onPress={logOut}>
           <View style={styles.item}>
             <View
               style={{
@@ -215,7 +219,8 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'space-between',
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 15,
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
 });

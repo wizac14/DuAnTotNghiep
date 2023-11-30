@@ -21,9 +21,17 @@ const ForgotPassword = () => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <Image style={{ width: 350, height: 400 }} source={require('../assets/images/think.jpg')} />
-      <Text style={{ fontSize: 20, flexWrap: 'wrap', margin: 5 }}>
-        Select which contact details should we use to reset your password{' '}
+      <Text
+        style={{
+          fontSize: 20,
+          textAlign: 'center',
+          paddingHorizontal: 10,
+          fontWeight: 'bold',
+        }}
+      >
+        Chúng tôi sẽ giúp bạn lấy lại mật khẩu bằng cách gửi một mã OTP cho bạn.
       </Text>
+
       <TouchableOpacity onPress={() => setIsClicked('button1')} style={buttonStyle('button1')}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Email Screen')}
@@ -46,7 +54,7 @@ const ForgotPassword = () => {
               left: 10,
             }}
           >
-            <Text style={{ fontSize: 17, top: 10 }}>Send to Email</Text>
+            <Text style={{ fontSize: 17, top: 10 }}>Gửi qua Email</Text>
           </View>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -73,7 +81,7 @@ const ForgotPassword = () => {
               left: 10,
             }}
           >
-            <Text style={{ fontSize: 17, top: 10 }}>Send to Phone Number</Text>
+            <Text style={{ fontSize: 17, top: 10 }}>Gửi qua số điện thoại</Text>
           </View>
         </TouchableOpacity>
       </TouchableOpacity>
