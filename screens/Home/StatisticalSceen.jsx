@@ -104,6 +104,7 @@ const StatisticalScreen = () => {
   dailyPayments.forEach(item => {
     dataDailyDay.labels.push(item.date);
     dataDailyDay.datasets[0].data.push(item.totalAmount);
+  
   });
 
 
@@ -133,7 +134,13 @@ const StatisticalScreen = () => {
       toDate: date2
     });
     setDailyPayments(response.totalAmount);
-    setShowChart(true);
+    if(statisticaDay!=0)
+    {
+     setShowChart(true)
+    }
+    else{
+     setShowChart(false);
+    }
     console.log(dailyPayments);
   };
   const statisticalUserbyDay = async () => {
@@ -150,10 +157,13 @@ const StatisticalScreen = () => {
       setIsLoading(false);
     }
   };
+  
 
   useEffect(() => {
     statisticalUser();
-  }, []);
+    statisticalUserbyDay();
+
+  }, [statisticaDay]);
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar style="auto" />
@@ -307,9 +317,9 @@ const StatisticalScreen = () => {
                 ))}
               </View>
             )}
-            {showchart && (
+            {showchart ? (
               <View style={{ flexDirection: "column", backgroundColor: "#F5F7F8" }}>
-                {statisticaDay !== 0 ? (
+                {/* {statisticaDay !== 0 ? ( */}
                   <LineChart
                     data={dataDailyDay}
                     width={width}
@@ -337,14 +347,14 @@ const StatisticalScreen = () => {
 
                     }}
                   />
-                ) : (
-                  <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
-                    Vui lòng chọn ngày khác!
-                  </Text>
-                )}
+                 
               </View>
 
-            )}
+) : (
+    <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
+      Vui lòng chọn ngày khác!
+    </Text>
+  )} 
           </View>
 
         )}
