@@ -8,7 +8,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { AppContext } from '../../components/ultil/AppContext';
@@ -21,15 +21,15 @@ import { StatusBar } from 'expo-status-bar';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { UIActivityIndicator } from 'react-native-indicators';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import {
   LineChart,
   BarChart,
   PieChart,
   ProgressChart,
   ContributionGraph,
-  StackedBarChart
-} from "react-native-chart-kit";
+  StackedBarChart,
+} from 'react-native-chart-kit';
 import moment from 'moment';
 const StatisticalScreen = () => {
   const { inforuser } = useContext(AppContext);
@@ -60,17 +60,17 @@ const StatisticalScreen = () => {
     setDatePickerVisibility2(false);
   };
   const handleConfirm = (date) => {
-    console.log("A date has been picked: ", date);
+    // console.log('A date has been picked: ', date);
     const formattedDate = moment(date).format('YYYY-MM-DD');
     setDate1(formattedDate);
-    console.log(date1, "aaaa");
+    // console.log(date1, 'aaaa');
     hideDatePicker();
   };
   const handleConfirm1 = (date1) => {
-    console.log("A date has been picked: ", date1);
+    console.log('A date has been picked: ', date1);
     const formattedDate = moment(date1).format('YYYY-MM-DD');
     setDate2(formattedDate);
-    console.log(date2, "aaaa2");
+    // console.log(date2, 'aaaa2');
     hideDatePicker2();
   };
   const data = {
@@ -80,14 +80,13 @@ const StatisticalScreen = () => {
         data: [],
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
         strokeWidth: 2, // optional,
-
-      }
+      },
     ],
     // legend: ["Rainy Days"] // optional
   };
 
-  statisticaMonth.forEach(item => {
-    data.labels.push(item._id.month + "/" + item._id.year);
+  statisticaMonth.forEach((item) => {
+    data.labels.push(item._id.month + '/' + item._id.year);
     data.datasets[0].data.push(item.totalAmount);
   });
 
@@ -98,25 +97,22 @@ const StatisticalScreen = () => {
         data: [],
         // optional
         strokeWidth: 2, // optional,
-      }
-    ]
-  }
-  dailyPayments.forEach(item => {
+      },
+    ],
+  };
+  dailyPayments.forEach((item) => {
     dataDailyDay.labels.push(item.date);
     dataDailyDay.datasets[0].data.push(item.totalAmount);
-  
   });
-
-
-
-
 
   const statisticalUser = async () => {
     try {
       const userId = inforuser._id;
-      const response = await AxiosIntance().get("/order/getTotalAmountByMonth?userId=" + userId + "&isPaid==true");
+      const response = await AxiosIntance().get(
+        '/order/getTotalAmountByMonth?userId=' + userId + '&isPaid==true'
+      );
       setstatisticaMonth(response.totalAmountByMonth);
-      console.log(response.totalAmountByMonth, "aaa");
+      // console.log(response.totalAmountByMonth, 'aaa');
       // const totalAmountArray = statisticaMonth.map(item => item.totalAmount);
       // console.log(totalAmountArray[0]);
     } catch (error) {
@@ -131,22 +127,28 @@ const StatisticalScreen = () => {
       userId: inforuser._id,
       isPaid: true,
       fromDate: date1,
-      toDate: date2
+      toDate: date2,
     });
     setDailyPayments(response.totalAmount);
-    if(statisticaDay!=0)
-    {
-     setShowChart(true)
+    if (statisticaDay != 0) {
+      setShowChart(true);
+    } else {
+      setShowChart(false);
     }
-    else{
-     setShowChart(false);
-    }
-    console.log(dailyPayments);
+    // console.log(dailyPayments);
   };
   const statisticalUserbyDay = async () => {
     try {
       const userId = inforuser._id;
-      const response = await AxiosIntance().get("/order/getTotalAmount?userId=" + userId + "&isPaid==true" + "&fromDate=" + date1 + "&toDate=" + date2);
+      const response = await AxiosIntance().get(
+        '/order/getTotalAmount?userId=' +
+          userId +
+          '&isPaid==true' +
+          '&fromDate=' +
+          date1 +
+          '&toDate=' +
+          date2
+      );
       setstatisticaDay(response.totalAmount);
       setShowStatistics(true);
       statisticalDailyPayments();
@@ -157,13 +159,20 @@ const StatisticalScreen = () => {
       setIsLoading(false);
     }
   };
-  
 
   useEffect(() => {
     statisticalUser();
     statisticalUserbyDay();
-
   }, [statisticaDay]);
+
+  const shortenAmount = (amount) => {
+    if (amount >= 1e6) {
+      return (amount / 1e6).toFixed(1) + 'M';
+    } else if (amount >= 1e3) {
+      return (amount / 1e3).toFixed(1) + 'K';
+    }
+    return amount.toString();
+  };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <StatusBar style="auto" />
@@ -191,9 +200,7 @@ const StatisticalScreen = () => {
           >
             <Icons name="arrow-back" size={24} color={COLORS.black} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1 }}>
-            THỐNG KÊ
-          </Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1 }}>THỐNG KÊ</Text>
         </View>
         {isLoading ? (
           <View
@@ -210,64 +217,87 @@ const StatisticalScreen = () => {
           <View>
             <View>
               <View>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, margin: 10 }}>Thống kê theo tháng</Text>
+                <Text
+                  style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, margin: 10 }}
+                >
+                  Thống kê theo tháng
+                </Text>
               </View>
-              {statisticaMonth.length> 0&& (
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-                <Text style={{ color: "green", fontWeight: 'bold' }}>Tháng</Text>
-                <Text style={{ color: "green", fontWeight: 'bold' }}>Số lượng</Text>
-                <Text style={{ color: "green", fontWeight: 'bold' }}>Tiền chi</Text>
-              </View>
-              )}
-              {statisticaMonth.length>0&&statisticaMonth.map((item, index) => (
-                <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc', marginBottom: 10 }}>
-                  <Text>{item._id.month + "/" + item._id.year}</Text>
-                  <Text>{item.totalProducts}</Text>
-                  <Text>{item.totalAmount} VNĐ</Text>
+              {statisticaMonth.length > 0 && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    padding: 10,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#ccc',
+                  }}
+                >
+                  <Text style={{ color: 'green', fontWeight: 'bold' }}>Tháng</Text>
+                  <Text style={{ color: 'green', fontWeight: 'bold' }}>Số lượng</Text>
+                  <Text style={{ color: 'green', fontWeight: 'bold' }}>Tiền chi</Text>
                 </View>
-              ))}
-              {statisticaMonth.length>0 ? (
-              <BarChart
-                // style={graphStyle}
-                data={data}
-                width={width}
-                height={220}
-                chartConfig={{
-                  backgroundGradientFrom: "#006633",
-                  backgroundGradientTo: "#33CC33",
-                  decimalPlaces: 0, // optional, defaults to 2dp
-                  // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                  labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                  barPercentage: 1,
-                  color: (opacity = 1) => `rgba(255, 255, 0, ${opacity})`,
-                  style: {
-                    borderRadius: 10
-                  },
-                  yAxisInterval: 1,
-
-                }}
-                style={{
-                  marginVertical: 8,
-                  borderRadius: 16,
-
-                }}
-              // verticalLabelRotation={10}
-              />
+              )}
+              {statisticaMonth.length > 0 &&
+                statisticaMonth.map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      padding: 10,
+                      borderBottomWidth: 1,
+                      borderBottomColor: '#ccc',
+                      marginBottom: 10,
+                    }}
+                  >
+                    <Text>{item._id.month + '/' + item._id.year}</Text>
+                    <Text>{item.totalProducts}</Text>
+                    <Text>{shortenAmount(item.totalAmount)} VNĐ</Text>
+                  </View>
+                ))}
+              {statisticaMonth.length > 0 ? (
+                <BarChart
+                  segments={3}
+                  data={data}
+                  width={width}
+                  height={220}
+                  chartConfig={{
+                    backgroundGradientFrom: '#006633',
+                    backgroundGradientTo: '#33CC33',
+                    decimalPlaces: 0, // optional, defaults to 2dp
+                    // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    barPercentage: 1,
+                    color: (opacity = 1) => `rgba(255, 255, 0, ${opacity})`,
+                    style: {
+                      borderRadius: 10,
+                    },
+                    formatYLabel: (value) => shortenAmount(value),
+                  }}
+                  style={{
+                    marginVertical: 8,
+                    paddingHorizontal: 0,
+                    borderRadius: 0,
+                  }}
+                  // verticalLabelRotation={10}
+                />
               ) : (
-                <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
-                  Rất tiếc, không có sản phẩm.Hãy lựa chọn sản phẩm thích hợp nào.
+                <Text style={{ textAlign: 'center', fontSize: 16, marginTop: 10 }}>
+                  Rất tiếc, không có dữ liệu.
                 </Text>
               )}
-
             </View>
-            <View >
-              <Text style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, margin: 10 }}>Thống kê theo ngày</Text>
-              <View style={{ flexDirection: "column", alignItems: "center" }}>
+            <View>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, margin: 10 }}>
+                Thống kê theo ngày
+              </Text>
+              <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <View style={{ flexDirection: 'row', height: 25 }}>
-                  <TouchableOpacity onPress={showDatePicker} style={{ marginLeft: 10 }} >
-                    <Icons name="date-range" size={24} color={"green"} />
+                  <TouchableOpacity onPress={showDatePicker} style={{ marginLeft: 10 }}>
+                    <Icons name="date-range" size={24} color={'green'} />
                   </TouchableOpacity>
-                  <Text style={{ marginLeft: 10 }} >{date1}</Text>
+                  <Text style={{ marginLeft: 10 }}>{date1}</Text>
 
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
@@ -275,11 +305,11 @@ const StatisticalScreen = () => {
                     onConfirm={handleConfirm}
                     onCancel={hideDatePicker}
                   />
-                  <Icons name="arrow-right-alt" size={24} color={"green"} />
-                  <TouchableOpacity onPress={showDatePicker2} style={{ marginLeft: 10 }} >
-                    <Icons name="date-range" size={24} color={"green"} />
+                  <Icons name="arrow-right-alt" size={24} color={'green'} />
+                  <TouchableOpacity onPress={showDatePicker2} style={{ marginLeft: 10 }}>
+                    <Icons name="date-range" size={24} color={'green'} />
                   </TouchableOpacity>
-                  <Text style={{ marginLeft: 10 }} >{date2}</Text>
+                  <Text style={{ marginLeft: 10 }}>{date2}</Text>
 
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible2}
@@ -294,78 +324,99 @@ const StatisticalScreen = () => {
               </View>
             </View>
             {showStatistics && (
-              <View style={{ flexDirection: "column", margin: 10, backgroundColor: "#F5F7F8" }}>
-               
-                <View style={{ flexDirection: "row" }}>
-                  <Text style={{ fontWeight: "bold", fontSize: 20 }}>Tổng tiền</Text>
-                  <Icons name='attach-money' color={"green"} size={24}></Icons>
+              <View style={{ flexDirection: 'column', margin: 10, backgroundColor: '#F5F7F8' }}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Tổng tiền</Text>
+                  <Icons name="attach-money" color={'green'} size={24}></Icons>
                 </View>
-                <Text style={{ fontSize: 25, fontWeight: "bold", color: "green", textAlign: "center" }}>{statisticaDay} VNĐ</Text>
+                <Text
+                  style={{
+                    fontSize: 25,
+                    fontWeight: 'bold',
+                    color: 'green',
+                    textAlign: 'center',
+                    letterSpacing: 1,
+                  }}
+                >
+                  {statisticaDay.toLocaleString('vi-VN')} VNĐ
+                </Text>
                 {statisticaDay !== 0 && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc', borderTopWidth: 1 }}>
-                  <Text style={{ color: "green", fontWeight: 'bold' }}>Ngày</Text>
-                  <Text style={{ color: "green", fontWeight: 'bold' }}>Số lượng</Text>
-                  <Text style={{ color: "green", fontWeight: 'bold' }}>Tiền chi</Text>
-                </View>
-                )}
-                {statisticaDay !== 0 &&dailyPayments.map((item, index) => (
-                  <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-                    <Text>{item.date}</Text>
-                    <Text>{item.totalProducts}</Text>
-                    <Text>{item.totalAmount} VNĐ</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      padding: 10,
+                      borderBottomWidth: 1,
+                      borderBottomColor: '#ccc',
+                      borderTopWidth: 1,
+                    }}
+                  >
+                    <Text style={{ color: 'green', fontWeight: 'bold' }}>Ngày</Text>
+                    <Text style={{ color: 'green', fontWeight: 'bold' }}>Số lượng</Text>
+                    <Text style={{ color: 'green', fontWeight: 'bold' }}>Tiền chi</Text>
                   </View>
-                ))}
+                )}
+                {statisticaDay !== 0 &&
+                  dailyPayments.map((item, index) => (
+                    <View
+                      key={index}
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        padding: 10,
+                        borderBottomWidth: 1,
+                        borderBottomColor: '#ccc',
+                      }}
+                    >
+                      <Text>{item.date}</Text>
+                      <Text>{item.totalProducts}</Text>
+                      <Text>{shortenAmount(item.totalAmount)} VNĐ</Text>
+                    </View>
+                  ))}
               </View>
             )}
             {showchart ? (
-              <View style={{ flexDirection: "column", backgroundColor: "#F5F7F8" }}>
+              <View style={{ flexDirection: 'column', backgroundColor: '#F5F7F8' }}>
                 {/* {statisticaDay !== 0 ? ( */}
-                  <LineChart
-                    data={dataDailyDay}
-                    width={width}
-                    height={220}
-                    chartConfig={{
-                      backgroundColor: "#e26a00",
-                      backgroundGradientFrom: "#fb8c00",
-                      backgroundGradientTo: "#ffa726",
-                      decimalPlaces: 0, // optional, defaults to 2dp
-                      color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                      labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                      style: {
-                        borderRadius: 16
-                      },
-                      propsForDots: {
-                        r: "6",
-                        strokeWidth: "2",
-                        stroke: "#e26a00",
-
-                      }
-                    }}
-                    bezier
-                    style={{
+                <LineChart
+                  data={dataDailyDay}
+                  width={width}
+                  height={220}
+                  formatYLabel={(value) => shortenAmount(value)}
+                  chartConfig={{
+                    backgroundColor: '#e26a00',
+                    backgroundGradientFrom: '#fb8c00',
+                    backgroundGradientTo: '#ffa726',
+                    decimalPlaces: 0, // optional, defaults to 2dp
+                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    style: {
                       borderRadius: 16,
-
-                    }}
-                  />
-                 
+                    },
+                    propsForDots: {
+                      r: '6',
+                      strokeWidth: '2',
+                      stroke: '#e26a00',
+                    },
+                  }}
+                  bezier
+                  style={{
+                    borderRadius: 0,
+                  }}
+                />
               </View>
-
-) : (
-    <Text style={{ textAlign: "center", fontSize: 16, marginTop: 10 }}>
-      Vui lòng chọn ngày khác!
-    </Text>
-  )} 
+            ) : (
+              <Text style={{ textAlign: 'center', fontSize: 16, marginTop: 10 }}>
+                Hãy thử chọn một ngày!
+              </Text>
+            )}
           </View>
-
         )}
       </SafeAreaView>
     </ScrollView>
   );
-
 };
 
-export default StatisticalScreen
+export default StatisticalScreen;
 
-const styles = StyleSheet.create({
-
-})
+const styles = StyleSheet.create({});

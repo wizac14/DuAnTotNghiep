@@ -29,6 +29,7 @@ import SearchResultScreen from '../screens/Home/SearchResultScreen';
 import SearchAllResultScreen from '../screens/Home/SearchAllResultScreen';
 import NewPasswordEmail from '../screens/NewPasswordEmail';
 import NewPasswordPhone from '../screens/NewPasswordPhone';
+import StatisticalScreen from '../screens/Home/StatisticalSceen';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -148,6 +149,11 @@ const AuthNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="statistical"
+        component={StatisticalScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
     </Stack.Navigator>
   );
 };
