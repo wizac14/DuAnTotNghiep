@@ -27,6 +27,7 @@ import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
 import ProductListScreen from '../screens/Home/ProductListScreen';
 import SearchResultScreen from '../screens/Home/SearchResultScreen';
 import SearchAllResultScreen from '../screens/Home/SearchAllResultScreen';
+import StatisticalScreen from '../screens/Home/StatisticalSceen';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -112,6 +113,12 @@ const AuthNavigator = () => {
         component={SearchAllResultScreen}
         options={{ headerShown: false, gestureEnabled: false }}
       />
+      <Stack.Screen
+        name="statistical"
+        component={StatisticalScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+
     </Stack.Navigator>
   );
 };
@@ -121,9 +128,9 @@ const AppNavigator = () => {
   return (
     <>
       {
-        // isLogin == false ? <NotAuthNavigator /> : <AuthNavigator />
+        isLogin == false ? <NotAuthNavigator /> : <AuthNavigator />
         // <Mains></Mains>
-        <AuthNavigator></AuthNavigator>
+        // <AuthNavigator></AuthNavigator>
       }
     </>
   );
