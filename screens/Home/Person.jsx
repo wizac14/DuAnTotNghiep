@@ -88,6 +88,32 @@ const Person = () => {
             </View>
           </View>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('statistical');
+          }}
+        >
+          <View style={styles.item}>
+            <View
+              style={{
+                justifyContent: 'center',
+                paddingLeft: 10,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 10,
+              }}
+            >
+              <Ionicons name="stats-chart" size={25} color="green" />
+              <View style={{}}>
+                <Text style={{ fontSize: 16, fontWeight: 500 }}>Thống kê</Text>
+              </View>
+            </View>
+
+            <View style={{ justifyContent: 'center' }}>
+              <Ionicons name="chevron-forward-outline" size={25} />
+            </View>
+          </View>
+        </TouchableOpacity>
 
         <View style={{ paddingBottom: 10, paddingLeft: 10, marginBottom: 10 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Cài đặt chung</Text>
