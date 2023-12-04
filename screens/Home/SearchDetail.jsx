@@ -20,6 +20,7 @@ import { AppContext } from '../../components/ultil/AppContext';
 import { TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ToastAndroid } from 'react-native';
+import Icons from '@expo/vector-icons/MaterialIcons';
 
 const SearchDetail = () => {
   const [products, setProducts] = useState([]);
@@ -63,21 +64,17 @@ const SearchDetail = () => {
     }
   };
 
+  const handleSearchSubmit = () => {
+    if (searchText.trim() !== '') {
+      navigation.navigate('SearchAllResultScreen', { searchText }); // chuyển sang màn hình SearchResultScreen với searchText
+    } else {
+      alert('Vui lòng nhập từ khóa để tìm kiếm.');
+    }
+  };
+
   return (
     <ScrollView>
-      <SafeAreaView style={{ paddingTop: 15, paddingLeft: 15, paddingRight: 15 }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignContent: 'center',
-            alignItems: 'center',
-            marginBottom: 16,
-          }}
-        >
-          <Text style={styles.cartDetailTitle}>TÌM KIẾM</Text>
-        </View>
-      </SafeAreaView>
+      <SafeAreaView style={{ paddingTop: 15, paddingLeft: 15, paddingRight: 15 }}></SafeAreaView>
       <View>
         <View
           style={{
@@ -92,16 +89,30 @@ const SearchDetail = () => {
             width: '100%',
           }}
         >
-          <TouchableOpacity>
-            <Ionicons style={{ marginRight: 5 }} name="search" size={22} color="black" />
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{
+              width: 32,
+              aspectRatio: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginRight: 5,
+              borderColor: COLORS.black,
+            }}
+          >
+            <Icons name="arrow-back" size={24} color={COLORS.black} />
           </TouchableOpacity>
-          <TextInput
-            style={{ fontSize: 16 }}
-            placeholder="Tìm sản phẩm..."
-            onChangeText={(text) => setSearchText(text)}
-            onBlur={handleBlur}
-            onFocus={handleFocus}
-          />
+
+          <TouchableOpacity style={{ flex: 1 }}>
+            <TextInput
+              style={{ fontSize: 16 }}
+              placeholder="Tìm sản phẩm..."
+              onChangeText={(text) => setSearchText(text)}
+              onBlur={handleBlur}
+              onFocus={handleFocus}
+              onSubmitEditing={handleSearchSubmit}
+            />
+          </TouchableOpacity>
         </View>
         {noResults && (
           <Text style={{ color: 'red', textAlign: 'center', marginTop: 10 }}>

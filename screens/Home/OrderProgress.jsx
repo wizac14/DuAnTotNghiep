@@ -20,9 +20,9 @@ import { AppContext } from '../../components/ultil/AppContext';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import PaidOrder from './PaidOrder';
-import UnPaidOrder from './UnPaidOrder';
-
+import CompleteOrder from './CompleteOrder';
+import CanceledOrder from './CanceledOrder';
+import DeliveringOrder from './DeliveringOrder';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -65,7 +65,8 @@ const OrderProgress = () => {
             justifyContent: 'space-between',
             paddingHorizontal: 10,
             alignItems: 'center',
-            marginBottom: 10,
+            // marginBottom: 10,
+            paddingVertical: 10,
           }}
         >
           <TouchableOpacity
@@ -88,9 +89,11 @@ const OrderProgress = () => {
         </View>
       </SafeAreaView>
       <Tab.Navigator>
-        <Tab.Screen name="Tất cả" component={AllOrderProgress} />
-        <Tab.Screen name="Đã thanh toán" component={PaidOrder} />
-        <Tab.Screen name="Chưa thanh toán" component={UnPaidOrder} />
+        {/* <Tab.Screen name="Tất cả" component={AllOrderProgress} /> */}
+        <Tab.Screen name="Đã đặt hàng" component={PaidOrder} />
+        <Tab.Screen name="Đang giao hàng" component={DeliveringOrder} />
+        <Tab.Screen name="Đã giao hàng" component={CompleteOrder} />
+        <Tab.Screen name="Đã hủy" component={CanceledOrder} />
       </Tab.Navigator>
     </>
   );

@@ -26,10 +26,12 @@ import OrderProgress from '../screens/Home/OrderProgress';
 import Search from '../screens/Home/Search';
 import SearchTitle from '../screens/Home/SearchTitle';
 import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
+import ProductListScreen from '../screens/Home/ProductListScreen';
+import SearchResultScreen from '../screens/Home/SearchResultScreen';
+import SearchAllResultScreen from '../screens/Home/SearchAllResultScreen';
 import NewPasswordEmail from '../screens/NewPasswordEmail';
 import NewPasswordPhone from '../screens/NewPasswordPhone';
-
-
+import StatisticalScreen from '../screens/Home/StatisticalSceen';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -52,9 +54,17 @@ const NotAuthNavigator = () => {
 
       <Stack.Screen name="Email Screen" component={EmailScreen} options={{ headerShown: false }} />
 
-      <Stack.Screen name="New Password Email" component={NewPasswordEmail} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="New Password Email"
+        component={NewPasswordEmail}
+        options={{ headerShown: false }}
+      />
 
-      <Stack.Screen name="New Password Phone" component={NewPasswordPhone} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="New Password Phone"
+        component={NewPasswordPhone}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
@@ -102,18 +112,50 @@ const AuthNavigator = () => {
         component={OrderProgressDetail}
         options={{ headerShown: false, gestureEnabled: false }}
       />
-
-
-
       <Stack.Screen
-        name="SearchTitle"
-        component={SearchTitle}
+        name="ProductListScreen"
+        component={ProductListScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="SearchResultScreen"
+        component={SearchResultScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="SearchAllResultScreen"
+        component={SearchAllResultScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="Forgot Password"
+        component={ForgotPassword}
         options={{ headerShown: false }}
       />
 
-   
+      <Stack.Screen name="Reset" component={ResetPassword} options={{ headerShown: false }} />
 
-        
+      <Stack.Screen name="Phone Screen" component={PhoneScreen} options={{ headerShown: false }} />
+
+      <Stack.Screen name="Email Screen" component={EmailScreen} options={{ headerShown: false }} />
+
+      <Stack.Screen
+        name="New Password Email"
+        component={NewPasswordEmail}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="New Password Phone"
+        component={NewPasswordPhone}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="statistical"
+        component={StatisticalScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
     </Stack.Navigator>
   );
 };

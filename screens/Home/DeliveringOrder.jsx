@@ -11,19 +11,20 @@ import {
 } from 'react-native';
 import { COLORS } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AxiosInstance from '../../components/ultil/AxiosInstance';
+import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { AppContext } from '../../components/ultil/AppContext';
 import { UIActivityIndicator } from 'react-native-indicators';
 import { Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import moment from 'moment';
+import { SimpleLineIcons } from '@expo/vector-icons';
 
-const UnPaidOrder = () => {
+const DeliveringOrder = () => {
   const [orders, setOrders] = useState([]);
   const { inforuser } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
-  const unPaidOrders = orders.filter((order) => order.status === 'ORDERED');
+  const paidOrders = orders.filter((order) => order.status === 'DELIVERING');
   const { width, height } = Dimensions.get('window');
   const paddingPercentage = 2;
 
@@ -32,8 +33,7 @@ const UnPaidOrder = () => {
     try {
       const userId = inforuser._id;
 
-      const response = await AxiosInstance().get(`order/user-orders/${userId}`);
-      //   console.log(response);
+      const response = await AxiosIntance().get(`order/user-orders/${userId}`);
 
       if (response.orders) {
         const reverseOrders = await response?.orders.reverse();
@@ -48,9 +48,18 @@ const UnPaidOrder = () => {
     }
   };
 
+  // useEffect(() => {
+  //   fetchProducts();
+  // }, []);
+
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    if (isFocused) {
+      setIsLoading(true);
+      fetchProducts();
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={{}}>
@@ -70,7 +79,7 @@ const UnPaidOrder = () => {
             <FlatList
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              data={unPaidOrders}
+              data={paidOrders}
               renderItem={({ item }) => <OrderItem item={item} navigation={navigation} />}
               keyExtractor={(item) => item._id}
               ListEmptyComponent={
@@ -81,7 +90,7 @@ const UnPaidOrder = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  <Text>Rất tiếc, không có sản phẩm nào.</Text>
+                  <Text>Rất tiếc, không có đơn hàng nào.</Text>
                 </View>
               }
             />
@@ -95,8 +104,8 @@ const UnPaidOrder = () => {
 const OrderItem = ({ item }) => {
   const { width, height } = Dimensions.get('window');
   const paddingPercentage = 2;
-  // const statusColor = item.status === 'PURCHASED' ? 'green' : 'orange';
-  // const statusPayment = item.status === 'PURCHASED' ? 'Đã thanh toán' : 'Đã đặt hàng';
+  const statusColor = item.isPaid === true ? 'green' : 'orange';
+  const statusPayment = item.isPaid === true ? 'Đã thanh toán' : 'Chưa thanh toán';
   const navigation = useNavigation();
 
   //truyền dữ liệu từ order(item) qua detail
@@ -104,7 +113,7 @@ const OrderItem = ({ item }) => {
     navigation.navigate('OrderProgressDetail', { order: item });
   };
   return (
-    <View style={{ justifyContent: 'center' }}>
+    <View style={{ justifyContent: 'center', backgroundColor: COLORS.lightWhite }}>
       <View
         style={{
           justifyContent: 'center',
@@ -127,10 +136,10 @@ const OrderItem = ({ item }) => {
           <View style={{}}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Image
-                style={{ height: 50, width: 50 }}
+                style={{ height: 70, width: 70 }}
                 source={require('../../assets/images/logo.png')}
               />
-              <View>
+              <View style={{ gap: 3 }}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontSize: 18 }}>{moment(item?.createdAt).format('HH:mm')}, </Text>
                   <Text style={{ fontSize: 18 }}>
@@ -140,19 +149,28 @@ const OrderItem = ({ item }) => {
                 <View style={{ flexDirection: 'column' }}>
                   {/* <Text style={{ fontSize: 16 }}>{item?.productCount} mặt hàng</Text> */}
                   <View style={{}}>
-                    <Text style={{ fontSize: 16, color: 'grey' }}>Nhấn để xem chi tiết</Text>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'left' }}>
+                      {item?.totalAmount.toLocaleString()}đ
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 'bold',
+                        textAlign: 'left',
+                        color: statusColor,
+                      }}
+                    >
+                      {statusPayment}
+                    </Text>
                   </View>
                 </View>
               </View>
             </View>
           </View>
 
-          <View style={{ flexDirection: 'column', gap: 0, alignSelf: 'center' }}>
-            <Text style={{ fontSize: 14, textAlign: 'right', color: 'black' }}>{item?.status}</Text>
-
-            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'right' }}>
-              {item?.totalAmount.toLocaleString()}đ
-            </Text>
+          <View style={{ flexDirection: 'row', gap: 3, alignSelf: 'center' }}>
+            <Text style={{ fontSize: 16, color: 'grey' }}>Xem chi tiết</Text>
+            <SimpleLineIcons name="arrow-right" size={14} color="grey" />
           </View>
         </TouchableOpacity>
       </View>
@@ -160,7 +178,7 @@ const OrderItem = ({ item }) => {
   );
 };
 
-export default UnPaidOrder;
+export default DeliveringOrder;
 
 const styles = StyleSheet.create({
   orderList: {

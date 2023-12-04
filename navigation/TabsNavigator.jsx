@@ -10,10 +10,21 @@ import ItemListHistory from '../components/item/ItemListHistory';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SearchProduct from '../screens/Home/SearchProduct';
 import SearchDetail from '../screens/Home/SearchDetail';
-import FavoriteScreen from '../screens/Home/FavoriteScreen';
+import Person from '../screens/Home/Person'
+import ChangePassword from '../screens/Home/ChangePassword'
 
 const TabsStack = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+const StackSetting = () => {
+  return (
+    <Stack.Navigator initialRouteName="Person" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Person" component={Person} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
+    </Stack.Navigator>
+  )
+}
 
 const TabsNavigator = () => {
   return (
@@ -36,7 +47,7 @@ const TabsNavigator = () => {
 
       <TabsStack.Screen
         name="Tìm kiếm"
-        component={SearchDetail}
+        component={SearchProduct}
         options={{
           headerShown: false,
           tabBarIcon(props) {
@@ -57,7 +68,7 @@ const TabsNavigator = () => {
       />
       <TabsStack.Screen
         name="Bạn"
-        component={Profile}
+        component={StackSetting}
         options={{
           headerShown: false,
           tabBarIcon(props) {

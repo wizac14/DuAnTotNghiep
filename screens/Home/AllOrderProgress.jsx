@@ -94,8 +94,8 @@ const AllOrderProgress = () => {
 const OrderItem = ({ item }) => {
   const { width, height } = Dimensions.get('window');
   const paddingPercentage = 2;
-  const statusColor = item.status === 'PURCHASED' ? 'green' : 'orange';
-  const statusPayment = item.status === 'PURCHASED' ? 'Đã thanh toán' : 'Đã đặt hàng';
+  // const statusColor = item.status === 'PURCHASED' ? 'green' : 'orange';
+  // const statusPayment = item.status === 'PURCHASED' ? 'Đã thanh toán' : 'Đã đặt hàng';
   const navigation = useNavigation();
 
   //truyền dữ liệu từ order(item) qua detail
@@ -146,18 +146,12 @@ const OrderItem = ({ item }) => {
             </View>
           </View>
 
-          <View style={{ flexDirection: 'column', gap: 0 }}>
-            <Text style={{ fontSize: 14, textAlign: 'right', color: statusColor }}>
-              {statusPayment}
-            </Text>
+          <View style={{ flexDirection: 'column', gap: 0, alignSelf: 'center' }}>
+            <Text style={{ fontSize: 14, textAlign: 'right', color: 'black' }}>{item?.status}</Text>
 
-            <View style={{}}>
-              <View>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'right' }}>
-                  {item?.totalAmount.toLocaleString()}đ
-                </Text>
-              </View>
-            </View>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'right' }}>
+              {item?.totalAmount.toLocaleString()}đ
+            </Text>
           </View>
         </TouchableOpacity>
       </View>

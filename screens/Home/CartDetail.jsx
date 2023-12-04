@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { COLORS } from '../../constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useContext } from 'react';
@@ -14,7 +14,6 @@ import { TextInput } from 'react-native';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { ToastAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
 
 const CartDetail = (props) => {
   const [data, setdata] = useState([]);
@@ -72,12 +71,7 @@ const CartDetail = (props) => {
         totalAmount: totalPrice,
       });
     }
-    // else {
-    //   Alert.alert(
-    //     'Chọn phương thức thanh toán',
-    //     'Vui lòng chọn phương thức thanh toán trước khi thanh toán.'
-    //   );
-    // }
+
     if (isCodChecked) {
       navigation.navigate('CodPayment', {
         address: addressText,
@@ -97,7 +91,7 @@ const CartDetail = (props) => {
             <View>
               <Text style={styles.cartDetailTitle}>CHI TIẾT ĐƠN HÀNG</Text>
             </View>
-            <View>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
               <Text style={styles.placeToShip}>Giao đến cho {inforuser.name}</Text>
               <View
                 style={{
@@ -150,7 +144,7 @@ const CartDetail = (props) => {
                   />
                 </View>
               </View>
-            </View>
+            </ScrollView>
             <View>
               <Text style={styles.placeToShip}>Hình thức giao hàng</Text>
               <View
@@ -414,6 +408,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: 'bold',
+  },
+  map: {
+    flex: 1,
+  },
+  textInput: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    margin: 10,
+    paddingHorizontal: 10,
   },
 });
 
