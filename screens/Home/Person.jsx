@@ -89,6 +89,7 @@ const Person = () => {
           </View>
         </TouchableOpacity>
         <TouchableOpacity
+        style={{ paddingHorizontal: 5 }}
           onPress={() => {
             navigation.navigate('statistical');
           }}
