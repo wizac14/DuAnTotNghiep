@@ -171,7 +171,6 @@ const Home = () => {
             height: Dimensions.get('window').height * 0.1,
             justifyContent: 'center',
             alignItems: 'center',
-            // marginVertical: 10,
           }}
         >
           <UIActivityIndicator size={30} color={COLORS.black} />
@@ -184,6 +183,7 @@ const Home = () => {
 
   return (
     <ScrollView
+      style={{ backgroundColor: COLORS.white }}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       onScroll={({ nativeEvent }) => {
@@ -758,12 +758,13 @@ const Home = () => {
                       </View>
                       <Text
                         style={{
-                          textAlign: 'left',
+                          textAlign: 'center',
                           color: 'white',
                           backgroundColor: 'black',
                           fontSize: 16,
                           letterSpacing: 0.5,
                           width: 100,
+                          borderRadius: 5,
                         }}
                       >
                         đ {item?.price.toLocaleString()}

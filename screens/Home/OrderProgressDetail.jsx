@@ -280,7 +280,9 @@ const OrderProgressDetail = ({ route }) => {
                     }}
                   >
                     <Text style={{ fontSize: 16, color: 'grey' }}>Địa chỉ</Text>
-                    <Text style={{ fontSize: 16, color: 'grey' }}>{order.address}</Text>
+                    <Text style={{ fontSize: 16, color: 'grey', textAlign: 'right', width: 200 }}>
+                      {order.address}
+                    </Text>
                   </View>
                   <View
                     style={{
@@ -400,7 +402,8 @@ const OrderProgressDetail = ({ route }) => {
               disabled={
                 order?.status === 'CANCELED' ||
                 order.status === 'DELIVERING' ||
-                order.status === 'COMPLETED'
+                order.status === 'COMPLETED' ||
+                order.status === 'REFUNDED'
               }
               style={{
                 justifyContent: 'center',

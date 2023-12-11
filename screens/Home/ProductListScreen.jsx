@@ -20,6 +20,7 @@ import Icons from '@expo/vector-icons/MaterialIcons';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ToastAndroid } from 'react-native';
 
 const ProductListScreen = ({ route }) => {
   const { brandName } = route.params;
@@ -63,7 +64,7 @@ const ProductListScreen = ({ route }) => {
         setNoResults(response.products.length === 0);
 
         const totalResults = response.totalResults || response.products.length;
-        setTotalSearchResults(totalResults.toString());
+        setTotalSearchResults(totalResults.toString() + ' kết quả');
       } else {
         setNoResults(true);
         ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
@@ -88,7 +89,7 @@ const ProductListScreen = ({ route }) => {
           setNoResults(response.products.length === 0);
 
           const totalResults = response.totalResults || response.products.length;
-          setTotalSearchResults(totalResults.toString());
+          setTotalSearchResults(totalResults.toString() + ' kết quả');
         } else {
           setNoResults(true);
           ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
@@ -178,7 +179,7 @@ const ProductListScreen = ({ route }) => {
                 onSubmitEditing={handleSearchSubmit}
               />
               <Text style={{ fontSize: 14, color: 'orange', marginRight: 5 }}>
-                ({totalSearchResults} kết quả)
+                {totalSearchResults}
               </Text>
               {searchText !== '' && (
                 <TouchableOpacity
