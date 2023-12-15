@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Pressable, ScrollView, TextInput, PermissionsAndroid } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, Pressable, ScrollView, TextInput, PermissionsAndroid,Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -26,6 +26,7 @@ const OrderProgressDetail = ({ route }) => {
   const { inforuser } = useContext(AppContext);
   const [orderStatusIndex, setOrderStatusIndex] = useState(0);
   const [collapsed, setCollapsed] = useState(false);
+  const [idRatingProduct, setidRatingProduct] = useState(null);
   const [collapsedDetail, setCollapsedDetail] = useState(false);
   const [collapsedProduct, setCollapsedProduct] = useState(true);
   //danhgia
@@ -33,20 +34,75 @@ const OrderProgressDetail = ({ route }) => {
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
   const [rating_description, setrating_description] = useState('');
   const SheetRef = useRef(null);
+  const [statusProduct, setstatusProduct] = useState('')
   const [rating, setRating] = useState([]);
+  const [productRating, setproductRating] = useState([]);
   const [isRating, setisRating] = useState(false);
+  const [isProductRating, setisProductRating] = useState(false);
   const [isOpen, setISOpen] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isVisible, setVisible] = useState(false);
+  const [isVisible1, setVisible1] = useState(false);
   const [images, setImage] = useState(null);
-  const [videos, setVideo] = useState(null);
 
+  const [videos, setVideo] = useState(null);
+  const [imageProduct, setImageProduct] = useState(null);
+
+  const [videoProduct, setVideoPRoduct] = useState(null);
+  const toggleVisibility = () => 
+  {
+    // console.log(products);
+    setVisible(!isVisible);
+  };
+  const createAlert = () =>
+    Alert.alert('Đánh Giá sản phẩm', 'Bạn đã đánh giá sản phẩm!', [
+      {
+        text: 'Từ chối',
+        // onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Xem đánh giá', },
+    ]);
+  const saveProductId = async(productId) => {
+    // console.log('Product ID:', productId);
+    setidRatingProduct(productId);
+    try {
+      const response=await AxiosIntance().get('/ratingProduct/get-by-id?productId='+productId);
+      if(response.result)
+      {
+        setproductRating(response.rating);
+          console.log(response.rating);
+          if (response.rating.some(rating => rating.idOder === order._id && rating.idUser._id===inforuser._id && rating.idProduct===productId &&  rating.israting==true)) {
+            setisProductRating(true);// Nếu có, chuyển trạng thái thành đã đánh giá
+            setVisible(false);
+            // createAlert();
+            setISOpen(false);
+            setVisible1(true);
+          }
+          else {
+            setisProductRating(false);
+            setVisible(true);
+            setISOpen(false);
+          
+          }
+        
+      }
+    } catch (error) {
+      
+    }
+    // setidRatingProduct(productId);
+    // setVisible(!isVisible);
+    // console.log(idRatingProduct);
+    // You can also call an API to save the product ID to your database
+  };
   const ratingIdOrder=async()=>{
     try {
       const response=await AxiosIntance().get('/rating/get-by-id?orderId='+order._id);
       if(response.result)
       {
           setRating(response.rating);
-          if (response.rating.some(rating => rating.idOder === order._id)) {
+          // console.log(response.rating);
+          if (response.rating.some(rating => rating.idOder === order._id && rating.idUser._id===inforuser._id)) {
             setisRating(true); // Nếu có, chuyển trạng thái thành đã đánh giá
             setISOpen(false)
           }
@@ -56,7 +112,7 @@ const OrderProgressDetail = ({ route }) => {
       console.error("Error ratingProduct:", error);
     }
   }
-  const ratingProduct = async () => {
+  const ratingOrder = async () => {
     try {
       const response = await AxiosIntance().post('/rating/add-new-rating',{
         idUser: inforuser._id,
@@ -65,11 +121,15 @@ const OrderProgressDetail = ({ route }) => {
         star: defaultRating,
         image: images,
         video: videos,
+       
       });
   
       if (response.result) {
         ToastAndroid.show("Phản hồi thành công", ToastAndroid.SHORT);
         setISOpen(false);
+        setisRating(true);
+        setImage(null);
+        setVideo(null);
       } else {
         ToastAndroid.show("Cập nhật không thành công", ToastAndroid.SHORT);
       }
@@ -78,11 +138,38 @@ const OrderProgressDetail = ({ route }) => {
       ToastAndroid.show("Đã xảy ra lỗi không xác định", ToastAndroid.SHORT);
     }
   };
+  const ratingidProduct = async () => {
+    try {
+      const response = await AxiosIntance().post('/ratingProduct/add-new-rating',{
+        idUser: inforuser._id,
+        idOrder: order._id,
+        idProduct:idRatingProduct,
+        ratingStatus: statusProduct,
+        star: defaultRating,
+        image: images,
+        video: videos,
+        israting:true
+      });
   
+      if (response.result) {
+        ToastAndroid.show("Phản hồi thành công", ToastAndroid.SHORT);
+        setImage(null);
+        setVideo(null);
+        setstatusProduct('');
+        setdefaultRating(2);
+        setVisible(!isVisible);
+      } else {
+        ToastAndroid.show("Cập nhật không thành công", ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      console.error("Error ratingProduct:", error);
+      ToastAndroid.show("Đã xảy ra lỗi không xác định", ToastAndroid.SHORT);
+    }
+  };
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const snapPoints = ["50%", "75%"];
+  const snapPoints = ["50%", "95%"];
   const handleSnapPress = useCallback(() => {
     if (order.status === 'COMPLETED' && isRating==false) {
       SheetRef.current?.snapToIndex(index);
@@ -271,10 +358,11 @@ const OrderProgressDetail = ({ route }) => {
    
 
     ratingIdOrder();
+   
     
     
    
-  }, [order.status,isRating]);
+  }, [order.status,isRating,isVisible]);
   const cancelOrder = async () => {
     try {
       let newStatus = 'CANCELED';
@@ -565,6 +653,10 @@ const OrderProgressDetail = ({ route }) => {
                             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
                               {item.unitPrice.toLocaleString()} VND
                             </Text>
+                            <TouchableOpacity onPress={() => saveProductId(item.productId._id)}>
+                              {/* <Text style={isProductRating  ? styles.textrated : styles.textnotrating}>{isProductRating  ? 'Đã đánh giá' : 'Đánh giá'}</Text> */}
+                                <Text style={styles.textrated}>Đánh giá</Text>
+                            </TouchableOpacity>
                           </View>
                         </View>
                       </TouchableOpacity>
@@ -634,13 +726,17 @@ const OrderProgressDetail = ({ route }) => {
                     order.status === 'DELIVERING' ||
                     order.status === 'REFUNDED' || isRating
                   }
-                  style={{
+                  style={isRating ?{
                     justifyContent: 'center',
                     marginTop: 20,
-                    backgroundColor: statusBackgroundColor2,
+                    backgroundColor: "green",
                     height: 30,
                     borderRadius: 5,
-                  }}
+                  }:{ justifyContent: 'center',
+                  marginTop: 20,
+                  backgroundColor: statusBackgroundColor2,
+                  height: 30,
+                  borderRadius: 5,}}
                   onPress={() => handleSnapPress(0)}>
                   <Text
                     style={{
@@ -765,10 +861,10 @@ const OrderProgressDetail = ({ route }) => {
                     </TouchableOpacity>
                   </View>)}
                   <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: COLORS.offwhite }}>
+                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: COLORS.offwhite }} onPress={()=>(setISOpen(false))}>
                       <Text style={{ textAlign: "center", padding: 10, color: "black", fontSize: 18, fontWeight: "bold" }}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: "black" }} onPress={ratingProduct}>
+                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: "black" }} onPress={ratingOrder}>
                       <Text style={{ textAlign: "center", padding: 10, color: "white", fontSize: 18, fontWeight: "bold" }}>Submit</Text>
                     </TouchableOpacity>
                   </View>
@@ -782,7 +878,7 @@ const OrderProgressDetail = ({ route }) => {
       </ScrollView>
       <Modal animationType="slide" transparent={true} visible={isModalVisible}>
         <TouchableOpacity style={styles.modalBackdrop} onPress={toggleModal} />
-        <View style={styles.modalContainer}>
+        <View style={styles.modalContainer1}>
           {/* Add your camera and gallery buttons here */}
           <TouchableOpacity
             style={{
@@ -807,6 +903,97 @@ const OrderProgressDetail = ({ route }) => {
           </TouchableOpacity>
         </View>
       </Modal>
+      <KeyboardAwareScrollView  >
+            <Modal visible={isVisible} animationType="fade" transparent={true}>
+              <View style={styles.alert}>
+                {/* <Text style={styles.alertTitle}>Đánh giá</Text> */}
+                <Text style={[styles.alertTitle,{fontSize:20,marginTop:5}]}>Sản phẩm của bạn thế nào?</Text>
+                  <Text style={[styles.alertTitle, { color: "gray", margin: 5, fontSize: 14, fontWeight: 'normal' }]}>Vui lòng cho đánh giá sao & cảm nhận của bạn</Text>
+                <View
+                >
+                  <CustomRatingStar></CustomRatingStar>
+                  {/* <Text>{defaultRating+'/'+maxRating.length}</Text>
+              <TouchableOpacity activeOpacity={0.7}
+              onPress={()=>alert(defaultRating)}>
+                <Text>Get star</Text>
+              </TouchableOpacity> */}
+                </View>
+
+                {/* <View style={styles.viewArea}> */}
+
+
+                <View style={{ flexDirection: "row", }}>
+                      <View style={[styles.viewArea,{width:270}]}>
+                        <TextInput
+                          value={statusProduct} onChangeText={setstatusProduct}
+                          placeholder="Viết đánh giá"
+                          numberOfLines={10} style={styles.textArea} />
+                      </View>
+                      <TouchableOpacity style={{ marginTop: 20, }} onPress={() => toggleModal()}>
+                        <Image source={require("../../assets/images/image.png")}></Image>
+                      </TouchableOpacity>
+                    </View>
+
+                {/* </View> */}
+                {images != null && (<View
+                    style={{
+
+                      justifyContent: 'space-around',
+                      marginTop: 10,
+                      flexDirection: "row",
+                     
+
+                    }}>
+
+                    <Image source={{ uri: images }} style={{ width: 100, height: 100 }} />
+                    <TouchableOpacity onPress={()=>getvideo()}>
+                      {
+                        videos ? (
+                          <ExpoVideo
+                            source={{ uri: videos }}
+                            style={{ width: 100, height: 100 }}
+                            useNativeControls
+                          />
+                        ) : (
+                          <Image source={require('../../assets/images/movie.png')} style={{ width: 100, height: 100 }} />
+                        )
+                      }
+                    </TouchableOpacity>
+                  </View>)}
+                  <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                    <TouchableOpacity onPress={() => toggleVisibility()} style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: COLORS.offwhite }}>
+                      <Text style={{ textAlign: "center", padding: 10, color: "black", fontSize: 18, fontWeight: "bold" }}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: "black" }} onPress={ratingidProduct}>
+                      <Text style={{ textAlign: "center", padding: 10, color: "white", fontSize: 18, fontWeight: "bold" }}>Submit</Text>
+                    </TouchableOpacity>
+                  </View>
+              </View>
+            </Modal>
+          </KeyboardAwareScrollView>
+
+    <Modal isVisible={isVisible1}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText1}>Đánh giá</Text>
+          <Text style={styles.modalText2}>
+            Bạn đã đánh giá! Bạn có muốn xem đánh giá của mọi người không?
+          </Text>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.cancelButton} onPress={()=>(setVisible1(false))}>
+              <Text style={styles.buttonText}>Đóng</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.confirmButton} onPress={() => {
+                              navigation.navigate('RatingScreen', {
+                                id: idRatingProduct ,
+                              });
+                            }}> 
+              <Text style={styles.buttonText}>Đồng ý</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
     </SafeAreaView>
 
   );
@@ -835,13 +1022,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   alert: {
-    // marginTop: 450,
+    // height: 320,
+    margin: 5,
     elevation: 24,
     backgroundColor: COLORS.offwhite,
-    // padding: 5,
+    padding: 5,
     borderWidth: 1,
     borderColor: 'lightgrey',
     flex: 1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   alertTitle: {
     margin: 0,
@@ -854,7 +1044,7 @@ const styles = StyleSheet.create({
     top: -25,
     height: 60,
   },
-  modalContainer: {
+  modalContainer1: {
     backgroundColor: 'white',
     position: 'absolute',
     alignSelf: 'center',
@@ -910,6 +1100,60 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background color
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  textnotrating: {
+    fontWeight:"bold",
+    color: "red",
+    fontSize:17
+    /* Thêm các thuộc tính CSS khác tùy ý */
+  },
+  textrated:{
+    fontWeight:"bold",
+    color: "green",
+    fontStyle:"italic",
+    fontSize:17
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: 300,
+    alignItems: 'center',
+  },
+  modalText1: {
+    fontSize: 22,
+    marginBottom: 30,
+    fontWeight: 'bold',
+  },
+  modalText2: {
+    fontSize: 18,
+    marginBottom: 40,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignSelf: 'flex-end',
+    gap: 6,
+  },
+  cancelButton: {
+    backgroundColor: 'grey',
+    padding: 10,
+    borderRadius: 5,
+  },
+  confirmButton: {
+    backgroundColor: 'red',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

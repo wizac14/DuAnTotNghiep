@@ -28,6 +28,8 @@ import NewPassword from "./screens/NewPassword";
 import AppNavigator from "./navigation/AppNavigator";
 import { AppContextProvider } from "./components/ultil/AppContext";
 import FilterScreen from "./screens/Home/FilterScreen";
+import RattingScreen from "./screens/Home/RatingScreen";
+import ItemRating from "./components/item/ItemRating";
 
 const Stack = createNativeStackNavigator();
 
@@ -70,6 +72,8 @@ export default function App() {
       </GestureHandlerRootView>
       {/* <FilterScreen></FilterScreen> */}
     </SafeAreaProvider>
+    // <ItemRating></ItemRating>
+    // <RattingScreen></RattingScreen>
   );
 }
 
