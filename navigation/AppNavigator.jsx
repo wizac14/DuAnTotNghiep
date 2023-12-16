@@ -30,6 +30,7 @@ import SearchAllResultScreen from '../screens/Home/SearchAllResultScreen';
 import NewPasswordEmail from '../screens/NewPasswordEmail';
 import NewPasswordPhone from '../screens/NewPasswordPhone';
 import StatisticalScreen from '../screens/Home/StatisticalSceen';
+import RatingScreen from '../screens/Home/RatingScreen';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -129,6 +130,11 @@ const AuthNavigator = () => {
         name="Forgot Password"
         component={ForgotPassword}
         options={{ headerShown: false }}
+      />
+         <Stack.Screen
+        name="RatingScreen"
+        component={RatingScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
 
       <Stack.Screen name="Reset" component={ResetPassword} options={{ headerShown: false }} />
