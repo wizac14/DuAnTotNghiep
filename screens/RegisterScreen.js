@@ -1,31 +1,27 @@
 import {
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
   View,
+  Text,
+  Image,
+  SafeAreaView,
+  TextInput,
   TouchableOpacity,
+  Pressable,
   ToastAndroid,
 } from 'react-native';
-import React, { useState } from 'react';
-import { SIZES, COLORS } from '../constants';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
-import { Axios } from 'axios';
+import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
+import React, { useState } from 'react';
 import AxiosInstance from '../components/ultil/AxiosIntance';
 
-const RegisterScreen = () => {
+export default function SignupScreen() {
+  const navigation = useNavigation();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
-  const navigation = useNavigation();
   const [isSecureEntry, setIsSecureEntry] = useState(true);
 
   const RegisterUser = async () => {
@@ -52,203 +48,111 @@ const RegisterScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Image style={{ width: 350, height: 300 }} source={require('../assets/images/logo.png')} />
+    <View className="bg-slate-100 h-full w-full">
+      <StatusBar style="light" />
+      <Image
+        className="h-full w-full absolute"
+        source={require('../assets/images/backgroundd.png')}
+      />
+
+      <View className="h-full w-full flex justify-around pt-48">
+        <View className="flex items-center">
+          <Animated.Text
+            entering={FadeInUp.duration(1000).springify()}
+            className="text-white font-bold tracking-wider text-5xl"
+          >
+            Đăng ký
+          </Animated.Text>
+        </View>
+
+        <View className="flex items-center mx-5 space-y-4">
+          <Animated.View
+            entering={FadeInDown.duration(1000).springify()}
+            className="bg-white p-3 rounded-2xl w-full"
+          >
+            <TextInput
+              value={name}
+              onChangeText={(text) => setName(text)}
+              style={{ width: 250 }}
+              placeholder="Tên của bạn"
+              placeholderTextColor={'gray'}
+            />
+          </Animated.View>
+          <Animated.View
+            entering={FadeInDown.delay(200).duration(1000).springify()}
+            className="bg-white p-3 rounded-2xl w-full"
+          >
+            <TextInput
+              value={email}
+              onChangeText={(text) => setEmail(text)}
+              style={{ width: 250 }}
+              placeholder="Email"
+              placeholderTextColor={'gray'}
+            />
+          </Animated.View>
+          <Animated.View
+            entering={FadeInDown.delay(400).duration(1000).springify()}
+            className="bg-white p-3 rounded-2xl w-full "
+          >
+            <TextInput
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              style={{ width: 250 }}
+              placeholder="Mật khẩu"
+              placeholderTextColor={'gray'}
+              secureTextEntry
+            />
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInDown.delay(400).duration(1000).springify()}
+            className="bg-white p-3 rounded-2xl w-full "
+          >
+            <TextInput
+              value={address}
+              onChangeText={(text) => setAddress(text)}
+              style={{ width: 250 }}
+              placeholder="Địa chỉ của bạn"
+              placeholderTextColor={'gray'}
+            />
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInDown.delay(400).duration(1000).springify()}
+            className="bg-white p-3 rounded-2xl w-full mb-3"
+          >
+            <TextInput
+              value={phoneNumber}
+              onChangeText={(text) => setPhoneNumber(text)}
+              style={{ width: 250 }}
+              placeholder="Số diện thoại của bạn"
+              placeholderTextColor={'gray'}
+            />
+          </Animated.View>
+
+          <Animated.View
+            className="w-full"
+            entering={FadeInDown.delay(600).duration(1000).springify()}
+          >
+            <TouchableOpacity
+              onPress={RegisterUser}
+              className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
+            >
+              <Text className="text-xl font-bold text-white text-center">Đăng ký</Text>
+            </TouchableOpacity>
+          </Animated.View>
+
+          <Animated.View
+            entering={FadeInDown.delay(800).duration(1000).springify()}
+            className="flex-row justify-center"
+          >
+            <Text>Đã có tài khoản? </Text>
+            <TouchableOpacity onPress={() => navigation.push('Login')}>
+              <Text className="text-sky-600">Đăng nhập</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
       </View>
-
-      <KeyboardAvoidingView>
-        <View style={{ alignItems: 'center' }}>
-          <Text style={{ fontSize: SIZES.xLarge }}>Create your Account</Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 35,
-          }}
-        >
-          <Ionicons style={{ padding: 5 }} name="person-circle" size={24} color="grey" />
-          <TextInput
-            value={name}
-            onChangeText={(text) => setName(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your name"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-          <MaterialCommunityIcons style={{ padding: 5 }} name="phone" size={24} color="grey" />
-          <TextInput
-            value={phoneNumber}
-            onChangeText={(text) => setPhoneNumber(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your phone number (+84)"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-          <Ionicons style={{ padding: 5 }} name="location" size={24} color="grey" />
-          <TextInput
-            value={address}
-            onChangeText={(text) => setAddress(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your address"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-          <MaterialCommunityIcons style={{ padding: 5 }} name="email" size={24} color="grey" />
-          <TextInput
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your email"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-          <Ionicons style={{ padding: 5 }} name="lock-closed" size={24} color="grey" />
-          <TextInput
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={isSecureEntry}
-            style={{ width: 250 }}
-            placeholder="Enter your password"
-          />
-          <Ionicons
-            style={{ padding: 5 }}
-            name={isSecureEntry ? 'eye' : 'eye-off'}
-            size={24}
-            color="grey"
-            onPress={() => setIsSecureEntry(!isSecureEntry)}
-          />
-        </View>
-
-        <View style={{ marginTop: 30 }} />
-
-        <TouchableOpacity
-          onPress={RegisterUser}
-          style={{
-            width: 300,
-            backgroundColor: '#D80032',
-            borderRadius: 10,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            padding: 10,
-          }}
-        >
-          <Text
-            style={{
-              textAlign: 'center',
-              color: COLORS.white,
-              fontSize: SIZES.Large,
-              // fontFamily: "bold",
-            }}
-          >
-            Sign up
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.imgView}>
-          <TouchableOpacity style={styles.img} activeOpacity={0.5}>
-            <Image
-              style={{ width: 100, height: 100 }}
-              source={require('../assets/images/google.png')}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.img} activeOpacity={0.5}>
-            <Image
-              style={{ width: 100, height: 100 }}
-              source={require('../assets/images/facebook.png')}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.text}>
-          <Text>Already have an account?</Text>
-          <Text
-            onPress={() => navigation.navigate('Login')}
-            style={{ left: 5, fontWeight: 'bold' }}
-          >
-            Sign in
-          </Text>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
-};
-
-export default RegisterScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imgView: {
-    flexDirection: 'row',
-    marginTop: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 10,
-  },
-  img: {
-    width: 50,
-    height: 50,
-    margin: 5,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#e3e3e3',
-    borderRadius: 10,
-    resizeMode: 'center',
-  },
-  text: {
-    flexDirection: 'row',
-    marginLeft: 10,
-    justifyContent: 'center',
-    top: 10,
-  },
-});
+}

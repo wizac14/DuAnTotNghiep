@@ -114,7 +114,7 @@ const Cart = (props) => {
         {isLoading ? (
           <View
             style={{
-              height: '90%',
+              height: '88%',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -122,7 +122,7 @@ const Cart = (props) => {
             <UIActivityIndicator size={30} color={colors.text} />
           </View>
         ) : (
-          <View style={{ height: '90%' }}>
+          <View style={{ height: '88%' }}>
             <FlatList
               data={data}
               renderItem={({ item }) => (

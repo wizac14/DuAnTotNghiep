@@ -45,11 +45,7 @@ const Profile = () => {
   const emailValidation = yup
     .string()
     .email('Email không hợp lệ')
-    .matches(
-      // Regular expression để kiểm tra định dạng email
-      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      'Email không hợp lệ'
-    );
+    .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email không hợp lệ');
 
   const nameValidation = yup
     .string()
@@ -74,8 +70,8 @@ const Profile = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: 'row', top: '10%' }}>
+    <SafeAreaView style={styles.container}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -86,7 +82,7 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
         <View>
-          <Text style={styles.title}>Cập nhật thông tin</Text>
+          <Text style={styles.title}>CẬP NHẬT THÔNG TIN</Text>
         </View>
       </View>
       <Formik
@@ -155,7 +151,7 @@ const Profile = () => {
           </View>
         )}
       </Formik>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -177,8 +173,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginLeft: 10,
-    marginRight: 70,
-    marginBottom: 30,
   },
   viewItem: {
     marginTop: 25,
@@ -199,11 +193,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     height: 50,
     borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btnUpdate: {
     color: 'white',
     textAlign: 'center',
-    top: '20%',
     fontSize: 16,
     fontWeight: 'bold',
   },

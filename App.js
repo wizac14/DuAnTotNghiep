@@ -1,33 +1,31 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, useColorScheme } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
-import { useCallback, useMemo } from "react";
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Cart from "./screens/Home/Cart";
-import Intro from "./screens/Intro";
-import Guide from "./screens/Begin/Guide";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import ForgotPassword from "./screens/ForgotPassword";
-import ResetPassword from "./screens/ResetPassword";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import ProductDetail from "./components/products/ProductDetail";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import TabsNavigator from "./navigation/TabsNavigator";
-import PhoneScreen from "./screens/PhoneScreen";
-import EmailScreen from "./screens/EmailScreen";
-
-import AppNavigator from "./navigation/AppNavigator";
-import { AppContextProvider } from "./components/ultil/AppContext";
-import FilterScreen from "./screens/Home/FilterScreen";
+import { useCallback, useMemo } from 'react';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Cart from './screens/Home/Cart';
+import Intro from './screens/Intro';
+import Guide from './screens/Begin/Guide';
+import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import ForgotPassword from './screens/ForgotPassword';
+import ResetPassword from './screens/ResetPassword';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import ProductDetail from './components/products/ProductDetail';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import TabsNavigator from './navigation/TabsNavigator';
+import PhoneScreen from './screens/PhoneScreen';
+import EmailScreen from './screens/EmailScreen';
+import NewPassword from './screens/NewPassword';
+import AppNavigator from './navigation/AppNavigator';
+import { AppContextProvider } from './components/ultil/AppContext';
+import FilterScreen from './screens/Home/FilterScreen';
+import RattingScreen from './screens/Home/RatingScreen';
+import ItemRating from './components/item/ItemRating';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,23 +34,25 @@ export default function App() {
 
   const theme = useMemo(
     () =>
-      colorScheme === "dark"
+      colorScheme === 'dark'
         ? {
             ...DarkTheme,
             colors: {
               ...DarkTheme.colors,
-              primary: "#fff",
-              text: "#fff",
+              // primary: '#191919',
+              primary: '#fff',
+              // text: '#191919',
+              text: '#fff',
             },
           }
         : {
             ...DefaultTheme,
             colors: {
               ...DefaultTheme.colors,
-              background: "#fff",
-              text: "#191919",
-              border: "#D9D9D9",
-              primary: "#191919",
+              background: '#fff',
+              text: '#191919',
+              border: '#D9D9D9',
+              primary: '#191919',
             },
           },
     [colorScheme]
@@ -68,8 +68,9 @@ export default function App() {
           </NavigationContainer>
         </AppContextProvider>
       </GestureHandlerRootView>
-      {/* <FilterScreen></FilterScreen> */}
     </SafeAreaProvider>
+    // <ItemRating></ItemRating>
+    // <RattingScreen></RattingScreen>
   );
 }
 
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textstyle: {
-    fontFamily: "regular",
+    fontFamily: 'regular',
     fontSize: 20,
   },
 });

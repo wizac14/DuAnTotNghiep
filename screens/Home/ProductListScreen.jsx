@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  ToastAndroid,
   FlatList,
 } from 'react-native';
 import AxiosIntance from '../../components/ultil/AxiosInstance';
@@ -63,7 +64,7 @@ const ProductListScreen = ({ route }) => {
         setNoResults(response.products.length === 0);
 
         const totalResults = response.totalResults || response.products.length;
-        setTotalSearchResults(totalResults.toString());
+        setTotalSearchResults(totalResults.toString() + ' kết quả');
       } else {
         setNoResults(true);
         ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
@@ -88,7 +89,7 @@ const ProductListScreen = ({ route }) => {
           setNoResults(response.products.length === 0);
 
           const totalResults = response.totalResults || response.products.length;
-          setTotalSearchResults(totalResults.toString());
+          setTotalSearchResults(totalResults.toString() + ' kết quả');
         } else {
           setNoResults(true);
           ToastAndroid.show('Lấy dữ liệu thất bại', ToastAndroid.SHORT);
@@ -178,7 +179,7 @@ const ProductListScreen = ({ route }) => {
                 onSubmitEditing={handleSearchSubmit}
               />
               <Text style={{ fontSize: 14, color: 'orange', marginRight: 5 }}>
-                ({totalSearchResults} kết quả)
+                {totalSearchResults}
               </Text>
               {searchText !== '' && (
                 <TouchableOpacity
