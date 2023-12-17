@@ -1,5 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Pressable, ScrollView, TextInput, PermissionsAndroid,Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  TextInput,
+  PermissionsAndroid,
+  Alert,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
@@ -14,7 +25,7 @@ import Collapsible from 'react-native-collapsible';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { ToastAndroid } from 'react-native';
 import Modal from 'react-native-modal';
-import { launchCameraAsync, launchImageLibraryAsync ,MediaTypeOptions } from 'expo-image-picker';
+import { launchCameraAsync, launchImageLibraryAsync, MediaTypeOptions } from 'expo-image-picker';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useCallback } from 'react';
@@ -34,7 +45,7 @@ const OrderProgressDetail = ({ route }) => {
   const [maxRating, setmaxRating] = useState([1, 2, 3, 4, 5]);
   const [rating_description, setrating_description] = useState('');
   const SheetRef = useRef(null);
-  const [statusProduct, setstatusProduct] = useState('')
+  const [statusProduct, setstatusProduct] = useState('');
   const [rating, setRating] = useState([]);
   const [productRating, setproductRating] = useState([]);
   const [isRating, setisRating] = useState(false);
@@ -49,8 +60,7 @@ const OrderProgressDetail = ({ route }) => {
   const [imageProduct, setImageProduct] = useState(null);
 
   const [videoProduct, setVideoPRoduct] = useState(null);
-  const toggleVisibility = () => 
-  {
+  const toggleVisibility = () => {
     // console.log(products);
     setVisible(!isVisible);
   };
@@ -61,120 +71,122 @@ const OrderProgressDetail = ({ route }) => {
         // onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Xem đánh giá', },
+      { text: 'Xem đánh giá' },
     ]);
-  const saveProductId = async(productId) => {
+  const saveProductId = async (productId) => {
     // console.log('Product ID:', productId);
     setidRatingProduct(productId);
     try {
-      const response=await AxiosIntance().get('/ratingProduct/get-by-id?productId='+productId);
-      if(response.result)
-      {
+      const response = await AxiosIntance().get('/ratingProduct/get-by-id?productId=' + productId);
+      if (response.result) {
         setproductRating(response.rating);
-          console.log(response.rating);
-          if (response.rating.some(rating => rating.idOder === order._id && rating.idUser._id===inforuser._id && rating.idProduct===productId &&  rating.israting==true)) {
-            setisProductRating(true);// Nếu có, chuyển trạng thái thành đã đánh giá
-            setVisible(false);
-            // createAlert();
-            setISOpen(false);
-            setVisible1(true);
-          }
-          else {
-            setisProductRating(false);
-            setVisible(true);
-            setISOpen(false);
-          
-          }
-        
+        console.log(response.rating);
+        if (
+          response.rating.some(
+            (rating) =>
+              rating.idOder === order._id &&
+              rating.idUser._id === inforuser._id &&
+              rating.idProduct === productId &&
+              rating.israting == true
+          )
+        ) {
+          setisProductRating(true); // Nếu có, chuyển trạng thái thành đã đánh giá
+          setVisible(false);
+          // createAlert();
+          setISOpen(false);
+          setVisible1(true);
+        } else {
+          setisProductRating(false);
+          setVisible(true);
+          setISOpen(false);
+        }
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
     // setidRatingProduct(productId);
     // setVisible(!isVisible);
     // console.log(idRatingProduct);
     // You can also call an API to save the product ID to your database
   };
-  const ratingIdOrder=async()=>{
+  const ratingIdOrder = async () => {
     try {
-      const response=await AxiosIntance().get('/rating/get-by-id?orderId='+order._id);
-      if(response.result)
-      {
-          setRating(response.rating);
-          // console.log(response.rating);
-          if (response.rating.some(rating => rating.idOder === order._id && rating.idUser._id===inforuser._id)) {
-            setisRating(true); // Nếu có, chuyển trạng thái thành đã đánh giá
-            setISOpen(false)
-          }
-        
+      const response = await AxiosIntance().get('/rating/get-by-id?orderId=' + order._id);
+      if (response.result) {
+        setRating(response.rating);
+        // console.log(response.rating);
+        if (
+          response.rating.some(
+            (rating) => rating.idOder === order._id && rating.idUser._id === inforuser._id
+          )
+        ) {
+          setisRating(true); // Nếu có, chuyển trạng thái thành đã đánh giá
+          setISOpen(false);
+        }
       }
     } catch (error) {
-      console.error("Error ratingProduct:", error);
+      console.error('Error ratingProduct:', error);
     }
-  }
+  };
   const ratingOrder = async () => {
     try {
-      const response = await AxiosIntance().post('/rating/add-new-rating',{
+      const response = await AxiosIntance().post('/rating/add-new-rating', {
         idUser: inforuser._id,
         idOrder: order._id,
         ratingStatus: rating_description,
         star: defaultRating,
         image: images,
         video: videos,
-       
       });
-  
+
       if (response.result) {
-        ToastAndroid.show("Phản hồi thành công", ToastAndroid.SHORT);
+        ToastAndroid.show('Phản hồi thành công', ToastAndroid.SHORT);
         setISOpen(false);
         setisRating(true);
         setImage(null);
         setVideo(null);
       } else {
-        ToastAndroid.show("Cập nhật không thành công", ToastAndroid.SHORT);
+        ToastAndroid.show('Cập nhật không thành công', ToastAndroid.SHORT);
       }
     } catch (error) {
-      console.error("Error ratingProduct:", error);
-      ToastAndroid.show("Đã xảy ra lỗi không xác định", ToastAndroid.SHORT);
+      console.error('Error ratingProduct:', error);
+      ToastAndroid.show('Đã xảy ra lỗi không xác định', ToastAndroid.SHORT);
     }
   };
   const ratingidProduct = async () => {
     try {
-      const response = await AxiosIntance().post('/ratingProduct/add-new-rating',{
+      const response = await AxiosIntance().post('/ratingProduct/add-new-rating', {
         idUser: inforuser._id,
         idOrder: order._id,
-        idProduct:idRatingProduct,
+        idProduct: idRatingProduct,
         ratingStatus: statusProduct,
         star: defaultRating,
         image: images,
         video: videos,
-        israting:true
+        israting: true,
       });
-  
+
       if (response.result) {
-        ToastAndroid.show("Phản hồi thành công", ToastAndroid.SHORT);
+        ToastAndroid.show('Phản hồi thành công', ToastAndroid.SHORT);
         setImage(null);
         setVideo(null);
         setstatusProduct('');
         setdefaultRating(2);
         setVisible(!isVisible);
       } else {
-        ToastAndroid.show("Cập nhật không thành công", ToastAndroid.SHORT);
+        ToastAndroid.show('Cập nhật không thành công', ToastAndroid.SHORT);
       }
     } catch (error) {
-      console.error("Error ratingProduct:", error);
-      ToastAndroid.show("Đã xảy ra lỗi không xác định", ToastAndroid.SHORT);
+      console.error('Error ratingProduct:', error);
+      ToastAndroid.show('Đã xảy ra lỗi không xác định', ToastAndroid.SHORT);
     }
   };
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
-  const snapPoints = ["50%", "95%"];
+  const snapPoints = ['50%', '95%'];
   const handleSnapPress = useCallback(() => {
-    if (order.status === 'COMPLETED' && isRating==false) {
+    if (order.status === 'COMPLETED' && isRating == false) {
       SheetRef.current?.snapToIndex(index);
       setISOpen(true);
-     
     } else {
       setISOpen(false);
     }
@@ -182,16 +194,13 @@ const OrderProgressDetail = ({ route }) => {
   // Chụp ảnh
   const requestCameraPermission = async () => {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'App Camera Permission',
-          message: 'App needs access to your camera ',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      );
+      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+        title: 'App Camera Permission',
+        message: 'App needs access to your camera ',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      });
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
         console.log('Camera permission given');
         const result = await launchCameraAsync();
@@ -202,7 +211,10 @@ const OrderProgressDetail = ({ route }) => {
           type: 'icon/icon_jpeg',
           name: 'image.jpg',
         });
-        const response = await AxiosIntance('multipart/form-data').post('/rating/upload-image', formdata);
+        const response = await AxiosIntance('multipart/form-data').post(
+          '/rating/upload-image',
+          formdata
+        );
         console.log(response.link);
         if (response.result) {
           setImage(response.link);
@@ -211,7 +223,6 @@ const OrderProgressDetail = ({ route }) => {
         } else {
           ToastAndroid.show('Upload ảnh thất bại', ToastAndroid.SHORT);
         }
-
       } else {
         console.log('Camera permission denied');
       }
@@ -220,35 +231,30 @@ const OrderProgressDetail = ({ route }) => {
     }
   };
   const getvideo = async () => {
-    
-        const result = await launchImageLibraryAsync( 
-          { mediaTypes:MediaTypeOptions.Videos,
-           allowsEditing: true,
-          quality: 1,
-      });
-        // Xử lý kết quả tương tự như khi upload ảnh
-        console.log(result.assets[0]?.uri);
-        const formdata = new FormData();
-        formdata.append('video', {
-          uri: result.assets[0]?.uri,
-          type: 'video/mp4', // Đổi loại file tùy thuộc vào định dạng video bạn sử dụng
-          name: 'video.mp4',
-        });
-        const response = await AxiosIntance('multipart/form-data').post(
-          '/rating/upload-video',
-          formdata
-        );
-        console.log(response.link);
-        if (response.result) {
-          setVideo(response.link);
-
-        } else {
-          ToastAndroid.show("Upload video thất bại", ToastAndroid.SHORT);
-        }
-   
-  
+    const result = await launchImageLibraryAsync({
+      mediaTypes: MediaTypeOptions.Videos,
+      allowsEditing: true,
+      quality: 1,
+    });
+    // Xử lý kết quả tương tự như khi upload ảnh
+    console.log(result.assets[0]?.uri);
+    const formdata = new FormData();
+    formdata.append('video', {
+      uri: result.assets[0]?.uri,
+      type: 'video/mp4', // Đổi loại file tùy thuộc vào định dạng video bạn sử dụng
+      name: 'video.mp4',
+    });
+    const response = await AxiosIntance('multipart/form-data').post(
+      '/rating/upload-video',
+      formdata
+    );
+    console.log(response.link);
+    if (response.result) {
+      setVideo(response.link);
+    } else {
+      ToastAndroid.show('Upload video thất bại', ToastAndroid.SHORT);
+    }
   };
-
 
   // Chọn ảnh từ thư viện
   const pickImageFromLibrary = async () => {
@@ -266,64 +272,65 @@ const OrderProgressDetail = ({ route }) => {
       type: 'icon/icon_jpeg',
       name: 'image.jpg',
     });
-    const response = await AxiosIntance("multipart/form-data").post('/rating/upload-image', formdata);
+    const response = await AxiosIntance('multipart/form-data').post(
+      '/rating/upload-image',
+      formdata
+    );
     console.log(response.link);
     if (response.result) {
       setImage(response.link);
       toggleModal();
-      ToastAndroid.show("Upload ảnh thành công", ToastAndroid.SHORT);
+      ToastAndroid.show('Upload ảnh thành công', ToastAndroid.SHORT);
+    } else {
+      ToastAndroid.show('Upload ảnh thất bại', ToastAndroid.SHORT);
     }
-    else {
-      ToastAndroid.show("Upload ảnh thất bại", ToastAndroid.SHORT);
-    }
-
-
-  }
-
-
+  };
 
   const CustomRatingStar = () => {
     return (
-      <View style={{
-        flexDirection: 'row',
-        alignContent: 'center',
-        justifyContent: 'center',
-        margin: 10
-      }}>
-        {
-          maxRating.map((item, key) => {
-            return (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => { setdefaultRating(item) }}
-                key={item}>
-                <Image style={styles.img}
-                  source={item <= defaultRating
+      <View
+        style={{
+          flexDirection: 'row',
+          alignContent: 'center',
+          justifyContent: 'center',
+          margin: 10,
+        }}
+      >
+        {maxRating.map((item, key) => {
+          return (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => {
+                setdefaultRating(item);
+              }}
+              key={item}
+            >
+              <Image
+                style={styles.img}
+                source={
+                  item <= defaultRating
                     ? require('../../assets/images/star.png')
                     : require('../../assets/images/unstar.png')
-                  }
-                >
-                </Image>
-              </TouchableOpacity>
-            )
-          })
-        }
+                }
+              ></Image>
+            </TouchableOpacity>
+          );
+        })}
       </View>
-    )
-  }
+    );
+  };
   const statusBackgroundColor =
     order.status === 'CANCELED' ||
-      order.status === 'DELIVERING' ||
-      order.status === 'COMPLETED' ||
-      order.status === 'REFUNDED'
+    order.status === 'DELIVERING' ||
+    order.status === 'COMPLETED' ||
+    order.status === 'REFUNDED'
       ? 'lightgrey'
       : 'red';
   const statusBackgroundColor2 =
     order.status === 'CANCELED' ||
-      order.status === 'DELIVERING' ||
-      order.status === 'REFUNDED' ||
-      order.status === 'PURCHASED'
-
+    order.status === 'DELIVERING' ||
+    order.status === 'REFUNDED' ||
+    order.status === 'PURCHASED'
       ? 'lightgrey'
       : 'red';
   const statusColorPayment = order.status === 'COMPLETED' ? 'green' : 'orange';
@@ -348,21 +355,15 @@ const OrderProgressDetail = ({ route }) => {
       setOrderStatusIndex(1);
     }
 
-    if (order.status === 'COMPLETED' && isRating==false) {
+    if (order.status === 'COMPLETED' && isRating == false) {
       // SheetRef.current?.snapToIndex(index);
       setISOpen(true);
-    }
-    else{
+    } else {
       setISOpen(false);
     }
-   
 
     ratingIdOrder();
-   
-    
-    
-   
-  }, [order.status,isRating,isVisible]);
+  }, [order.status, isRating, isVisible]);
   const cancelOrder = async () => {
     try {
       let newStatus = 'CANCELED';
@@ -657,7 +658,7 @@ const OrderProgressDetail = ({ route }) => {
                             </Text>
                             <TouchableOpacity onPress={() => saveProductId(item.productId._id)}>
                               {/* <Text style={isProductRating  ? styles.textrated : styles.textnotrating}>{isProductRating  ? 'Đã đánh giá' : 'Đánh giá'}</Text> */}
-                                <Text style={styles.textrated}>Đánh giá</Text>
+                              <Text style={styles.textrated}>Đánh giá</Text>
                             </TouchableOpacity>
                           </View>
                         </View>
@@ -722,34 +723,44 @@ const OrderProgressDetail = ({ route }) => {
               </Text>
             </TouchableOpacity>
             <View>
-              <View >
+              <View>
                 <TouchableOpacity
                   disabled={
                     order?.status === 'CANCELED' ||
                     order.status === 'DELIVERING' ||
-                    order.status === 'REFUNDED' || isRating
+                    order.status === 'REFUNDED' ||
+                    isRating
                   }
-                  style={isRating ?{
-                    justifyContent: 'center',
-                    marginTop: 20,
-                    backgroundColor: "green",
-                    height: 30,
-                    borderRadius: 5,
-                  }:{ justifyContent: 'center',
-                  marginTop: 20,
-                  backgroundColor: statusBackgroundColor2,
-                  height: 30,
-                  borderRadius: 5,}}
-                  onPress={() => handleSnapPress(0)}>
+                  style={
+                    isRating
+                      ? {
+                          justifyContent: 'center',
+                          marginTop: 20,
+                          backgroundColor: 'green',
+                          height: 30,
+                          borderRadius: 5,
+                        }
+                      : {
+                          justifyContent: 'center',
+                          marginTop: 20,
+                          backgroundColor: statusBackgroundColor2,
+                          height: 30,
+                          borderRadius: 5,
+                        }
+                  }
+                  onPress={() => handleSnapPress(0)}
+                >
                   <Text
                     style={{
-                      textAlign: 'center', fontSize: 18, color: 'white'
-                    }}>
+                      textAlign: 'center',
+                      fontSize: 18,
+                      color: 'white',
+                    }}
+                  >
                     {isRating ? 'Đã đánh giá' : 'Đánh giá'}
                   </Text>
                 </TouchableOpacity>
               </View>
-
             </View>
           </View>
 
@@ -768,37 +779,48 @@ const OrderProgressDetail = ({ route }) => {
             </View>
           </View>
           {isOpen == false ? (
-            <View>
-
-            </View>
+            <View></View>
           ) : (
-            <BottomSheet ref={SheetRef}
+            <BottomSheet
+              ref={SheetRef}
               snapPoints={snapPoints}
               enablePanDownToClose={true}
               onClose={() => setISOpen(false)}
             >
-
-              <BottomSheetView >
+              <BottomSheetView>
                 <View style={{ elevation: 1, marginStart: 10 }}>
                   <Text style={styles.alertTitle}>Đánh giá</Text>
-                  <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}
-                    onPress={toggleCollapseProduct}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                    onPress={toggleCollapseProduct}
+                  >
                     <Text style={{ fontSize: 18, fontWeight: 'bold', margin: 10 }}>
                       {order.productCount} mặt hàng
                     </Text>
-                    <Icon name={collapsedProduct ? 'chevron-down-outline' : 'chevron-up-outline'} size={24} color="grey" />
+                    <Icon
+                      name={collapsedProduct ? 'chevron-down-outline' : 'chevron-up-outline'}
+                      size={24}
+                      color="grey"
+                    />
                   </TouchableOpacity>
                   <Collapsible style={{}} collapsed={collapsedProduct}>
                     <View
-                      style={{ gap: 5, marginTop: 15, borderColor: 'lightgrey', marginBottom: 15, }}>
+                      style={{ gap: 5, marginTop: 15, borderColor: 'lightgrey', marginBottom: 15 }}
+                    >
                       <ScrollView showsVerticalScrollIndicator={false}>
                         {products.map((item, index) => (
-                          <TouchableOpacity key={index}
+                          <TouchableOpacity
+                            key={index}
                             onPress={() => {
                               navigation.navigate('ProductDetail', {
                                 id: item?.productId?._id,
                               });
-                            }}>
+                            }}
+                          >
                             <View style={styles.productItem}>
                               <Image
                                 style={styles.productImage}
@@ -811,7 +833,9 @@ const OrderProgressDetail = ({ route }) => {
                                   {item?.color.charAt(0).toUpperCase() + item?.color.slice(1)},{' '}
                                   {item.size})
                                 </Text>
-                                <Text style={{ fontSize: 16, color: 'grey' }}>{item.quantity}x</Text>
+                                <Text style={{ fontSize: 16, color: 'grey' }}>
+                                  {item.quantity}x
+                                </Text>
                                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
                                   {item.unitPrice.toLocaleString()} VND
                                 </Text>
@@ -823,58 +847,116 @@ const OrderProgressDetail = ({ route }) => {
                     </View>
                   </Collapsible>
                   <Text style={styles.alertTitle}>Đơn hàng của bạn thế nào?</Text>
-                  <Text style={[styles.alertTitle, { color: "gray", margin: 5, fontSize: 15, fontWeight: 'normal' }]}>Vui lòng cho đánh giá sao & cảm nhận của bạn</Text>
+                  <Text
+                    style={[
+                      styles.alertTitle,
+                      { color: 'gray', margin: 5, fontSize: 15, fontWeight: 'normal' },
+                    ]}
+                  >
+                    Vui lòng cho đánh giá sao & cảm nhận của bạn
+                  </Text>
                   <CustomRatingStar></CustomRatingStar>
-                  <KeyboardAwareScrollView >
-                    <View style={{ flexDirection: "row", }}>
+                  <KeyboardAwareScrollView>
+                    <View style={{ flexDirection: 'row' }}>
                       <View style={styles.viewArea}>
                         <TextInput
-                          value={rating_description} onChangeText={setrating_description}
+                          value={rating_description}
+                          onChangeText={setrating_description}
                           placeholder="Viết đánh giá"
-                          numberOfLines={10} style={styles.textArea} />
+                          numberOfLines={10}
+                          style={styles.textArea}
+                        />
                       </View>
-                      <TouchableOpacity style={{ marginTop: 20, }} onPress={() => toggleModal()}>
-                        <Image source={require("../../assets/images/image.png")}></Image>
+                      <TouchableOpacity style={{ marginTop: 20 }} onPress={() => toggleModal()}>
+                        <Image source={require('../../assets/images/image.png')}></Image>
                       </TouchableOpacity>
                     </View>
                   </KeyboardAwareScrollView>
-                  {images != null && (<View
-                    style={{
-
-                      justifyContent: 'space-around',
-                      marginTop: 10,
-                      flexDirection: "row",
-                     
-
-                    }}>
-
-                    <Image source={{ uri: images }} style={{ width: 100, height: 100 }} />
-                    <TouchableOpacity onPress={()=>getvideo()}>
-                      {
-                        videos ? (
+                  {images != null && (
+                    <View
+                      style={{
+                        justifyContent: 'space-around',
+                        marginTop: 10,
+                        flexDirection: 'row',
+                      }}
+                    >
+                      <Image source={{ uri: images }} style={{ width: 100, height: 100 }} />
+                      <TouchableOpacity onPress={() => getvideo()}>
+                        {videos ? (
                           <ExpoVideo
                             source={{ uri: videos }}
                             style={{ width: 100, height: 100 }}
                             useNativeControls
                           />
                         ) : (
-                          <Image source={require('../../assets/images/movie.png')} style={{ width: 100, height: 100 }} />
-                        )
-                      }
+                          <Image
+                            source={require('../../assets/images/movie.png')}
+                            style={{ width: 100, height: 100 }}
+                          />
+                        )}
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-around',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{
+                        marginTop: 20,
+                        borderWidth: 1,
+                        width: 120,
+                        height: 50,
+                        borderRadius: 10,
+                        backgroundColor: COLORS.offwhite,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                      onPress={() => setISOpen(false)}
+                    >
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          padding: 10,
+                          color: 'black',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        HỦY
+                      </Text>
                     </TouchableOpacity>
-                  </View>)}
-                  <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: COLORS.offwhite }} onPress={()=>(setISOpen(false))}>
-                      <Text style={{ textAlign: "center", padding: 10, color: "black", fontSize: 18, fontWeight: "bold" }}>Cancel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: "black" }} onPress={ratingOrder}>
-                      <Text style={{ textAlign: "center", padding: 10, color: "white", fontSize: 18, fontWeight: "bold" }}>Submit</Text>
+                    <TouchableOpacity
+                      style={{
+                        marginTop: 20,
+                        borderWidth: 1,
+                        width: 120,
+                        height: 50,
+                        borderRadius: 10,
+                        backgroundColor: 'black',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                      onPress={ratingOrder}
+                    >
+                      <Text
+                        style={{
+                          textAlign: 'center',
+                          padding: 10,
+                          color: 'white',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        OK
+                      </Text>
                     </TouchableOpacity>
                   </View>
-
                 </View>
               </BottomSheetView>
-
             </BottomSheet>
           )}
         </View>
@@ -891,114 +973,175 @@ const OrderProgressDetail = ({ route }) => {
               borderBottomWidth: 0.6,
               width: '100%',
             }}
-            onPress={() => requestCameraPermission()}>
+            onPress={() => requestCameraPermission()}
+          >
             <Text style={[styles.text20, { color: '#4287f5' }]}>Chụp ảnh</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{ justifyContent: 'center', alignItems: 'center' }}
-            onPress={() => pickImageFromLibrary()}>
+            onPress={() => pickImageFromLibrary()}
+          >
             <Text style={styles.text20}>Chọn ảnh từ thư viện </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{ justifyContent: 'center', alignItems: 'center' }}
-            onPress={() => pickImageFromLibrary()}>
+            onPress={() => pickImageFromLibrary()}
+          >
             <Text style={styles.text20}>updatevideo </Text>
           </TouchableOpacity>
         </View>
       </Modal>
-      <KeyboardAwareScrollView  >
-            <Modal visible={isVisible} animationType="fade" transparent={true}>
-              <View style={styles.alert}>
-                {/* <Text style={styles.alertTitle}>Đánh giá</Text> */}
-                <Text style={[styles.alertTitle,{fontSize:20,marginTop:5}]}>Sản phẩm của bạn thế nào?</Text>
-                  <Text style={[styles.alertTitle, { color: "gray", margin: 5, fontSize: 14, fontWeight: 'normal' }]}>Vui lòng cho đánh giá sao & cảm nhận của bạn</Text>
-                <View
-                >
-                  <CustomRatingStar></CustomRatingStar>
-                  {/* <Text>{defaultRating+'/'+maxRating.length}</Text>
+      <KeyboardAwareScrollView>
+        <Modal visible={isVisible} animationType="fade" transparent={true}>
+          <View style={styles.alert}>
+            {/* <Text style={styles.alertTitle}>Đánh giá</Text> */}
+            <Text style={[styles.alertTitle, { fontSize: 20, marginTop: 5 }]}>
+              Sản phẩm của bạn thế nào?
+            </Text>
+            <Text
+              style={[
+                styles.alertTitle,
+                { color: 'gray', margin: 5, fontSize: 14, fontWeight: 'normal' },
+              ]}
+            >
+              Vui lòng cho đánh giá sao & cảm nhận của bạn
+            </Text>
+            <View>
+              <CustomRatingStar></CustomRatingStar>
+              {/* <Text>{defaultRating+'/'+maxRating.length}</Text>
               <TouchableOpacity activeOpacity={0.7}
               onPress={()=>alert(defaultRating)}>
                 <Text>Get star</Text>
               </TouchableOpacity> */}
-                </View>
+            </View>
 
-                {/* <View style={styles.viewArea}> */}
+            {/* <View style={styles.viewArea}> */}
 
-
-                <View style={{ flexDirection: "row", }}>
-                      <View style={[styles.viewArea,{width:270}]}>
-                        <TextInput
-                          value={statusProduct} onChangeText={setstatusProduct}
-                          placeholder="Viết đánh giá"
-                          numberOfLines={10} style={styles.textArea} />
-                      </View>
-                      <TouchableOpacity style={{ marginTop: 20, }} onPress={() => toggleModal()}>
-                        <Image source={require("../../assets/images/image.png")}></Image>
-                      </TouchableOpacity>
-                    </View>
-
-                {/* </View> */}
-                {images != null && (<View
-                    style={{
-
-                      justifyContent: 'space-around',
-                      marginTop: 10,
-                      flexDirection: "row",
-                     
-
-                    }}>
-
-                    <Image source={{ uri: images }} style={{ width: 100, height: 100 }} />
-                    <TouchableOpacity onPress={()=>getvideo()}>
-                      {
-                        videos ? (
-                          <ExpoVideo
-                            source={{ uri: videos }}
-                            style={{ width: 100, height: 100 }}
-                            useNativeControls
-                          />
-                        ) : (
-                          <Image source={require('../../assets/images/movie.png')} style={{ width: 100, height: 100 }} />
-                        )
-                      }
-                    </TouchableOpacity>
-                  </View>)}
-                  <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-                    <TouchableOpacity onPress={() => toggleVisibility()} style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: COLORS.offwhite }}>
-                      <Text style={{ textAlign: "center", padding: 10, color: "black", fontSize: 18, fontWeight: "bold" }}>Cancel</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ marginTop: 20, borderWidth: 1, width: 120, height: 50, borderRadius: 10, backgroundColor: "black" }} onPress={ratingidProduct}>
-                      <Text style={{ textAlign: "center", padding: 10, color: "white", fontSize: 18, fontWeight: "bold" }}>Submit</Text>
-                    </TouchableOpacity>
-                  </View>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={[styles.viewArea, { width: 270 }]}>
+                <TextInput
+                  value={statusProduct}
+                  onChangeText={setstatusProduct}
+                  placeholder="Viết đánh giá"
+                  numberOfLines={10}
+                  style={styles.textArea}
+                />
               </View>
-            </Modal>
-          </KeyboardAwareScrollView>
+              <TouchableOpacity style={{ marginTop: 20 }} onPress={() => toggleModal()}>
+                <Image source={require('../../assets/images/image.png')}></Image>
+              </TouchableOpacity>
+            </View>
 
-    <Modal isVisible={isVisible1}>
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <Text style={styles.modalText1}>Đánh giá</Text>
-          <Text style={styles.modalText2}>
-            Bạn đã đánh giá! Bạn có muốn xem đánh giá của mọi người không?
-          </Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.cancelButton} onPress={()=>(setVisible1(false))}>
-              <Text style={styles.buttonText}>Đóng</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.confirmButton} onPress={() => {
-                              navigation.navigate('RatingScreen', {
-                                id: idRatingProduct ,
-                              });
-                            }}> 
-              <Text style={styles.buttonText}>Đồng ý</Text>
-            </TouchableOpacity>
+            {/* </View> */}
+            {images != null && (
+              <View
+                style={{
+                  justifyContent: 'space-around',
+                  marginTop: 10,
+                  flexDirection: 'row',
+                }}
+              >
+                <Image source={{ uri: images }} style={{ width: 100, height: 100 }} />
+                <TouchableOpacity onPress={() => getvideo()}>
+                  {videos ? (
+                    <ExpoVideo
+                      source={{ uri: videos }}
+                      style={{ width: 100, height: 100 }}
+                      useNativeControls
+                    />
+                  ) : (
+                    <Image
+                      source={require('../../assets/images/movie.png')}
+                      style={{ width: 100, height: 100 }}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
+            )}
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}
+            >
+              <TouchableOpacity
+                onPress={() => toggleVisibility()}
+                style={{
+                  marginTop: 20,
+                  borderWidth: 1,
+                  width: 120,
+                  height: 50,
+                  borderRadius: 10,
+                  backgroundColor: COLORS.offwhite,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    padding: 10,
+                    color: 'black',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  HỦY
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  marginTop: 20,
+                  borderWidth: 1,
+                  width: 120,
+                  height: 50,
+                  borderRadius: 10,
+                  backgroundColor: 'black',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                onPress={ratingidProduct}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    padding: 10,
+                    color: 'white',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}
+                >
+                  OK
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </KeyboardAwareScrollView>
+
+      <Modal isVisible={isVisible1}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText1}>Đánh giá</Text>
+            <Text style={styles.modalText2}>
+              Bạn đã đánh giá! Bạn có muốn xem đánh giá của mọi người không?
+            </Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.cancelButton} onPress={() => setVisible1(false)}>
+                <Text style={styles.buttonText}>Đóng</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={() => {
+                  navigation.navigate('RatingScreen', {
+                    id: idRatingProduct,
+                  });
+                }}
+              >
+                <Text style={styles.buttonText}>Đồng ý</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
     </SafeAreaView>
-
   );
 };
 
@@ -1073,10 +1216,8 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     resizeMode: 'cover',
-    padding: 4
-
-  }
-  ,
+    padding: 4,
+  },
   viewArea: {
     width: 300,
     alignSelf: 'left',
@@ -1105,16 +1246,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textnotrating: {
-    fontWeight:"bold",
-    color: "red",
-    fontSize:17
+    fontWeight: 'bold',
+    color: 'red',
+    fontSize: 17,
     /* Thêm các thuộc tính CSS khác tùy ý */
   },
-  textrated:{
-    fontWeight:"bold",
-    color: "green",
-    fontStyle:"italic",
-    fontSize:17
+  textrated: {
+    fontWeight: 'bold',
+    color: 'green',
+    fontStyle: 'italic',
+    fontSize: 17,
   },
   modalContainer: {
     flex: 1,

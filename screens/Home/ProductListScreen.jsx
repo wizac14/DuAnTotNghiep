@@ -21,7 +21,6 @@ import Icons from '@expo/vector-icons/MaterialIcons';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ToastAndroid } from 'react-native';
 
 const ProductListScreen = ({ route }) => {
   const { brandName } = route.params;
