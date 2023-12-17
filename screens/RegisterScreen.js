@@ -30,11 +30,7 @@ export default function SignupScreen() {
     .string()
     .email('Email không hợp lệ')
     .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email không hợp lệ');
-
-  const passwordValidation = yup
-    .string()
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, 'Mật khẩu chưa phù hợp');
-
+    
   const nameValidation = yup
     .string()
     .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt');
@@ -46,13 +42,11 @@ export default function SignupScreen() {
   const initialValues = {
     name: name,
     email: email,
-    password: password,
     phoneNumber: phoneNumber,
   };
   const validationSchema = yup.object().shape({
     name: nameValidation,
     email: emailValidation,
-    password: passwordValidation,
     phoneNumber: phoneValidation,
   });
 
@@ -150,14 +144,8 @@ export default function SignupScreen() {
                   placeholder="Mật khẩu"
                   placeholderTextColor={'gray'}
                   secureTextEntry
-                  onChangeText={(text) => {
-                    handleChange('password')(text);
-                    setPassword(text);
-                  }}
+                  onChangeText={(text) => setPassword(text)}
                 />
-                {touched.password && errors.password && (
-                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.password}</Text>
-                )}
               </Animated.View>
 
               <Animated.View

@@ -25,17 +25,11 @@ export default function LoginScreen() {
     .string()
     .email('Email không hợp lệ')
     .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email không hợp lệ');
-
-  const passwordValidation = yup
-    .string()
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/, 'Mật khẩu chưa phù hợp');
   const initialValues = {
     email: email,
-    password: password,
   };
   const validationSchema = yup.object().shape({
     email: emailValidation,
-    password: passwordValidation,
   });
 
   const handleSubmit = async () => {
@@ -104,15 +98,10 @@ export default function LoginScreen() {
                   value={password}
                   placeholder="Mật khẩu"
                   placeholderTextColor={'gray'}
-                  onChangeText={(text) => {
-                    handleChange('password')(text);
-                    setPassword(text);
-                  }}
+                  onChangeText={(text) => setPassword(text)}
                   secureTextEntry={isSecureEntry}
                 />
-                {touched.password && errors.password && (
-                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.password}</Text>
-                )}
+
                 <Ionicons
                   style={{ padding: 5 }}
                   name={isSecureEntry ? 'eye' : 'eye-off'}
