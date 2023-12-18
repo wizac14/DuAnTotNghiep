@@ -13,6 +13,8 @@ import { useNavigation } from '@react-navigation/native';
 import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
 import React, { useState } from 'react';
 import AxiosInstance from '../components/ultil/AxiosIntance';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
 export default function SignupScreen() {
   const navigation = useNavigation();
@@ -24,7 +26,31 @@ export default function SignupScreen() {
   const [address, setAddress] = useState('');
   const [isSecureEntry, setIsSecureEntry] = useState(true);
 
-  const RegisterUser = async () => {
+  const emailValidation = yup
+    .string()
+    .email('Email không hợp lệ')
+    .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email không hợp lệ');
+    
+  const nameValidation = yup
+    .string()
+    .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt');
+
+  const phoneValidation = yup
+    .string()
+    .matches(/^\+84[3|5|7|8|9][0-9]{8}\b/, 'Số điện thoại không hợp lệ (bắt đầu với +84)');
+
+  const initialValues = {
+    name: name,
+    email: email,
+    phoneNumber: phoneNumber,
+  };
+  const validationSchema = yup.object().shape({
+    name: nameValidation,
+    email: emailValidation,
+    phoneNumber: phoneValidation,
+  });
+
+  const handleSubmit = async () => {
     console.log(email, password);
     try {
       const response = await AxiosInstance().post('/user/register', {
@@ -44,6 +70,7 @@ export default function SignupScreen() {
       }
     } catch (error) {
       console.log('Error RegisterUser', error);
+      ToastAndroid.show('Chưa nhập thông tin', ToastAndroid.SHORT);
     }
   };
 
@@ -64,94 +91,119 @@ export default function SignupScreen() {
             Đăng ký
           </Animated.Text>
         </View>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
+          {({ handleChange, handleBlur, handleSubmit, touched, errors }) => (
+            <View className="flex items-center mx-5 space-y-4">
+              <Animated.View
+                entering={FadeInDown.duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full"
+              >
+                <TextInput
+                  value={name}
+                  style={{ width: 250 }}
+                  placeholder="Tên của bạn"
+                  placeholderTextColor={'gray'}
+                  onChangeText={(text) => {
+                    handleChange('name')(text);
+                    setName(text);
+                  }}
+                />
+                {touched.name && errors.name && (
+                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.name}</Text>
+                )}
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(200).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full"
+              >
+                <TextInput
+                  value={email}
+                  style={{ width: 250 }}
+                  placeholder="Email"
+                  placeholderTextColor={'gray'}
+                  onChangeText={(text) => {
+                    handleChange('email')(text);
+                    setEmail(text);
+                  }}
+                />
+                {touched.email && errors.email && (
+                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.email}</Text>
+                )}
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full "
+              >
+                <TextInput
+                  value={password}
+                  style={{ width: 250 }}
+                  placeholder="Mật khẩu"
+                  placeholderTextColor={'gray'}
+                  secureTextEntry
+                  onChangeText={(text) => setPassword(text)}
+                />
+              </Animated.View>
 
-        <View className="flex items-center mx-5 space-y-4">
-          <Animated.View
-            entering={FadeInDown.duration(1000).springify()}
-            className="bg-white p-3 rounded-2xl w-full"
-          >
-            <TextInput
-              value={name}
-              onChangeText={(text) => setName(text)}
-              style={{ width: 250 }}
-              placeholder="Tên của bạn"
-              placeholderTextColor={'gray'}
-            />
-          </Animated.View>
-          <Animated.View
-            entering={FadeInDown.delay(200).duration(1000).springify()}
-            className="bg-white p-3 rounded-2xl w-full"
-          >
-            <TextInput
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              style={{ width: 250 }}
-              placeholder="Email"
-              placeholderTextColor={'gray'}
-            />
-          </Animated.View>
-          <Animated.View
-            entering={FadeInDown.delay(400).duration(1000).springify()}
-            className="bg-white p-3 rounded-2xl w-full "
-          >
-            <TextInput
-              value={password}
-              onChangeText={(text) => setPassword(text)}
-              style={{ width: 250 }}
-              placeholder="Mật khẩu"
-              placeholderTextColor={'gray'}
-              secureTextEntry
-            />
-          </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full "
+              >
+                <TextInput
+                  value={address}
+                  onChangeText={(text) => setAddress(text)}
+                  style={{ width: 250 }}
+                  placeholder="Địa chỉ của bạn"
+                  placeholderTextColor={'gray'}
+                />
+              </Animated.View>
 
-          <Animated.View
-            entering={FadeInDown.delay(400).duration(1000).springify()}
-            className="bg-white p-3 rounded-2xl w-full "
-          >
-            <TextInput
-              value={address}
-              onChangeText={(text) => setAddress(text)}
-              style={{ width: 250 }}
-              placeholder="Địa chỉ của bạn"
-              placeholderTextColor={'gray'}
-            />
-          </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full mb-3"
+              >
+                <TextInput
+                  value={phoneNumber}
+                  style={{ width: 250 }}
+                  placeholder="Số diện thoại của bạn"
+                  placeholderTextColor={'gray'}
+                  onChangeText={(text) => {
+                    handleChange('phoneNumber')(text);
+                    setPhoneNumber(text);
+                  }}
+                />
+                {touched.phoneNumber && errors.phoneNumber && (
+                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.phoneNumber}</Text>
+                )}
+              </Animated.View>
 
-          <Animated.View
-            entering={FadeInDown.delay(400).duration(1000).springify()}
-            className="bg-white p-3 rounded-2xl w-full mb-3"
-          >
-            <TextInput
-              value={phoneNumber}
-              onChangeText={(text) => setPhoneNumber(text)}
-              style={{ width: 250 }}
-              placeholder="Số diện thoại của bạn"
-              placeholderTextColor={'gray'}
-            />
-          </Animated.View>
+              <Animated.View
+                className="w-full"
+                entering={FadeInDown.delay(600).duration(1000).springify()}
+              >
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
+                >
+                  <Text className="text-xl font-bold text-white text-center">Đăng ký</Text>
+                </TouchableOpacity>
+              </Animated.View>
 
-          <Animated.View
-            className="w-full"
-            entering={FadeInDown.delay(600).duration(1000).springify()}
-          >
-            <TouchableOpacity
-              onPress={RegisterUser}
-              className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
-            >
-              <Text className="text-xl font-bold text-white text-center">Đăng ký</Text>
-            </TouchableOpacity>
-          </Animated.View>
-
-          <Animated.View
-            entering={FadeInDown.delay(800).duration(1000).springify()}
-            className="flex-row justify-center"
-          >
-            <Text>Đã có tài khoản? </Text>
-            <TouchableOpacity onPress={() => navigation.push('Login')}>
-              <Text className="text-sky-600">Đăng nhập</Text>
-            </TouchableOpacity>
-          </Animated.View>
-        </View>
+              <Animated.View
+                entering={FadeInDown.delay(800).duration(1000).springify()}
+                className="flex-row justify-center"
+              >
+                <Text>Đã có tài khoản? </Text>
+                <TouchableOpacity onPress={() => navigation.push('Login')}>
+                  <Text className="text-sky-600">Đăng nhập</Text>
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
+          )}
+        </Formik>
       </View>
     </View>
   );
