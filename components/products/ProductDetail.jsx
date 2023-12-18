@@ -77,7 +77,7 @@ const ProductDetail = (props) => {
         const totalStars = response.rating.reduce((acc, rating) => acc + rating.star, 0);
         const averageStars = totalStars / response.rating.length;
         setstar(averageStars);
-        console.log("Số sao trung bình:", averageStars);
+        console.log('Số sao trung bình:', averageStars);
       }
     } catch (error) {
       console.error('Error ratingProduct:', error);
@@ -257,7 +257,7 @@ const ProductDetail = (props) => {
     getDetails();
     ratingProductOrder();
 
-    return () => { };
+    return () => {};
   }, []);
 
   const checkIfFavorite = async () => {
@@ -567,7 +567,6 @@ const ProductDetail = (props) => {
                     </View>
                   </View>
                 )}
-                <ScrollView>
                 <View>
                   <Text
                     style={{
@@ -588,24 +587,34 @@ const ProductDetail = (props) => {
                     {product?.description}
                   </Text>
                 </View>
-                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                  <TouchableOpacity onPress={() => {
-                    navigation.navigate('RatingScreen', {
-                      id: params.id,
-                    });
-                  }}>
-                    <Text style={{ fontWeight: "bold", fontSize: 15, color: 'green' }}>Xem đánh giá</Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    // marginBottom: 40,
+                    // marginTop: 20,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('RatingScreen', {
+                        id: params.id,
+                      });
+                    }}
+                  >
+                    <Text style={{ fontWeight: 'bold', fontSize: 15, color: 'green' }}>
+                      Xem đánh giá
+                    </Text>
                   </TouchableOpacity>
-                  <View style={{ flexDirection: "row" }}>
+                  <View style={{ flexDirection: 'row' }}>
                     {!isNaN(star) ? (
-                      <View style={{ flexDirection: "row" }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 3 }}>
                         <Text style={{ fontSize: 15 }}>{star}</Text>
-                        <Icons name="star-half" size={20} color={COLORS.black} />
+                        <Icons name="star" size={20} color={COLORS.black} />
                       </View>
                     ) : (
                       <Text></Text>
                     )}
-              
                   </View>
                 </View>
                 <View style={{ flex: 1 }} />
@@ -615,6 +624,7 @@ const ProductDetail = (props) => {
                     alignItems: 'center',
                     gap: 16,
                     justifyContent: 'space-between',
+                    alignContent: 'flex-end',
                     // flex: 1,
                   }}
                 >
@@ -668,7 +678,6 @@ const ProductDetail = (props) => {
                     </View>
                   </TouchableOpacity>
                 </View>
-                </ScrollView>
               </Animated.View>
             </BottomSheet>
           </View>
