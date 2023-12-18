@@ -29,8 +29,6 @@ import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Layout } from 'react-native-reanimated';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { Button } from 'react-native-elements';
-import * as Facebook from 'expo-facebook';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Home = () => {

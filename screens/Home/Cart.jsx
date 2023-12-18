@@ -29,6 +29,7 @@ const Cart = (props) => {
   const { cartItemCount, setCartItemCount } = useContext(AppContext); // Truy cập cartItemCount
   const { cartCount, setCartCount } = useContext(AppContext); // Truy cập cartItemCount
   const [totalPrice, setTotalPrice] = useState(0);
+  const [hasItems, setHasItems] = useState(false);
 
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,11 @@ const Cart = (props) => {
       setIsLoading(true);
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    // setHasItems khi data thay đổi
+    setHasItems(data.length > 0);
+  }, [data]);
 
   const getDetailByIdUser = async () => {
     try {
@@ -152,7 +158,8 @@ const Cart = (props) => {
       <View>
         <FixedBottom>
           <TouchableOpacity
-            style={styles.buttonBuy}
+            disabled={isLoading || !hasItems} // Disable nút khi isLoading hoặc không có sản phẩm
+            style={[styles.buttonBuy, !hasItems && { opacity: 0.5 }]}
             onPress={() => {
               navigation.navigate('CartDetail', { data });
             }}
