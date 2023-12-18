@@ -105,7 +105,7 @@ const PhoneScreen = () => {
           fontWeight: '700',
         }}
       >
-        Enter your Phone Number
+        Nhập số điện thoại của bạn
       </Text>
       <Text
         style={{
@@ -115,11 +115,11 @@ const PhoneScreen = () => {
           textAlign: 'center',
         }}
       >
-        We will send you the 6 digit verification code
+        Chúng tôi sẽ gửi cho bạn đoạn mã 6 ký tự số
       </Text>
 
       <TextInput
-        label="Phone Number"
+        label="Số điện thoại"
         mode="outlined"
         outlineColor="#000000"
         activeOutlineColor="#000000"
@@ -148,7 +148,7 @@ const PhoneScreen = () => {
             fontSize: SIZES.Large,
           }}
         >
-          Generate OTP
+          Gửi mã OTP
         </Text>
       </TouchableOpacity>
 
@@ -180,7 +180,7 @@ const PhoneScreen = () => {
             fontSize: SIZES.Large,
           }}
         >
-          Submit
+          Xác nhận
         </Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>

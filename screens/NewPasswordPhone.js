@@ -62,7 +62,7 @@ const NewPasswordPhone = (props) => {
       <KeyboardAvoidingView>
         <View style={{ alignItems: 'center' }}>
           <Text style={{ fontWeight: 'bold', fontSize: SIZES.xLarge }}>
-            Create Your New Password
+            Tạo mật khẩu mới của bạn
           </Text>
         </View>
 
@@ -82,7 +82,7 @@ const NewPasswordPhone = (props) => {
             value={newPassword}
             secureTextEntry={isSecureEntry1}
             style={{ width: 250 }}
-            placeholder="Password"
+            placeholder="Mật khẩu"
           />
           <Ionicons
             style={{ padding: 5 }}
@@ -109,7 +109,7 @@ const NewPasswordPhone = (props) => {
             value={confirmPass}
             secureTextEntry={isSecureEntry2}
             style={{ width: 250 }}
-            placeholder="Re-Password"
+            placeholder="Nhập lại mật khẩu"
           />
           <Ionicons
             style={{ padding: 5 }}
@@ -140,7 +140,7 @@ const NewPasswordPhone = (props) => {
               fontSize: SIZES.Large,
             }}
           >
-            Continue
+            Tiếp tục
           </Text>
         </TouchableOpacity>
       </KeyboardAvoidingView>

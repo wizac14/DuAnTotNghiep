@@ -1,25 +1,15 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Button,
-  Pressable,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SIZES } from '../../constants/index';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/index';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../components/ultil/AppContext';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
-import { launchCameraAsync } from 'expo-image-picker';
 import { ToastAndroid } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { TextInput } from 'react-native-paper';
+import { Image } from 'react-native';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -71,7 +61,15 @@ const Profile = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          alignContent: 'flex-start',
+          alignSelf: 'flex-start',
+        }}
+      >
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -91,11 +89,15 @@ const Profile = () => {
         validationSchema={validationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
-          <View>
+          <View style={{ justifyContent: 'center' }}>
             <View style={styles.viewItem}>
               <TextInput
                 style={styles.textHint}
                 placeholder="Email"
+                label="Email"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 value={values.email}
                 editable={false}
               />
@@ -105,6 +107,10 @@ const Profile = () => {
               <TextInput
                 style={styles.textHint}
                 placeholder="Name"
+                label="Tên"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 onChangeText={(text) => {
                   handleChange('name')(text);
                   setinforuser({ ...inforuser, name: text });
@@ -119,6 +125,10 @@ const Profile = () => {
               <TextInput
                 style={styles.textHint}
                 placeholder="Sđt"
+                label="Số điện thoại"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 onChangeText={(text) => {
                   handleChange('phoneNumber')(text);
                   setinforuser({ ...inforuser, phoneNumber: text });
@@ -134,6 +144,10 @@ const Profile = () => {
               <TextInput
                 style={styles.textHint}
                 placeholder="Địa chỉ"
+                label="Địa chỉ"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 onChangeText={(text) => {
                   handleChange('address')(text);
                   setinforuser({ ...inforuser, address: text });
@@ -151,6 +165,20 @@ const Profile = () => {
           </View>
         )}
       </Formik>
+      <View style={{ alignItems: 'center', marginTop: 30 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ fontSize: 40, color: 'grey', fontWeight: 'bold', paddingLeft: 10 }}>
+            Shop in Styles!
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            style={{ height: 60, width: 60 }}
+            source={require('../../assets/images/logo.png')}
+          />
+          <Text style={{ fontSize: 18, color: 'grey' }}>THEFIVEMENSSHOES</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };

@@ -181,7 +181,7 @@ const StatisticalScreen = () => {
           style={{
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-start',
             paddingHorizontal: 10,
             alignItems: 'center',
           }}
@@ -200,7 +200,9 @@ const StatisticalScreen = () => {
           >
             <Icons name="arrow-back" size={24} color={COLORS.black} />
           </TouchableOpacity>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1 }}>THỐNG KÊ</Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', borderBottomWidth: 1, marginLeft: 5 }}>
+            THỐNG KÊ
+          </Text>
         </View>
         {isLoading ? (
           <View
@@ -294,10 +296,12 @@ const StatisticalScreen = () => {
               </Text>
               <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <View style={{ flexDirection: 'row', height: 25 }}>
-                  <TouchableOpacity onPress={showDatePicker} style={{ marginLeft: 10 }}>
-                    <Icons name="date-range" size={24} color={'green'} />
-                  </TouchableOpacity>
-                  <Text style={{ marginLeft: 10 }}>{date1}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={showDatePicker} style={{ marginLeft: 10 }}>
+                      <Icons name="date-range" size={24} color={'green'} />
+                    </TouchableOpacity>
+                    <Text style={{ marginLeft: 5 }}>{date1}</Text>
+                  </View>
 
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
@@ -306,10 +310,12 @@ const StatisticalScreen = () => {
                     onCancel={hideDatePicker}
                   />
                   <Icons name="arrow-right-alt" size={24} color={'green'} />
-                  <TouchableOpacity onPress={showDatePicker2} style={{ marginLeft: 10 }}>
-                    <Icons name="date-range" size={24} color={'green'} />
-                  </TouchableOpacity>
-                  <Text style={{ marginLeft: 10 }}>{date2}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={showDatePicker2} style={{ marginLeft: 5 }}>
+                      <Icons name="date-range" size={24} color={'green'} />
+                    </TouchableOpacity>
+                    <Text style={{ marginLeft: 5 }}>{date2}</Text>
+                  </View>
 
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible2}
@@ -318,8 +324,11 @@ const StatisticalScreen = () => {
                     onCancel={hideDatePicker2}
                   />
                 </View>
-                <TouchableOpacity onPress={statisticalUserbyDay}>
-                  <Text>Xem thống kê</Text>
+                <TouchableOpacity
+                  style={{ backgroundColor: 'green', borderRadius: 5, padding: 5, marginTop: 10 }}
+                  onPress={statisticalUserbyDay}
+                >
+                  <Text style={{ color: 'white' }}>Xem thống kê</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -327,7 +336,7 @@ const StatisticalScreen = () => {
               <View style={{ flexDirection: 'column', margin: 10, backgroundColor: '#F5F7F8' }}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Tổng tiền</Text>
-                  <Icons name="attach-money" color={'green'} size={24}></Icons>
+                  <Icons name="attach-money" color={'green'} size={20}></Icons>
                 </View>
                 <Text
                   style={{

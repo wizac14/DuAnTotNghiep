@@ -330,6 +330,7 @@ const OrderProgressDetail = ({ route }) => {
     order.status === 'CANCELED' ||
     order.status === 'DELIVERING' ||
     order.status === 'REFUNDED' ||
+    order.status === 'ORDERED' ||
     order.status === 'PURCHASED'
       ? 'lightgrey'
       : 'red';
@@ -729,6 +730,8 @@ const OrderProgressDetail = ({ route }) => {
                     order?.status === 'CANCELED' ||
                     order.status === 'DELIVERING' ||
                     order.status === 'REFUNDED' ||
+                    order.status === 'ORDERED' ||
+                    order.status === 'PURCHASED' ||
                     isRating
                   }
                   style={

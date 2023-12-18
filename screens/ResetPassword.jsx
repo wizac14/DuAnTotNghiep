@@ -38,7 +38,7 @@ const ResetPassword = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Code has been send</Text>
+      <Text style={styles.title}>Đã gửi mã</Text>
       <View style={styles.otpView}>
         <TextInput
           onChangeText={(txt) => {
@@ -111,7 +111,7 @@ const ResetPassword = () => {
             color: count == 0 ? 'blue' : 'grey',
           }}
         >
-          Resend
+          Gửi lại
         </Text>
         <Text style={{ fontSize: 20, marginLeft: 10 }}>{count + 's'}</Text>
       </View>
@@ -133,7 +133,7 @@ const ResetPassword = () => {
             fontSize: SIZES.Large,
           }}
         >
-          Submit
+          Xác nhận
         </Text>
       </TouchableOpacity>
     </View>

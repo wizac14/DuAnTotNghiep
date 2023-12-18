@@ -133,7 +133,7 @@ const EmailScreen = () => {
           fontWeight: '700',
         }}
       >
-        Enter your Email Address
+        Nhập địa chỉ email của bạn
       </Text>
       <Text
         style={{
@@ -143,13 +143,13 @@ const EmailScreen = () => {
           textAlign: 'center',
         }}
       >
-        We will send you the 6 digit verification code
+        Chúng tôi sẽ gửi cho bạn đoạn mã 6 ký tự số
       </Text>
 
       <TextInput
         value={setEmail}
         onChangeText={setEmail}
-        label="Email Address"
+        label="Địa chỉ email"
         mode="outlined"
         outlineColor="#000000"
         activeOutlineColor="#000000"
@@ -177,7 +177,7 @@ const EmailScreen = () => {
             fontSize: SIZES.Large,
           }}
         >
-          Generate OTP
+          Gửi mã OTP
         </Text>
       </TouchableOpacity>
 
@@ -203,7 +203,7 @@ const EmailScreen = () => {
         <View style={styles.btnResend}>
           <Text style={[styles.textResend, { color: enableResend ? 'gray' : '#234DB7' }]}>
             {' '}
-            {enableResend && countdown > 0 ? `Resend OTP (${countdown}s)` : 'Resend OTP'}{' '}
+            {enableResend && countdown > 0 ? `Gửi lại OTP (${countdown}s)` : 'Gửi lại OTP'}{' '}
           </Text>
         </View>
       </TouchableOpacity>
@@ -216,7 +216,7 @@ const EmailScreen = () => {
             fontSize: SIZES.Large,
           }}
         >
-          Submit
+          Xác nhận
         </Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>

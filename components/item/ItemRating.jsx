@@ -189,8 +189,8 @@ const ItemRating = (props) => {
           </TouchableWithoutFeedback>
         </View>
       </Modal>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-        {/* <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+        {/* <View style={{ flexDirection: 'row', paddingHorizontal: 5 }}>
           <TouchableOpacity onPress={handleHeartClick}>
             <Icon
               name={isClicked ? 'heart' : 'heart-outline'}

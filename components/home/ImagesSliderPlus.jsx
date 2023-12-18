@@ -5,12 +5,9 @@ import { SliderBox } from 'react-native-image-slider-box';
 
 const ImagesSlider = () => {
   const slides = [
-    'https://wallpaperset.com/w/full/f/d/6/43388.jpg',
-    'https://wallpaperset.com/w/full/a/4/b/76571.jpg',
-    'https://wallpaperset.com/w/full/8/9/5/474196.jpg',
-    'https://wallpaperset.com/w/full/f/e/0/25026.jpg',
-    'https://wallpaperset.com/w/full/b/8/0/21482.jpg',
-    'https://wallpaperset.com/w/full/5/f/d/65130.jpg',
+    'https://wallpaperset.com/w/full/d/4/c/505570.jpg',
+    'https://wallpaperset.com/w/full/8/5/0/505573.jpg',
+    'https://wallpaperset.com/w/full/8/e/3/505576.jpg',
   ];
   return (
     <View style={styles.imageSlider}>
@@ -27,8 +24,8 @@ const ImagesSlider = () => {
         }}
         inactiveDotColor={COLORS.secondary}
         ImageComponentStyle={{ width: '100%', marginTop: 15 }}
-        autoplay
-        circleLoop
+        // autoplay
+        // circleLoop
       />
     </View>
   );

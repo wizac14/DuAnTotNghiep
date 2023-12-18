@@ -86,10 +86,11 @@ const RatingScreen = (props) => {
             style={{
               flex: 1,
               flexDirection: 'row',
-              justifyContent: 'space-between',
+              justifyContent: 'flex-start',
               paddingHorizontal: 10,
               alignItems: 'center',
               marginTop: 50,
+              gap: 5,
             }}
           >
             <TouchableOpacity

@@ -13,10 +13,12 @@ import React, { useCallback, useRef, useState, useEffect, useContext } from 'rea
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../constants/index';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { SIZES } from '../../constants/index';
 import { useNavigation, useTheme } from '@react-navigation/native';
 import MasonryList from 'reanimated-masonry-list';
 import ImageSlider from '../../components/home/ImagesSlider';
+import ImageSliderPlus from '../../components/home/ImagesSliderPlus';
 import { Pressable } from 'react-native';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { UIActivityIndicator } from 'react-native-indicators';
@@ -32,14 +34,15 @@ const Home = () => {
     'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/4225f4a7-dc73-4926-a99f-a677f56346fe/cortez-se-shoes-Pfr5Qh.png';
 
   const { colors } = useTheme();
-  const bottomSheetModalRef = useRef(null);
   const [brands, setBrands] = useState([]);
   const [products, setProducts] = useState([]);
+  const [brandProducts, setBrandProducts] = useState([]);
   const [newProducts, setNewProducts] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
   const [isProductLoading, setIsProductLoading] = useState(true);
+  const [isAllProductLoading, setIsAllProductLoading] = useState(true);
+  const [isNewProductLoading, setIsNewProductLoading] = useState(true);
   const { inforuser } = useContext(AppContext);
-  const lastProductIndex = products.length - 1;
   const newFirstProduct = newProducts[0];
   const newSecondProduct = newProducts[1];
   const [page, setPage] = useState(0);
@@ -52,9 +55,10 @@ const Home = () => {
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
 
   useEffect(() => {
-    // getBrands();
+    getBrands();
     getProducts();
     getNewProducts();
+    handleBrandSelect('Vans');
   }, []);
 
   //lấy all product
@@ -76,6 +80,8 @@ const Home = () => {
           setProducts((pre) => [...pre, ...reversedProducts]);
         }
         setIsProductLoading(false);
+        setIsAllProductLoading(false);
+        setIsNewProductLoading(false);
         setIsLoading(false);
       } else {
         ToastAndroid.show('Lấy data thất bại');
@@ -88,15 +94,17 @@ const Home = () => {
     }
   };
 
+  //lay new product tu all produt
   const getNewProducts = async () => {
     try {
-      const response = await AxiosIntance().get('/product/get-all');
+      const response = await AxiosIntance().get('/product/get-all-new');
       if (response.result) {
         // Đảo ngược danh sách sản phẩm
         const newRevProducts = response?.products.reverse();
 
         setNewProducts(newRevProducts);
         setIsProductLoading(false);
+        setIsNewProductLoading(false);
         setIsLoading(false);
       } else {
         ToastAndroid.show('Lấy data thất bại');
@@ -110,11 +118,8 @@ const Home = () => {
   const getBrands = async () => {
     try {
       const response = await AxiosIntance().get('/brand/get-all-brands');
-      const allProduct = {
-        name: 'Tất Cả',
-      };
       if (response.result) {
-        setBrands([allProduct, ...response.brands]);
+        setBrands(response.brands);
       } else {
         console.log('Lấy data thất bại');
       }
@@ -129,17 +134,15 @@ const Home = () => {
     setIsProductLoading(true);
     try {
       let url = `/product/get-by-brand?brandName=${brandName}`;
-      if (brandName === 'Tất Cả') {
-        url = `/product/get-all`;
-      }
       const response = await AxiosIntance().get(url);
 
       if (response.products) {
         const reversedProducts = response?.products;
-        // const limitedProducts = reversedProducts.slice(0, 4);
+        const limitedProducts = reversedProducts.slice(0, 6);
 
-        setProducts(reversedProducts);
+        setBrandProducts([...limitedProducts, { isViewAll: true }]);
         setIsProductLoading(false);
+        setIsNewProductLoading(false);
       }
     } catch (error) {
       console.error('Lỗi khi lấy danh sách sản phẩm theo thương hiệu:', error);
@@ -292,7 +295,7 @@ const Home = () => {
             </Text>
           </View>
           <View style={{ flexDirection: 'row', height: 250, gap: 12 }}>
-            {isProductLoading ? (
+            {isNewProductLoading ? (
               <View
                 style={{
                   flex: 1,
@@ -445,7 +448,7 @@ const Home = () => {
             )}
           </View>
           <View style={{ flexDirection: 'row', height: 250, gap: 12, marginTop: 100 }}>
-            {isProductLoading ? (
+            {isNewProductLoading ? (
               <View
                 style={{
                   flex: 1,
@@ -599,7 +602,7 @@ const Home = () => {
               flexDirection: 'row',
               alignItems: 'center',
               marginBottom: 16,
-              borderBottomWidth: 1,
+              borderBottomWidth: 0,
               borderBottomColor: 'lightgrey',
               marginTop: 60,
               // width: '100%',
@@ -651,7 +654,7 @@ const Home = () => {
                         color: isSelected ? colors.background : colors.text,
                         fontWeight: '600',
                         fontSize: isSelected ? 18 : 16,
-                        opacity: isSelected ? 1 : 0.6,
+                        opacity: isSelected ? 1 : 0.8,
                         textAlign: 'center',
                       }}
                     >
@@ -664,8 +667,143 @@ const Home = () => {
           />
         </View>
 
-        {/* Mesonary */}
         {isProductLoading ? (
+          <View
+            style={{
+              height: Dimensions.get('window').height * 0.25,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <UIActivityIndicator size={30} color={colors.text} />
+          </View>
+        ) : (
+          <View>
+            <FlatList
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              data={brandProducts}
+              contentContainerStyle={{
+                paddingHorizontal: (width * paddingPercentage) / 100,
+              }}
+              ListEmptyComponent={
+                <View
+                  style={{
+                    height: Dimensions.get('window').height * 0.25,
+                    width: Dimensions.get('window').width * 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text>Rất tiếc, không có sản phẩm nào.</Text>
+                  <Text>Hãy khám phá các thương hiệu khác nhé!</Text>
+                </View>
+              }
+              renderItem={({ item, index }) => {
+                if (item.isViewAll) {
+                  return (
+                    <TouchableOpacity
+                      style={{
+                        paddingHorizontal: (width * paddingPercentage) / 100,
+                        paddingVertical: 10,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: COLORS.white,
+                        borderWidth: 0.5,
+                        borderColor: 'lightgrey',
+                      }}
+                      onPress={() => {
+                        navigation.navigate('ProductListScreen', { brandName: selectedBrand });
+                      }}
+                    >
+                      <Text style={{ color: COLORS.black, fontWeight: 'bold' }}>Xem tất cả</Text>
+                      <Ionicons name="arrow-forward-circle-outline" size={24} color="black" />
+                    </TouchableOpacity>
+                  );
+                }
+                // keyExtractor={(item, index) => index.toString()}
+                return (
+                  <View
+                    style={{
+                      padding: 0,
+                      borderWidth: 0.2,
+                      borderColor: COLORS.gray2,
+                      paddingHorizontal: (width * paddingPercentage) / 100,
+                    }}
+                  >
+                    <View style={{}}>
+                      <Pressable
+                        style={{ width: 180, height: 180 }}
+                        onPress={() => {
+                          navigation.navigate('ProductDetail', {
+                            id: item._id,
+                          });
+                        }}
+                      >
+                        {item?.variances[0]?.images[0]?.url ? (
+                          <Image
+                            style={{ flex: 1 }}
+                            source={{
+                              uri: item?.variances[0].images[0].url,
+                            }}
+                            resizeMode="contain"
+                          />
+                        ) : (
+                          <Image resizeMode="contain" source={noImageAvailable} />
+                        )}
+                      </Pressable>
+                      <Text style={{ fontSize: 14, fontWeight: 'bold', paddingHorizontal: 3 }}>
+                        {item?.title}
+                      </Text>
+                      <View style={{ backgroundColor: COLORS.black, width: 100, borderRadius: 3 }}>
+                        <Text
+                          style={{
+                            fontSize: 14,
+                            color: COLORS.white,
+                            paddingHorizontal: 3,
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                          }}
+                        >
+                          đ{item?.price.toLocaleString()}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        )}
+
+        <ImageSliderPlus />
+
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 6,
+            borderBottomWidth: 0,
+            borderBottomColor: 'lightgrey',
+            // marginTop: 60,
+            paddingHorizontal: (width * paddingPercentage) / 100,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: '600',
+              color: COLORS.red,
+              marginBottom: 6,
+              // marginTop: 6,
+              textAlign: 'left',
+            }}
+          >
+            TẤT CẢ SẢN PHẨM
+          </Text>
+        </View>
+        {isAllProductLoading ? (
           <View
             style={{
               height: Dimensions.get('window').height * 0.25,
