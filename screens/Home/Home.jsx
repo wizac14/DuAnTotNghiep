@@ -8,6 +8,7 @@ import {
   FlatList,
   ToastAndroid,
   Dimensions,
+  Linking
 } from 'react-native';
 import React, { useCallback, useRef, useState, useEffect, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -28,8 +29,12 @@ import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Layout } from 'react-native-reanimated';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
+import { Button } from 'react-native-elements';
+import * as Facebook from 'expo-facebook';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Home = () => {
+
   const AVATAR_URL =
     'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/4225f4a7-dc73-4926-a99f-a677f56346fe/cortez-se-shoes-Pfr5Qh.png';
 
@@ -53,7 +58,15 @@ const Home = () => {
   const paddingPercentage = 2;
   const { width, height } = Dimensions.get('window');
   const [showActivityIndicator, setShowActivityIndicator] = useState(false);
-
+ const sendMessage = () => {
+        Linking.canOpenURL('fb-messenger://').then(supported => {
+          if (!supported) {
+            console.log("Can't handle url: fb-messenger://");
+          } else {
+            Linking.openURL('fb-messenger://user-thread/61554523297880');
+          }
+        }).catch(err => console.error('An error occurred', err));
+      };
   useEffect(() => {
     getBrands();
     getProducts();
@@ -186,6 +199,8 @@ const Home = () => {
   };
 
   return (
+    <View>
+    
     <ScrollView
       style={{ backgroundColor: COLORS.white }}
       showsHorizontalScrollIndicator={false}
@@ -198,7 +213,6 @@ const Home = () => {
       scrollEventThrottle={400}
     >
       <StatusBar style="auto" />
-
       <SafeAreaView style={{ paddingVertical: 14, gap: 24 }}>
         <Animated.View
           layout={Layout}
@@ -620,6 +634,7 @@ const Home = () => {
             >
               KHÁM PHÁ THÊM
             </Text>
+           
           </View>
           <FlatList
             data={brands}
@@ -917,8 +932,17 @@ const Home = () => {
             keyExtractor={(item) => item._id}
           />
         )}
+        
       </SafeAreaView>
     </ScrollView>
+    <TouchableOpacity style={styles.floadingButton} onPress={sendMessage}>
+    <Icon
+            name="facebook-messenger"
+            size={40}
+            color="white"
+          />
+    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -954,4 +978,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: COLORS.lightWhite,
   },
+  floadingButton:{
+    position:'absolute',
+    width:60,
+    bottom:30,
+    height:60,
+    alignItems:'center',
+    justifyContent:'center',
+    right:  20,
+    backgroundColor:"blue",
+    borderRadius:60
+  }
 });

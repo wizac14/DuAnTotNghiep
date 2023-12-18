@@ -201,9 +201,9 @@ const Person = () => {
 
         <TouchableOpacity
           style={{ paddingHorizontal: 5 }}
-          // onPress={() => {
-          //   navigation.navigate('OrderProgress');
-          // }}
+          onPress={() => {
+            navigation.navigate('SupportScreen');
+          }}
         >
           <View style={styles.item}>
             <View
