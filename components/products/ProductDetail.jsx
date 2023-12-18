@@ -7,6 +7,7 @@ import {
   ToastAndroid,
   Modal,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,6 +22,7 @@ import { useContext } from 'react';
 import { AppContext } from '../ultil/AppContext';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import { Skeleton } from 'moti/skeleton';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Animated from 'react-native-reanimated';
 import { FadeIn, FadeOut } from 'react-native-reanimated';
 import { Layout } from 'react-native-reanimated';
@@ -53,6 +55,8 @@ const ProductDetail = (props) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const [showImageView, setShowImageView] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [rating, setRating] = useState([]);
+  const [star, setstar] = useState(0);
 
   const openImageViewer = (index) => {
     setSelectedImageIndex(index);
@@ -64,6 +68,21 @@ const ProductDetail = (props) => {
     setShowImageView(false);
   };
 
+  //xem danh gia
+  const ratingProductOrder = async () => {
+    try {
+      const response = await AxiosIntance().get('/ratingProduct/get-by-id?productId=' + params.id);
+      if (response.result) {
+        setRating(response.rating);
+        const totalStars = response.rating.reduce((acc, rating) => acc + rating.star, 0);
+        const averageStars = totalStars / response.rating.length;
+        setstar(averageStars);
+        console.log("Số sao trung bình:", averageStars);
+      }
+    } catch (error) {
+      console.error('Error ratingProduct:', error);
+    }
+  };
   //thêm vào ds yêu thích
   const addToFavorites = async () => {
     try {
@@ -188,7 +207,6 @@ const ProductDetail = (props) => {
         sizesForColor = variance?.varianceDetail;
       }
     });
-
     return sizesForColor;
   }
   // http://localhost:3000/api/cart/new-to-cart
@@ -237,8 +255,9 @@ const ProductDetail = (props) => {
     };
     checkIfFavorite();
     getDetails();
+    ratingProductOrder();
 
-    return () => {};
+    return () => { };
   }, []);
 
   const checkIfFavorite = async () => {
@@ -404,8 +423,8 @@ const ProductDetail = (props) => {
                     {hasSelectedColor && selectedSize
                       ? `Chỉ còn ${remainingQuantity} sản phẩm`
                       : hasSelectedColor
-                      ? 'Vui lòng chọn size'
-                      : 'Vui lòng chọn màu'}
+                        ? 'Vui lòng chọn size'
+                        : 'Vui lòng chọn màu'}
                   </Text>
                 </View>
                 <View
@@ -548,7 +567,7 @@ const ProductDetail = (props) => {
                     </View>
                   </View>
                 )}
-
+                <ScrollView>
                 <View>
                   <Text
                     style={{
@@ -569,8 +588,27 @@ const ProductDetail = (props) => {
                     {product?.description}
                   </Text>
                 </View>
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                  <TouchableOpacity onPress={() => {
+                    navigation.navigate('RatingScreen', {
+                      id: params.id,
+                    });
+                  }}>
+                    <Text style={{ fontWeight: "bold", fontSize: 15, color: 'green' }}>Xem đánh giá</Text>
+                  </TouchableOpacity>
+                  <View style={{ flexDirection: "row" }}>
+                    {!isNaN(star) ? (
+                      <View style={{ flexDirection: "row" }}>
+                        <Text style={{ fontSize: 15 }}>{star}</Text>
+                        <Icons name="star-half" size={20} color={COLORS.black} />
+                      </View>
+                    ) : (
+                      <Text></Text>
+                    )}
+              
+                  </View>
+                </View>
                 <View style={{ flex: 1 }} />
-
                 <View
                   style={{
                     flexDirection: 'row',
@@ -630,6 +668,7 @@ const ProductDetail = (props) => {
                     </View>
                   </TouchableOpacity>
                 </View>
+                </ScrollView>
               </Animated.View>
             </BottomSheet>
           </View>
