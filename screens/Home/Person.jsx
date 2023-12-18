@@ -217,7 +217,7 @@ const Person = () => {
             >
               <Ionicons name="information-circle-outline" size={25} color="black" />
               <View style={{}}>
-                <Text style={{ fontSize: 16, fontWeight: 500 }}>Giới thiệu cửa hàng</Text>
+                <Text style={{ fontSize: 16, fontWeight: 500 }}>Thông tin cửa hàng</Text>
               </View>
             </View>
 

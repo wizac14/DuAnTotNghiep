@@ -3,7 +3,7 @@ import AllOrderProgress from './AllOrderProgress';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PaidOrder from './PaidOrder';
 import UnPaidOrder from './UnPaidOrder';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, Linking, StyleSheet } from 'react-native';
 import { COLORS } from '../../constants';
 import Icons from '@expo/vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';

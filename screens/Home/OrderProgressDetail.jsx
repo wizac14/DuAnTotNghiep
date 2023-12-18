@@ -10,6 +10,7 @@ import {
   TextInput,
   PermissionsAndroid,
   Alert,
+  Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import moment from 'moment';
@@ -30,6 +31,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useCallback } from 'react';
 import { Video as ExpoVideo } from 'expo-av';
+import { Button } from 'react-native-elements';
+import * as Facebook from 'expo-facebook';
+import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 const OrderProgressDetail = ({ route }) => {
   const { order } = route.params;
   const navigation = useNavigation();
@@ -60,6 +64,18 @@ const OrderProgressDetail = ({ route }) => {
   const [imageProduct, setImageProduct] = useState(null);
 
   const [videoProduct, setVideoPRoduct] = useState(null);
+
+  const sendMessage = () => {
+    Linking.canOpenURL('fb-messenger://')
+      .then((supported) => {
+        if (!supported) {
+          console.log("Can't handle url: fb-messenger://");
+        } else {
+          Linking.openURL('fb-messenger://user-thread/61554523297880');
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  };
   const toggleVisibility = () => {
     // console.log(products);
     setVisible(!isVisible);
@@ -780,6 +796,10 @@ const OrderProgressDetail = ({ route }) => {
               />
               <Text style={{ fontSize: 18, color: 'grey' }}>THEFIVEMENSSHOES</Text>
             </View>
+
+            {/* <TouchableOpacity style={styles.floadingButton} onPress={sendMessage}>
+              <IconM name="facebook-messenger" size={30} color="white" />
+            </TouchableOpacity> */}
           </View>
           {isOpen == false ? (
             <View></View>
@@ -990,7 +1010,7 @@ const OrderProgressDetail = ({ route }) => {
             style={{ justifyContent: 'center', alignItems: 'center' }}
             onPress={() => pickImageFromLibrary()}
           >
-            <Text style={styles.text20}>updatevideo </Text>
+            <Text style={styles.text20}>Video</Text>
           </TouchableOpacity>
         </View>
       </Modal>
@@ -1301,6 +1321,18 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+
+  floadingButton: {
+    position: 'absolute',
+    width: 40,
+    bottom: 10,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 10,
+    backgroundColor: 'blue',
+    borderRadius: 30,
   },
 });
 
