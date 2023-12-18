@@ -30,6 +30,8 @@ import { AppContextProvider } from "./components/ultil/AppContext";
 import FilterScreen from "./screens/Home/FilterScreen";
 import RattingScreen from "./screens/Home/RatingScreen";
 import ItemRating from "./components/item/ItemRating";
+import Chat from "./screens/Home/Chat";
+import Person from "./screens/Home/Person";
 
 const Stack = createNativeStackNavigator();
 
@@ -72,8 +74,9 @@ export default function App() {
       </GestureHandlerRootView>
       {/* <FilterScreen></FilterScreen> */}
     </SafeAreaProvider>
-    // <ItemRating></ItemRating>
-    // <RattingScreen></RattingScreen>
+    // <Chat></Chat>
+
+
   );
 }
 
