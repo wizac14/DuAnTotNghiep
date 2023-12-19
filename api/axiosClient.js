@@ -2,7 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 // import { firebase } from '../config/firebase';
 const axiosClient = axios.create({
-  baseURL: process.env.EXPO_PUBLIC_AXIOS_BASE_URL,
+  baseURL: 'http://192.168.1.80:3000',
   headers: {
     'content-type': 'application/json',
   },
@@ -62,7 +62,5 @@ axiosClientFormData.interceptors.response.use(
     throw error.response;
   }
 );
-
-
 
 export { axiosClient, axiosClientFormData };
