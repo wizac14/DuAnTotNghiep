@@ -30,7 +30,7 @@ export default function SignupScreen() {
     .string()
     .email('Email không hợp lệ')
     .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email không hợp lệ');
-    
+
   const nameValidation = yup
     .string()
     .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt');
@@ -70,7 +70,7 @@ export default function SignupScreen() {
       }
     } catch (error) {
       console.log('Error RegisterUser', error);
-      ToastAndroid.show('Chưa nhập thông tin', ToastAndroid.SHORT);
+      ToastAndroid.show('Chưa nhập thông tin hoặc thông tin bị trùng', ToastAndroid.SHORT);
     }
   };
 
@@ -163,18 +163,26 @@ export default function SignupScreen() {
 
               <Animated.View
                 entering={FadeInDown.delay(400).duration(1000).springify()}
-                className="bg-white p-3 rounded-2xl w-full mb-3"
+                className="bg-white p-3 rounded-2xl w-full mb-3 "
               >
-                <TextInput
-                  value={phoneNumber}
-                  style={{ width: 250 }}
-                  placeholder="Số diện thoại của bạn"
-                  placeholderTextColor={'gray'}
-                  onChangeText={(text) => {
-                    handleChange('phoneNumber')(text);
-                    setPhoneNumber(text);
-                  }}
-                />
+                <View className="w-full items-center flex-row ">
+                  <Image
+                    style={{ width: 24, height: 24, marginRight: 5 }}
+                    source={require('../assets/images/vietnam.png')}
+                  />
+                  <TextInput
+                    value={phoneNumber}
+                    style={{ width: 250 }}
+                    defaultValue="+84"
+                    placeholder="+84"
+                    placeholderTextColor={'gray'}
+                    keyboardType="phone-pad"
+                    onChangeText={(text) => {
+                      handleChange('phoneNumber')(text);
+                      setPhoneNumber(text);
+                    }}
+                  />
+                </View>
                 {touched.phoneNumber && errors.phoneNumber && (
                   <Text style={{ marginTop: 5, color: 'red' }}>{errors.phoneNumber}</Text>
                 )}

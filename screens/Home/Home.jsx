@@ -70,7 +70,7 @@ const Home = () => {
     getBrands();
     getProducts();
     getNewProducts();
-    handleBrandSelect('Vans');
+    handleBrandSelect('Nike');
   }, []);
 
   //lấy all product

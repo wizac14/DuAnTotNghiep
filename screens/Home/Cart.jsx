@@ -156,17 +156,30 @@ const Cart = (props) => {
         )}
       </View>
       <View>
-        <FixedBottom>
-          <TouchableOpacity
-            disabled={isLoading || !hasItems} // Disable nút khi isLoading hoặc không có sản phẩm
-            style={[styles.buttonBuy, !hasItems && { opacity: 0.5 }]}
-            onPress={() => {
-              navigation.navigate('CartDetail', { data });
-            }}
-          >
-            <Text style={styles.textBuy}>Tiếp tục</Text>
-          </TouchableOpacity>
-        </FixedBottom>
+        {hasItems ? (
+          <FixedBottom>
+            <TouchableOpacity
+              disabled={isLoading || !hasItems} // Disable nút khi isLoading hoặc không có sản phẩm
+              style={[styles.buttonBuy, !hasItems && { opacity: 0.5 }]}
+              onPress={() => {
+                navigation.navigate('CartDetail', { data });
+              }}
+            >
+              <Text style={styles.textBuy}>Tiếp tục</Text>
+            </TouchableOpacity>
+          </FixedBottom>
+        ) : (
+          <FixedBottom>
+            <TouchableOpacity
+              style={[styles.buttonBuy, !hasItems && { opacity: 0.5 }]}
+              onPress={() => {
+                navigation.navigate('Trang chủ');
+              }}
+            >
+              <Text style={styles.textBuy}>Hãy mua hàng để thanh toán!</Text>
+            </TouchableOpacity>
+          </FixedBottom>
+        )}
       </View>
     </SafeAreaView>
   );

@@ -12,7 +12,7 @@ const SupportScreen = () => {
         if (!supported) {
           console.log("Can't handle url: fb-messenger://");
         } else {
-          Linking.openURL('fb-messenger://user-thread/61554523297880');
+          Linking.openURL('fb-messenger://user-thread/61554434832138');
         }
       })
       .catch((err) => console.error('An error occurred', err));
@@ -57,7 +57,7 @@ const SupportScreen = () => {
             height: 60,
             alignItems: 'center',
           }}
-          onPress={() => Linking.openURL('sms:App bán giày')}
+          onPress={() => Linking.openURL('sms:0869072730')}
         >
           <Ionicons name="chatbox" size={30} />
           <Text style={styles.text}>Liên hệ qua SMS</Text>
@@ -71,7 +71,7 @@ const SupportScreen = () => {
             height: 60,
             alignItems: 'center',
           }}
-          onPress={() => Linking.openURL('tel:0899865329')}
+          onPress={() => Linking.openURL('tel:0869072730')}
         >
           <Ionicons name="phone-portrait-sharp" size={30} />
           <Text style={styles.text}>Liên hệ qua Điện thoại</Text>
@@ -85,7 +85,7 @@ const SupportScreen = () => {
             height: 60,
             alignItems: 'center',
           }}
-          onPress={() => Linking.openURL('mailto:hoacrkh10@gmail.com')}
+          onPress={() => Linking.openURL('mailto:thefivemensshoesshop@gmail.com')}
         >
           <Ionicons name="mail-unread-outline" size={30} color="red" />
           <Text style={styles.text}>Liên hệ qua Gmail</Text>
@@ -99,7 +99,7 @@ const SupportScreen = () => {
             height: 60,
             alignItems: 'center',
           }}
-          onPress={() => Linking.openURL('fb://page/61554523297880')}
+          onPress={() => Linking.openURL('https://www.facebook.com/profile.php?id=61554434832138')}
         >
           <Ionicons name="logo-facebook" size={30} color="blue" />
           <Text style={styles.text}>Xem trang Facebook</Text>

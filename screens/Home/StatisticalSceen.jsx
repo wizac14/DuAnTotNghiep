@@ -104,6 +104,7 @@ const StatisticalScreen = () => {
     dataDailyDay.labels.push(item.date);
     dataDailyDay.datasets[0].data.push(item.totalAmount);
   });
+  console.log(dataDailyDay.labels);
 
   const statisticalUser = async () => {
     try {
@@ -236,7 +237,7 @@ const StatisticalScreen = () => {
                   }}
                 >
                   <Text style={{ color: 'green', fontWeight: 'bold' }}>Tháng</Text>
-                  <Text style={{ color: 'green', fontWeight: 'bold' }}>Số lượng</Text>
+                  <Text style={{ color: 'green', fontWeight: 'bold' }}>Số đơn</Text>
                   <Text style={{ color: 'green', fontWeight: 'bold' }}>Tiền chi</Text>
                 </View>
               )}
@@ -264,11 +265,11 @@ const StatisticalScreen = () => {
                   data={data}
                   width={width}
                   height={220}
+                  fromZero={true}
                   chartConfig={{
                     backgroundGradientFrom: '#006633',
                     backgroundGradientTo: '#33CC33',
                     decimalPlaces: 0, // optional, defaults to 2dp
-                    // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                     barPercentage: 1,
                     color: (opacity = 1) => `rgba(255, 255, 0, ${opacity})`,
@@ -282,7 +283,6 @@ const StatisticalScreen = () => {
                     paddingHorizontal: 0,
                     borderRadius: 0,
                   }}
-                  // verticalLabelRotation={10}
                 />
               ) : (
                 <Text style={{ textAlign: 'center', fontSize: 16, marginTop: 10 }}>
@@ -361,7 +361,7 @@ const StatisticalScreen = () => {
                     }}
                   >
                     <Text style={{ color: 'green', fontWeight: 'bold' }}>Ngày</Text>
-                    <Text style={{ color: 'green', fontWeight: 'bold' }}>Số lượng</Text>
+                    <Text style={{ color: 'green', fontWeight: 'bold' }}>Số đơn</Text>
                     <Text style={{ color: 'green', fontWeight: 'bold' }}>Tiền chi</Text>
                   </View>
                 )}
@@ -377,7 +377,7 @@ const StatisticalScreen = () => {
                         borderBottomColor: '#ccc',
                       }}
                     >
-                      <Text>{item.date}</Text>
+                      <Text>{moment(item.date).format('DD/MM/YYYY')}</Text>
                       <Text>{item.totalProducts}</Text>
                       <Text>{shortenAmount(item.totalAmount)} VNĐ</Text>
                     </View>
@@ -392,6 +392,7 @@ const StatisticalScreen = () => {
                   width={width}
                   height={220}
                   formatYLabel={(value) => shortenAmount(value)}
+                  // formatXLabel={(value) => moment(dataDailyDay.labels[value]).format('DD/MM')}
                   chartConfig={{
                     backgroundColor: '#e26a00',
                     backgroundGradientFrom: '#fb8c00',
