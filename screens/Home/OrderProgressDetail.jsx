@@ -32,7 +32,7 @@ import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { useCallback } from 'react';
 import { Video as ExpoVideo } from 'expo-av';
 import { Button } from 'react-native-elements';
-import * as Facebook from 'expo-facebook';
+
 import IconM from 'react-native-vector-icons/MaterialCommunityIcons';
 const OrderProgressDetail = ({ route }) => {
   const { order } = route.params;
