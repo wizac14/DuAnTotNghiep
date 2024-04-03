@@ -12,7 +12,7 @@ import ResetPassword from '../screens/ResetPassword';
 import ProductDetail from '../components/products/ProductDetail';
 import PhoneScreen from '../screens/PhoneScreen';
 import EmailScreen from '../screens/EmailScreen';
-
+import NewPassword from '../screens/NewPassword';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useContext } from 'react';
 import { AppContext } from '../components/ultil/AppContext';
@@ -23,15 +23,15 @@ import CodPayment from '../screens/Payment/CodPayment';
 import FavoriteScreen from '../screens/Home/FavoriteScreen';
 import OrderProcessing from '../components/order/OrderProcessing';
 import OrderProgress from '../screens/Home/OrderProgress';
-import Search from '../screens/Home/Search';
-import SearchTitle from '../screens/Home/SearchTitle';
 import OrderProgressDetail from '../screens/Home/OrderProgressDetail';
 import ProductListScreen from '../screens/Home/ProductListScreen';
 import SearchResultScreen from '../screens/Home/SearchResultScreen';
 import SearchAllResultScreen from '../screens/Home/SearchAllResultScreen';
 import NewPasswordEmail from '../screens/NewPasswordEmail';
 import NewPasswordPhone from '../screens/NewPasswordPhone';
-
+import StatisticalScreen from '../screens/Home/StatisticalSceen';
+import RatingScreen from '../screens/Home/RatingScreen';
+import SupportScreen from '../screens/Home/SupportScreen';
 const Stack = createNativeStackNavigator();
 const TabsStack = createBottomTabNavigator();
 const NotAuthNavigator = () => {
@@ -125,6 +125,44 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="SearchAllResultScreen"
         component={SearchAllResultScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen
+        name="Forgot Password"
+        component={ForgotPassword}
+        options={{ headerShown: false }}
+      />
+         <Stack.Screen
+        name="RatingScreen"
+        component={RatingScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+       <Stack.Screen
+        name="SupportScreen"
+        component={SupportScreen}
+        options={{ headerShown: false, gestureEnabled: false }}
+      />
+      <Stack.Screen name="Reset" component={ResetPassword} options={{ headerShown: false }} />
+
+      <Stack.Screen name="Phone Screen" component={PhoneScreen} options={{ headerShown: false }} />
+
+      <Stack.Screen name="Email Screen" component={EmailScreen} options={{ headerShown: false }} />
+
+      <Stack.Screen
+        name="New Password Email"
+        component={NewPasswordEmail}
+        options={{ headerShown: false }}
+      />
+
+      <Stack.Screen
+        name="New Password Phone"
+        component={NewPasswordPhone}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="statistical"
+        component={StatisticalScreen}
         options={{ headerShown: false, gestureEnabled: false }}
       />
     </Stack.Navigator>

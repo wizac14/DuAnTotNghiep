@@ -1,284 +1,218 @@
 import {
-  Alert,
-  Image,
-  KeyboardAvoidingView,
-  Pressable,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
   View,
+  Text,
+  Image,
+  SafeAreaView,
+  TextInput,
   TouchableOpacity,
+  Pressable,
   ToastAndroid,
-} from "react-native";
-import React, { useState } from "react";
-import { SIZES, COLORS } from "../constants";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { Axios } from "axios";
-import AxiosInstance from "../components/ultil/AxiosInstance";
+} from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { useNavigation } from '@react-navigation/native';
+import Animated, { FadeIn, FadeInDown, FadeInUp } from 'react-native-reanimated';
+import React, { useState } from 'react';
+import AxiosInstance from '../components/ultil/AxiosIntance';
+import { Formik } from 'formik';
+import * as yup from 'yup';
 
-const RegisterScreen = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
+export default function SignupScreen() {
   const navigation = useNavigation();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
   const [isSecureEntry, setIsSecureEntry] = useState(true);
 
+  const emailValidation = yup
+    .string()
+    .email('Email không hợp lệ')
+    .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email không hợp lệ');
 
+  const nameValidation = yup
+    .string()
+    .matches(/^[a-zA-Z0-9 ]{5,}$/, 'Tên phải có ít nhất 5 ký tự và không có ký tự đặc biệt');
 
-  const RegisterUser = async () => {
+  const phoneValidation = yup
+    .string()
+    .matches(/^\+84[3|5|7|8|9][0-9]{8}\b/, 'Số điện thoại không hợp lệ (bắt đầu với +84)');
+
+  const initialValues = {
+    name: name,
+    email: email,
+    phoneNumber: phoneNumber,
+  };
+  const validationSchema = yup.object().shape({
+    name: nameValidation,
+    email: emailValidation,
+    phoneNumber: phoneValidation,
+  });
+
+  const handleSubmit = async () => {
     console.log(email, password);
     try {
-      const response = await AxiosInstance().post("/user/register", {
+      const response = await AxiosInstance().post('/user/register', {
         email: email,
         password: password,
         name: name,
         phoneNumber: phoneNumber,
-        address : address
+        address: address,
       });
       console.log(response);
       if (response.result == true) {
-        ToastAndroid.show("Đăng ký thành công", ToastAndroid.SHORT);
+        ToastAndroid.show('Đăng ký thành công', ToastAndroid.SHORT);
 
-        navigation.navigate("Login");
+        navigation.navigate('Login');
       } else {
-        ToastAndroid.show("Đăng ký không thành công", ToastAndroid.SHORT);
+        ToastAndroid.show('Đăng ký không thành công', ToastAndroid.SHORT);
       }
     } catch (error) {
-      console.log("Error RegisterUser", error);
+      console.log('Error RegisterUser', error);
+      ToastAndroid.show('Chưa nhập thông tin hoặc thông tin bị trùng', ToastAndroid.SHORT);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <Image
-          style={{ width: 350, height: 300 }}
-          source={require("../assets/images/logo.png")}
-        />
+    <View className="bg-slate-100 h-full w-full">
+      <StatusBar style="light" />
+      <Image
+        className="h-full w-full absolute"
+        source={require('../assets/images/backgroundd.png')}
+      />
+
+      <View className="h-full w-full flex justify-around pt-48">
+        <View className="flex items-center">
+          <Animated.Text
+            entering={FadeInUp.duration(1000).springify()}
+            className="text-white font-bold tracking-wider text-5xl"
+          >
+            Đăng ký
+          </Animated.Text>
+        </View>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema}
+        >
+          {({ handleChange, handleBlur, handleSubmit, touched, errors }) => (
+            <View className="flex items-center mx-5 space-y-4">
+              <Animated.View
+                entering={FadeInDown.duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full"
+              >
+                <TextInput
+                  value={name}
+                  style={{ width: 250 }}
+                  placeholder="Tên của bạn"
+                  placeholderTextColor={'gray'}
+                  onChangeText={(text) => {
+                    handleChange('name')(text);
+                    setName(text);
+                  }}
+                />
+                {touched.name && errors.name && (
+                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.name}</Text>
+                )}
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(200).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full"
+              >
+                <TextInput
+                  value={email}
+                  style={{ width: 250 }}
+                  placeholder="Email"
+                  placeholderTextColor={'gray'}
+                  onChangeText={(text) => {
+                    handleChange('email')(text);
+                    setEmail(text);
+                  }}
+                />
+                {touched.email && errors.email && (
+                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.email}</Text>
+                )}
+              </Animated.View>
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full "
+              >
+                <TextInput
+                  value={password}
+                  style={{ width: 250 }}
+                  placeholder="Mật khẩu"
+                  placeholderTextColor={'gray'}
+                  secureTextEntry
+                  onChangeText={(text) => setPassword(text)}
+                />
+              </Animated.View>
+
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full "
+              >
+                <TextInput
+                  value={address}
+                  onChangeText={(text) => setAddress(text)}
+                  style={{ width: 250 }}
+                  placeholder="Địa chỉ của bạn"
+                  placeholderTextColor={'gray'}
+                />
+              </Animated.View>
+
+              <Animated.View
+                entering={FadeInDown.delay(400).duration(1000).springify()}
+                className="bg-white p-3 rounded-2xl w-full mb-3 "
+              >
+                <View className="w-full items-center flex-row ">
+                  <Image
+                    style={{ width: 24, height: 24, marginRight: 5 }}
+                    source={require('../assets/images/vietnam.png')}
+                  />
+                  <TextInput
+                    value={phoneNumber}
+                    style={{ width: 250 }}
+                    defaultValue="+84"
+                    placeholder="+84"
+                    placeholderTextColor={'gray'}
+                    keyboardType="phone-pad"
+                    onChangeText={(text) => {
+                      handleChange('phoneNumber')(text);
+                      setPhoneNumber(text);
+                    }}
+                  />
+                </View>
+                {touched.phoneNumber && errors.phoneNumber && (
+                  <Text style={{ marginTop: 5, color: 'red' }}>{errors.phoneNumber}</Text>
+                )}
+              </Animated.View>
+
+              <Animated.View
+                className="w-full"
+                entering={FadeInDown.delay(600).duration(1000).springify()}
+              >
+                <TouchableOpacity
+                  onPress={handleSubmit}
+                  className="w-full bg-sky-400 p-3 rounded-2xl mb-3"
+                >
+                  <Text className="text-xl font-bold text-white text-center">Đăng ký</Text>
+                </TouchableOpacity>
+              </Animated.View>
+
+              <Animated.View
+                entering={FadeInDown.delay(800).duration(1000).springify()}
+                className="flex-row justify-center"
+              >
+                <Text>Đã có tài khoản? </Text>
+                <TouchableOpacity onPress={() => navigation.push('Login')}>
+                  <Text className="text-sky-600">Đăng nhập</Text>
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
+          )}
+        </Formik>
       </View>
-
-      <KeyboardAvoidingView>
-        <View style={{ alignItems: "center" }}>
-          <Text style={{ fontSize: SIZES.xLarge }}>Create your Account</Text>
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 35,
-          }}
-        >
-          <Ionicons
-            style={{ padding: 5 }}
-            name="person-circle"
-            size={24}
-            color="grey"
-          />
-          <TextInput
-            value={name}
-            onChangeText={(text) => setName(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your name"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-           <MaterialCommunityIcons
-            style={{ padding: 5 }}
-            name="phone"
-            size={24}
-            color="grey"
-          />
-          <TextInput
-            value={phoneNumber}
-            onChangeText={(text) => setPhoneNumber(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your phone number (+84)"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-          <Ionicons
-            style={{ padding: 5 }}
-            name="location"
-            size={24}
-            color="grey"
-          />
-          <TextInput
-            value={address}
-            onChangeText={(text) => setAddress(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your address"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-          <MaterialCommunityIcons
-            style={{ padding: 5 }}
-            name="email"
-            size={24}
-            color="grey"
-          />
-          <TextInput
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            style={{ width: 250 }}
-            placeholder="Enter your email"
-          />
-        </View>
-
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 5,
-            borderRadius: 5,
-            borderWidth: 0.5,
-            marginTop: 15,
-          }}
-        >
-          <Ionicons
-            style={{ padding: 5 }}
-            name="lock-closed"
-            size={24}
-            color="grey"
-          />
-          <TextInput
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry={isSecureEntry}
-            style={{ width: 250 }}
-            placeholder="Enter your password"
-          />
-          <Ionicons
-            style={{ padding: 5 }}
-            name={isSecureEntry ? "eye" : "eye-off"}
-            size={24}
-            color="grey"
-            onPress={() => setIsSecureEntry(!isSecureEntry)}
-          />
-        </View>
-
-        <View style={{ marginTop: 30 }} />
-
-        <TouchableOpacity
-          onPress={RegisterUser}
-          style={{
-            width: 300,
-            backgroundColor: "#D80032",
-            borderRadius: 10,
-            marginLeft: "auto",
-            marginRight: "auto",
-            padding: 10,
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              color: COLORS.white,
-              fontSize: SIZES.Large,
-              // fontFamily: "bold",
-            }}
-          >
-            Sign up
-          </Text>
-        </TouchableOpacity>
-
-        <View style={styles.imgView}>
-          <TouchableOpacity style={styles.img} activeOpacity={0.5}>
-            <Image
-              style={{ width: 100, height: 100 }}
-              source={require("../assets/images/google.png")}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.img} activeOpacity={0.5}>
-            <Image
-              style={{ width: 100, height: 100 }}
-              source={require("../assets/images/facebook.png")}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.text}>
-          <Text>Already have an account?</Text>
-          <Text
-            onPress={() => navigation.navigate("Login")}
-            style={{ left: 5, fontWeight: "bold" }}
-          >
-            Sign in
-          </Text>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
-};
-
-export default RegisterScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  imgView: {
-    flexDirection: "row",
-    marginTop: 30,
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-  },
-  img: {
-    width: 50,
-    height: 50,
-    margin: 5,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#e3e3e3",
-    borderRadius: 10,
-    resizeMode: "center",
-  },
-  text: {
-    flexDirection: "row",
-    marginLeft: 10,
-    justifyContent: "center",
-    top: 10,
-  },
-});
+}

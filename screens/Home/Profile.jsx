@@ -1,31 +1,21 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Button,
-  Pressable,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SIZES } from '../../constants/index';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS } from '../../constants/index';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../components/ultil/AppContext';
-import AxiosInstance from '../../components/ultil/AxiosInstance';
-import { launchCameraAsync } from 'expo-image-picker';
+import AxiosIntance from '../../components/ultil/AxiosIntance';
 import { ToastAndroid } from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { TextInput } from 'react-native-paper';
+import { Image } from 'react-native';
 
 const Profile = () => {
   const navigation = useNavigation();
   const { inforuser, setinforuser } = useContext(AppContext);
   const handleSubmit = async () => {
-    const response = await AxiosIntance().put('/user/update/' + inforuser._id, {
+    const response = await AxiosIntance().post('/user/update', {
       name: inforuser.name,
       email: inforuser.email,
       address: inforuser.address,
@@ -45,11 +35,7 @@ const Profile = () => {
   const emailValidation = yup
     .string()
     .email('Email không hợp lệ')
-    .matches(
-      // Regular expression để kiểm tra định dạng email
-      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      'Email không hợp lệ'
-    );
+    .matches(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, 'Email không hợp lệ');
 
   const nameValidation = yup
     .string()
@@ -57,7 +43,7 @@ const Profile = () => {
 
   const phoneValidation = yup
     .string()
-    .matches(/^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/, 'Số điện thoại không hợp lệ');
+    .matches(/^\+84[3|5|7|8|9][0-9]{8}\b/, 'Số điện thoại không hợp lệ (bắt đầu với +84)');
 
   const validationSchema = yup.object().shape({
     email: emailValidation,
@@ -74,8 +60,16 @@ const Profile = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: 'row', top: '10%' }}>
+    <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          alignContent: 'flex-start',
+          alignSelf: 'flex-start',
+        }}
+      >
         <View>
           <TouchableOpacity
             onPress={() => {
@@ -86,7 +80,7 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
         <View>
-          <Text style={styles.title}>Cập nhật thông tin</Text>
+          <Text style={styles.title}>CẬP NHẬT THÔNG TIN</Text>
         </View>
       </View>
       <Formik
@@ -95,11 +89,15 @@ const Profile = () => {
         validationSchema={validationSchema}
       >
         {({ handleChange, handleBlur, handleSubmit, values, touched, errors }) => (
-          <View>
+          <View style={{ justifyContent: 'center' }}>
             <View style={styles.viewItem}>
               <TextInput
                 style={styles.textHint}
                 placeholder="Email"
+                label="Email"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 value={values.email}
                 editable={false}
               />
@@ -109,6 +107,10 @@ const Profile = () => {
               <TextInput
                 style={styles.textHint}
                 placeholder="Name"
+                label="Tên"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 onChangeText={(text) => {
                   handleChange('name')(text);
                   setinforuser({ ...inforuser, name: text });
@@ -123,12 +125,16 @@ const Profile = () => {
               <TextInput
                 style={styles.textHint}
                 placeholder="Sđt"
+                label="Số điện thoại"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 onChangeText={(text) => {
                   handleChange('phoneNumber')(text);
                   setinforuser({ ...inforuser, phoneNumber: text });
                 }}
                 // onBlur={handleBlur('phoneNumber')}
-                // value={inforuser.phoneNumber.toString()}
+                value={inforuser.phoneNumber}
               />
               {touched.phoneNumber && errors.phoneNumber && (
                 <Text style={styles.error}>{errors.phoneNumber}</Text>
@@ -138,6 +144,10 @@ const Profile = () => {
               <TextInput
                 style={styles.textHint}
                 placeholder="Địa chỉ"
+                label="Địa chỉ"
+                mode="outlined"
+                outlineColor="#000000"
+                activeOutlineColor="#000000"
                 onChangeText={(text) => {
                   handleChange('address')(text);
                   setinforuser({ ...inforuser, address: text });
@@ -155,7 +165,21 @@ const Profile = () => {
           </View>
         )}
       </Formik>
-    </View>
+      <View style={{ alignItems: 'center', marginTop: 30 }}>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ fontSize: 40, color: 'grey', fontWeight: 'bold', paddingLeft: 10 }}>
+            Shop in Styles!
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Image
+            style={{ height: 60, width: 60 }}
+            source={require('../../assets/images/logo.png')}
+          />
+          <Text style={{ fontSize: 18, color: 'grey' }}>THEFIVEMENSSHOES</Text>
+        </View>
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -177,8 +201,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     marginLeft: 10,
-    marginRight: 70,
-    marginBottom: 30,
   },
   viewItem: {
     marginTop: 25,
@@ -199,11 +221,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     height: 50,
     borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btnUpdate: {
     color: 'white',
     textAlign: 'center',
-    top: '20%',
     fontSize: 16,
     fontWeight: 'bold',
   },

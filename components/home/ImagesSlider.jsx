@@ -26,7 +26,7 @@ const ImagesSlider = () => {
           margin: 0,
         }}
         inactiveDotColor={COLORS.secondary}
-        ImageComponentStyle={{ borderRadius: 15, width: '98%', marginTop: 15 }}
+        ImageComponentStyle={{ width: '100%', marginTop: 15 }}
         autoplay
         circleLoop
       />

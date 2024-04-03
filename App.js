@@ -1,7 +1,7 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, useColorScheme } from "react-native";
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, useColorScheme } from 'react-native';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 import { useCallback, useMemo } from "react";
 import {
@@ -28,6 +28,9 @@ import EmailScreen from "./screens/EmailScreen";
 import AppNavigator from "./navigation/AppNavigator";
 import { AppContextProvider } from "./components/ultil/AppContext";
 import FilterScreen from "./screens/Home/FilterScreen";
+import RattingScreen from "./screens/Home/RatingScreen";
+import ItemRating from "./components/item/ItemRating";
+import SupportScreen from './screens/Home/SupportScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,23 +39,25 @@ export default function App() {
 
   const theme = useMemo(
     () =>
-      colorScheme === "dark"
+      colorScheme === 'dark'
         ? {
             ...DarkTheme,
             colors: {
               ...DarkTheme.colors,
-              primary: "#fff",
-              text: "#fff",
+              // primary: '#191919',
+              primary: '#fff',
+              // text: '#191919',
+              text: '#fff',
             },
           }
         : {
             ...DefaultTheme,
             colors: {
               ...DefaultTheme.colors,
-              background: "#fff",
-              text: "#191919",
-              border: "#D9D9D9",
-              primary: "#191919",
+              background: '#fff',
+              text: '#191919',
+              border: '#D9D9D9',
+              primary: '#191919',
             },
           },
     [colorScheme]
@@ -68,8 +73,10 @@ export default function App() {
           </NavigationContainer>
         </AppContextProvider>
       </GestureHandlerRootView>
-      {/* <FilterScreen></FilterScreen> */}
     </SafeAreaProvider>
+    // <Chat></Chat>
+    // <SupportScreen></SupportScreen>
+
   );
 }
 
@@ -78,7 +85,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   textstyle: {
-    fontFamily: "regular",
+    fontFamily: 'regular',
     fontSize: 20,
   },
 });

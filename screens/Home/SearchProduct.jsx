@@ -7,17 +7,16 @@ import {
   Image,
   FlatList,
   Dimensions,
+  ToastAndroid,
 } from 'react-native';
 import React, { useCallback, useRef, useState, useEffect, useContext } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../../constants/index';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation, useTheme } from '@react-navigation/native';
-import ImageSlider from '../../components/home/ImagesSlider';
+import ImageSliderPlus from '../../components/home/ImagesSliderPlus';
 import AxiosIntance from '../../components/ultil/AxiosIntance';
-import { AppContext } from '../../components/ultil/AppContext';
 import { SimpleLineIcons } from '@expo/vector-icons';
-import FixedBottom from './FixedBottom';
 
 const SearchProduct = () => {
   const { colors } = useTheme();
@@ -126,7 +125,7 @@ const SearchProduct = () => {
         ))}
       </View>
 
-      <ImageSlider />
+      <ImageSliderPlus />
     </ScrollView>
   );
 };

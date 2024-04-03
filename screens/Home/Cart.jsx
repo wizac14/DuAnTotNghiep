@@ -29,6 +29,7 @@ const Cart = (props) => {
   const { cartItemCount, setCartItemCount } = useContext(AppContext); // Truy cập cartItemCount
   const { cartCount, setCartCount } = useContext(AppContext); // Truy cập cartItemCount
   const [totalPrice, setTotalPrice] = useState(0);
+  const [hasItems, setHasItems] = useState(false);
 
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(true);
@@ -66,6 +67,11 @@ const Cart = (props) => {
       setIsLoading(true);
     };
   }, [isFocused]);
+
+  useEffect(() => {
+    // setHasItems khi data thay đổi
+    setHasItems(data.length > 0);
+  }, [data]);
 
   const getDetailByIdUser = async () => {
     try {
@@ -114,7 +120,7 @@ const Cart = (props) => {
         {isLoading ? (
           <View
             style={{
-              height: '90%',
+              height: '88%',
               alignItems: 'center',
               justifyContent: 'center',
             }}
@@ -122,7 +128,7 @@ const Cart = (props) => {
             <UIActivityIndicator size={30} color={colors.text} />
           </View>
         ) : (
-          <View style={{ height: '90%' }}>
+          <View style={{ height: '88%' }}>
             <FlatList
               data={data}
               renderItem={({ item }) => (
@@ -150,16 +156,30 @@ const Cart = (props) => {
         )}
       </View>
       <View>
-        <FixedBottom>
-          <TouchableOpacity
-            style={styles.buttonBuy}
-            onPress={() => {
-              navigation.navigate('CartDetail', { data });
-            }}
-          >
-            <Text style={styles.textBuy}>Tiếp tục</Text>
-          </TouchableOpacity>
-        </FixedBottom>
+        {hasItems ? (
+          <FixedBottom>
+            <TouchableOpacity
+              disabled={isLoading || !hasItems} // Disable nút khi isLoading hoặc không có sản phẩm
+              style={[styles.buttonBuy, !hasItems && { opacity: 0.5 }]}
+              onPress={() => {
+                navigation.navigate('CartDetail', { data });
+              }}
+            >
+              <Text style={styles.textBuy}>Tiếp tục</Text>
+            </TouchableOpacity>
+          </FixedBottom>
+        ) : (
+          <FixedBottom>
+            <TouchableOpacity
+              style={[styles.buttonBuy, !hasItems && { opacity: 0.5 }]}
+              onPress={() => {
+                navigation.navigate('Trang chủ');
+              }}
+            >
+              <Text style={styles.textBuy}>Hãy mua hàng để thanh toán!</Text>
+            </TouchableOpacity>
+          </FixedBottom>
+        )}
       </View>
     </SafeAreaView>
   );

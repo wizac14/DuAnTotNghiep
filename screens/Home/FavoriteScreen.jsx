@@ -164,12 +164,13 @@ const FavoriteScreen = () => {
                       </View>
                       <Text
                         style={{
-                          textAlign: 'left',
+                          textAlign: 'center',
                           color: 'white',
                           backgroundColor: 'black',
                           fontSize: 16,
                           letterSpacing: 0.5,
-                          width: 90,
+                          width: 100,
+                          borderRadius: 5,
                         }}
                       >
                         đ {item?.idProduct?.price.toLocaleString()}
