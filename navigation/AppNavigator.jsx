@@ -132,12 +132,12 @@ const AuthNavigator = () => {
         component={ForgotPassword}
         options={{ headerShown: false }}
       />
-         <Stack.Screen
+      <Stack.Screen
         name="RatingScreen"
         component={RatingScreen}
         options={{ headerShown: false, gestureEnabled: false }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="SupportScreen"
         component={SupportScreen}
         options={{ headerShown: false, gestureEnabled: false }}
@@ -160,6 +160,7 @@ const AuthNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name="statistical"
         component={StatisticalScreen}
